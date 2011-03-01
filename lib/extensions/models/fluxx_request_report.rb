@@ -149,8 +149,8 @@ module FluxxRequestReport
     
     base.insta_workflow do |insta|
       insta.add_state_to_english RequestReport.new_state, 'New', 'new'
-      insta.add_state_to_english RequestReport.pending_lead_approval_state, 'Pending Lead Approval', 'approval'
       insta.add_state_to_english RequestReport.report_received_state, 'Report Received', 'approval'
+      insta.add_state_to_english RequestReport.pending_lead_approval_state, 'Pending Lead Approval', 'approval'
       insta.add_state_to_english RequestReport.pending_grant_team_approval_state, 'Pending Grants Team Approval', 'approval'
       insta.add_state_to_english RequestReport.pending_finance_approval_state, 'Pending Finance Approval', 'approval'
       insta.add_state_to_english RequestReport.approved_state, 'Approved', 'approval'

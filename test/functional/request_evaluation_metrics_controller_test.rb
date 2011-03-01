@@ -44,7 +44,8 @@ class RequestEvaluationMetricsControllerTest < ActionController::TestCase
       rem.reload()
     end
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_evaluation_metrics_path}$/
+    
+    assert @response.header["Location"] =~ /#{request_evaluation_metric_path(:id => rem.id)}/
   end
   
   test "should get request evaluation metrics list for given request" do

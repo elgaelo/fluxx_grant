@@ -49,7 +49,7 @@ class RequestFundingSourcesControllerTest < ActionController::TestCase
     rfs = RequestFundingSource.make
     put :update, :id => rfs.id, :request_funding_source => {:funding_source_allocation_id => @funding_source.id}
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_funding_source_url(assigns(:request_funding_source))}$/
+    assert @response.header["Location"] =~ /#{request_funding_source_path(assigns(:request_funding_source))}$/
     assert_equal @funding_source, assigns(:request_funding_source).funding_source_allocation
   end
   
@@ -61,7 +61,7 @@ class RequestFundingSourcesControllerTest < ActionController::TestCase
     end
 
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_funding_sources_path}$/
+    assert @response.header["Location"] =~ /#{request_funding_source_path(:id => rfs.id)}$/
   end
   
   test "should not be allowed to edit if somebody else is editing" do

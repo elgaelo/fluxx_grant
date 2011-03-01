@@ -23,6 +23,13 @@ module FluxxGrantedRequestsController
     base.insta_report do |insta|
       insta.report_name_path = 'granted_requests'
     end
+    base.insta_edit Request do |insta|
+      insta.force_redirect do |conf|
+        # Load the model; we may have either a FIP or a Grant, handle both cases
+        model = conf.load_existing_model params
+        redirect_to send("edit_#{model.class.name.tableize.singularize}_path", model.id)
+      end
+    end
     
     base.insta_show Request do |insta|
       insta.template = 'grant_requests/grant_request_show'
@@ -40,6 +47,11 @@ module FluxxGrantedRequestsController
       end
     end
     base.add_grant_request_install_role
+    base.insta_delete GrantRequest do |insta|
+      insta.template = 'grant_request_form'
+      insta.icon_style = ICON_STYLE
+    end
+    
     base.insta_related Request do |insta|
       insta.add_related do |related|
         related.display_name = 'People'

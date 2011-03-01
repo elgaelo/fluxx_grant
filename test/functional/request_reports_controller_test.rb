@@ -79,19 +79,19 @@ class RequestReportsControllerTest < ActionController::TestCase
     assert flash[:info]
     
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_report_url(assigns(:request_report))}$/
+    assert @response.header["Location"] =~ /#{request_report_path(assigns(:request_report))}$/
   end
 
   test "should destroy request_report" do
     delete :destroy, :id => @request_final_report.id
     assert_not_nil @request_final_report.reload().deleted_at 
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_report_url(@request_final_report)}$/
+    assert @response.header["Location"] =~ /#{request_report_path(@request_final_report)}$/
   end
   
   test "try to have pa approve a report" do
     @program = @request1.program
-    request_report1 = RequestReport.make :request => @request1, :report_type => RequestReport.interim_budget_type_name
+    request_report1 = RequestReport.make :request => @request1, :report_type => RequestReport.interim_budget_type_name, :state => RequestReport.report_received_state
     
     login_as_user_with_role Program.program_associate_role_name
     check_models_are_updated{put :update, :id => request_report1.to_param, :event_action => RequestReport.submit_report_event}
