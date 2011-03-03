@@ -2,7 +2,8 @@
   - timeline = model.event_timeline
   - timeline.each_with_index do |req_state, idx|
     - klass = (idx == 0 ? 'first' : (idx == timeline.length-1 ? 'last' : ''))
-    - if model.state == req_state
+    - cur_state = model.respond_to?(:state_id) ? model.state_id.to_s : model.state
+    - if (cur_state == req_state)
       %li{:class => "state selected #{klass}"}= Request.state_to_english_translation req_state
     - else
       %li{:class => "state #{klass}"}= Request.state_to_english_translation req_state

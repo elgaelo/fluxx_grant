@@ -30,6 +30,7 @@ module FluxxGrantRequest
 
   module ModelInstanceMethods
     def generate_grant_transactions
+      validate_for_grant
       interim_request_document = request_reports.select{|rep| rep.is_interim_type?}.last
       final_request_document = request_reports.select{|rep| rep.is_final_type?}.last
       if self.is_er?
@@ -75,7 +76,15 @@ module FluxxGrantRequest
       end
     end
     
+    def validate_for_grant
+      raise I18n.t(:grant_begins_at_field_required) if grant_begins_at.blank?
+      raise I18n.t(:grant_ends_at_field_required) if grant_ends_at.blank?
+      raise I18n.t(:amount_recommended_field_required) if amount_recommended.blank?
+      raise I18n.t(:duration_in_months_field_required) if duration_in_months.blank?
+    end
+    
     def generate_grant_reports
+      validate_for_grant
       new_grantee = program_organization.grants.select {|grant| grant.id != self.id}.empty?
       # Interim Reports
       if duration_in_months > 12

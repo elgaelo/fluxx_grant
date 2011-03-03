@@ -18,7 +18,10 @@
         %tr
           %td
             - if model.respond_to? :note
-              = model.note
+              -if model.created_by_id == current_user.id
+                = link_to model.note, edit_note_path(:id => model.id, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
+              - else
+                = model.note
             - else
               %strong
                 = model.workflowable.class.state_to_english_translation model.old_state
