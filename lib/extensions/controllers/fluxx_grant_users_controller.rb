@@ -5,6 +5,7 @@ module FluxxGrantUsersController
     base.insta_index User do |insta|
       insta.filter_title = "People Filter"
       insta.filter_template = 'users/user_filter'
+      insta.order_clause = 'first_name asc, last_name asc'
       insta.pre do |controller_dsl|
         if params[:related_organization_id]
           rel_org_id = params[:related_organization_id]
