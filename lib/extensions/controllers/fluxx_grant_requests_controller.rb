@@ -5,6 +5,7 @@ module FluxxGrantRequestsController
     base.insta_index Request do |insta|
       insta.search_conditions = {:granted => 0, :has_been_rejected => 0}
       insta.template = 'grant_request_list'
+      insta.suppress_model_anchor_tag = true
       insta.filter_title = "Requests Filter"
       insta.filter_template = 'grant_requests/grant_request_filter'
       insta.order_clause = 'updated_at desc'
