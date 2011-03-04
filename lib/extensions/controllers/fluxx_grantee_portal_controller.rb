@@ -13,7 +13,7 @@ module FluxxGranteePortalController
   module ModelInstanceMethods
     ITEMS_PER_PAGE = 10
     def index
-      org_ids = (6000..6347).to_a
+      org_ids = current_user.primary_user_organization_id
 
       client_store = ClientStore.where(:user_id => fluxx_current_user.id, :client_store_type => 'grantee portal').first || 
                      ClientStore.create(:user_id => fluxx_current_user.id, :client_store_type => 'grantee portal', :data => {:pages => {:requests => 1, :grants => 1, :reports => 1, :transactions => 1}}.to_json, :name => "Default")
@@ -26,7 +26,6 @@ module FluxxGranteePortalController
       settings["pages"][table] = page if (table != :all)
   
       requests = Request.where("(requests.program_organization_id in (?) OR requests.fiscal_organization_id in (?)) AND requests.type = ? AND requests.deleted_at IS NULL", org_ids, org_ids, "GrantRequest")
-      # :program_organization_id => org_ids, :type => "GrantRequest", "request.deleted_at IS NULL")
       request_ids = requests.map { |request| request.id }    
       
       if table == :all || table == "requests"
@@ -36,7 +35,7 @@ module FluxxGranteePortalController
       end
       
       if table == :all || table == "grants"
-        @grants = requests.where(:granted => true).order("updated_at desc").paginate :page => settings["pages"]["requests"], :per_page => ITEMS_PER_PAGE
+        @grants = requests.where(:granted => true).order("updated_at desc").paginate :page => settings["pages"]["grants"], :per_page => ITEMS_PER_PAGE
         @title = "Grants"
         template = "_grant_request_list"
       end
