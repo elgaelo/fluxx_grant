@@ -199,9 +199,8 @@ module FluxxRequestReport
         has grant.program(:id), :as => :grant_program_ids
         has grant.sub_program(:id), :as => :grant_sub_program_ids
         has "requests.#{state_name}", :type => :string, :crc => true, :as => :grant_state
-        has "requests.#{state_name}", :type => :string, :crc => true, :as => :state
         has :report_type, :type => :string, :crc => true
-        has "request_reports.#{state_name}", :type => :string, :crc => true
+        has "request_reports.#{state_name}", :type => :string, :crc => true, :as => :state
         has 'null', :type => :multi, :as => :favorite_user_ids
         has "IF(request_reports.#{state_name} = 'approved', 1, 0)", :as => :has_been_approved, :type => :boolean
         has "CONCAT(IFNULL(`requests`.`program_organization_id`, '0'), ',', IFNULL(`requests`.`fiscal_organization_id`, '0'))", :as => :related_organization_ids, :type => :multi
@@ -223,9 +222,8 @@ module FluxxRequestReport
         has 'null', :type => :multi, :as => :grant_program_ids
         has 'null', :type => :multi, :as => :grant_sub_program_ids
         has 'null', :type => :multi, :type => :string, :crc => true, :as => :grant_state
-        has 'null', :type => :multi, :type => :string, :crc => true, :as => :state
         has :report_type, :type => :string, :crc => true
-        has "request_reports.#{state_name}", :type => :string, :crc => true
+        has "request_reports.#{state_name}", :type => :string, :crc => true, :as => :state
         has favorites.user(:id), :as => :favorite_user_ids
         has "IF(request_reports.#{state_name} = 'approved', 1, 0)", :as => :has_been_approved, :type => :boolean
         has 'null', :type => :multi, :as => :related_organization_ids
