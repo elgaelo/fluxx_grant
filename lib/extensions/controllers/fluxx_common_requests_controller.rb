@@ -146,7 +146,8 @@ module FluxxCommonRequestsController
     def set_enabled_variables controller_dsl
       fluxx_request = instance_variable_get "@model"
       if fluxx_request
-        promotion_events = fluxx_request.current_allowed_events(Request.all_workflow_states)
+        event_pairs = fluxx_request.current_allowed_events(Request.all_workflow_events)
+        promotion_events = event_pairs.map {|event| event.first}
         allowed_promotion_events = event_allowed?(promotion_events, fluxx_request)
         promotion_event = allowed_promotion_events && allowed_promotion_events.first
 
@@ -165,3 +166,4 @@ module FluxxCommonRequestsController
     end
   end
 end
+
