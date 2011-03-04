@@ -204,8 +204,8 @@ module FluxxRequestReport
         has 'null', :type => :multi, :as => :favorite_user_ids
         has "IF(request_reports.#{state_name} = 'approved', 1, 0)", :as => :has_been_approved, :type => :boolean
         has "CONCAT(IFNULL(`requests`.`program_organization_id`, '0'), ',', IFNULL(`requests`.`fiscal_organization_id`, '0'))", :as => :related_organization_ids, :type => :multi
-        # TODO ESH: derive the following which are no longer basd on roles_users but instead on program_lead_requests, grantee_org_owner_requests, grantee_signatory_requests, fiscal_org_owner_requests, fiscal_signatory_requests
-        # has request.lead_user_roles.roles_users.user(:id), :as => :lead_user_ids
+        has grant.program_lead(:id), :as => :lead_user_ids
+        
         has group_members.group(:id), :type => :multi, :as => :group_ids
       end
 
@@ -227,8 +227,7 @@ module FluxxRequestReport
         has favorites.user(:id), :as => :favorite_user_ids
         has "IF(request_reports.#{state_name} = 'approved', 1, 0)", :as => :has_been_approved, :type => :boolean
         has 'null', :type => :multi, :as => :related_organization_ids
-        # TODO ESH: derive the following which are no longer basd on roles_users but instead on program_lead_requests, grantee_org_owner_requests, grantee_signatory_requests, fiscal_org_owner_requests, fiscal_signatory_requests
-        # has 'null', :type => :multi, :as => :lead_user_ids
+        has 'null', :type => :multi, :as => :lead_user_ids
         has 'null', :type => :multi, :as => :group_ids
       end
     end
