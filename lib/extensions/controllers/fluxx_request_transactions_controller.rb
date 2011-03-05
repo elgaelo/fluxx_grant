@@ -121,19 +121,14 @@ module FluxxRequestTransactionsController
     def update_transaction_funding_sources model
       model.request.request_funding_sources.each do |rfs|
         amount = params["funding_source_value_#{rfs.id}"]
-        p "ESH: 111 have an amount of #{amount} for rfs=#{rfs.id}"
         rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
         if !amount.blank?
           if rtfs
-            p "ESH: 222 updating amount to #{amount} for rfs=#{rfs.id}"
             rtfs.update_attributes :amount => amount, :updated_by_id => current_user.id
           else
-            p "ESH: 333 creating amount to #{amount} for rfs=#{rfs.id}"
-            RequestTransactionFundingSource.create :request_transaction_id => model.id, :request_funding_source_id => rfs.id, :amount => amount, :created_by_id => current_user.id, :updated_by_id => current_user.id
           end
         elsif rtfs
           # The user removed the value, let's delete the record as well
-          p "ESH: 444 user destroyed rfs=#{rfs.id}"
           rtfs.destroy
         end
       end
