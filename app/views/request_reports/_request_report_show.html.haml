@@ -27,6 +27,12 @@
   
   - if model.is_eval_report_type?
     .pairs
+      .keys= "What did the grantee do?"
+      .values= model.what_grantee_did
+    .pairs
+      .keys= "What did the grantee win?"
+      .values= model.what_grantee_won
+    .pairs
       .keys= "Evaluation Rating:"
       .values= model.evaluation_rating
 
