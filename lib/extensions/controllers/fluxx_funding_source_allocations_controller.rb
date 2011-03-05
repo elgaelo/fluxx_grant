@@ -11,19 +11,18 @@ module FluxxFundingSourceAllocationsController
       insta.suppress_model_iteration = true
       
       insta.pre do |controller_dsl|
-        # We want to use the most proscriptive search in the case that we get more than one limiter passed in
-        prog_entity = if !params[:sub_initiative_id].blank?
+        prog_entity = if !params[:sub_initiative_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_initiative]
           SubInitiative.find params[:sub_initiative_id]
-        elsif !params[:initiative_id].blank?
+        elsif !params[:initiative_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_initiative]
           Initiative.find params[:initiative_id]
-        elsif !params[:sub_program_id].blank?
+        elsif !params[:sub_program_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_program]
           SubProgram.find params[:sub_program_id]
         elsif !params[:program_id].blank?
           Program.find params[:program_id]
         end
         self.pre_models = if prog_entity
           if params[:spending_year].blank?
-            prog_entity.funding_source_allocations()
+            []
           else
             prog_entity.funding_source_allocations(:spending_year => params[:spending_year])
           end

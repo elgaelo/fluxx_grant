@@ -8,14 +8,10 @@ module FluxxRequestFundingSource
     base.validates_presence_of     :funding_amount
     base.validates_presence_of     :funding_source_allocation
 
-    base.send :attr_accessor, :program
-    base.send :attr_accessor, :program_id
-    base.send :attr_accessor, :initiative
-    base.send :attr_accessor, :initiative_id
-    base.send :attr_accessor, :sub_program
-    base.send :attr_accessor, :sub_program_id
-    base.send :attr_accessor, :sub_initiative
-    base.send :attr_accessor, :sub_initiative_id
+    base.belongs_to :program
+    base.belongs_to :sub_program
+    base.belongs_to :initiative
+    base.belongs_to :sub_initiative
     base.send :attr_accessor, :spending_year
     
     base.insta_search do |insta|

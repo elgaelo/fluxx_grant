@@ -10,10 +10,10 @@
   - form.object.initiative = form.object.funding_source_allocation.derive_initiative
   - form.object.sub_initiative = form.object.funding_source_allocation.derive_sub_initiative
 
-  - form.object.initiative_id = form.object.initiative.id if form.object.initiative
   - form.object.program_id = form.object.program.id if form.object.program
-  - form.object.sub_program_id = form.object.sub_program.id if form.object.sub_program
-  - form.object.sub_initiative_id = form.object.sub_initiative.id if form.object.sub_initiative
+  - form.object.sub_program_id = form.object.sub_program.id if form.object.sub_program && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_program]
+  - form.object.initiative_id = form.object.initiative.id if form.object.initiative && !FLUXX_CONFIGURATION[:no_funding_source_ripple_initiative]
+  - form.object.sub_initiative_id = form.object.sub_initiative.id if form.object.sub_initiative && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_initiative]
 
   - if form.object.program
     - sub_programs = form.object.program.load_sub_programs
@@ -50,4 +50,9 @@
   - form.object.program.funding_source_allocations
 - funding_source_allocations = [] unless funding_source_allocations
 
-= form.input :funding_source_allocation, :label => "Funding Source", :as => :select, :collection => funding_source_allocations.map{|fsa| [fsa.funding_source_title(form.object.funding_amount), fsa.id]}, :input_html => {:class => 'funding-source-allocation-select', 'data-require-parent-id' => 'true', 'data-param-list'.to_sym => 'program_id=.program-dropdown-select,sub_program_id=.sub-program-select,initiative_id=.initiative-select,sub_initiative_id=.sub-initiative-select,spending_year=.spending-year-input,funding_amount=.funding-amount-input', 'data-src'.to_sym => funding_source_allocations_path(:format => 'autocomplete')}
+-# Build a list of parameters to send to the URL
+- param_list = ['program_id=.program-dropdown-select']
+- param_list << 'sub_program_id=.sub-program-select' unless FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_program]
+- param_list << 'initiative_id=.initiative-select' unless FLUXX_CONFIGURATION[:no_funding_source_ripple_initiative]
+- param_list << 'sub_initiative_id=.sub-initiative-select' unless FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_initiative]
+= form.input :funding_source_allocation, :label => "Funding Source", :as => :select, :collection => funding_source_allocations.map{|fsa| [fsa.funding_source_title(form.object.funding_amount), fsa.id]}, :input_html => {:class => 'funding-source-allocation-select', 'data-require-parent-id' => 'true', 'data-param-list'.to_sym => "#{param_list.join(',')},spending_year=.spending-year-input,funding_amount=.funding-amount-input", 'data-src'.to_sym => funding_source_allocations_path(:format => 'autocomplete')}
