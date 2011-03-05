@@ -8,7 +8,7 @@ module FluxxCommonRequestsController
   end
 
   module ModelClassMethods
-    def add_grant_request_install_role
+    def add_grant_request_install_role model_class
       insta_role Request do |insta|
         # Define who is allowd to perform which events
         insta.add_event_roles 'reject', Program, Program.request_roles
@@ -30,9 +30,17 @@ module FluxxCommonRequestsController
         insta.add_event_roles 'svp_send_back', Program, Program.svp_role_name
         insta.add_event_roles 'president_approve', Program, Program.president_role_name
         insta.add_event_roles 'president_send_back', Program, Program.president_role_name
-        insta.add_event_roles 'become_grant', Program, Program.grant_roles
-        insta.add_event_roles 'close_grant', Program, Program.grant_roles
-        insta.add_event_roles 'cancel_grant', Program, Program.grant_roles
+        if model_class == GrantRequest
+          insta.add_event_roles 'become_grant', Program, Program.grant_roles
+          insta.add_event_roles 'close_grant', Program, Program.grant_roles
+          insta.add_event_roles 'fip_close_grant', Program, Program.finance_roles
+          insta.add_event_roles 'cancel_grant', Program, Program.grant_roles
+        else
+          insta.add_event_roles 'become_grant', Program, Program.finance_roles
+          insta.add_event_roles 'close_grant', Program, Program.grant_roles
+          insta.add_event_roles 'fip_close_grant', Program, Program.finance_roles
+          insta.add_event_roles 'cancel_grant', Program, Program.finance_roles
+        end
 
         insta.extract_related_object do |model|
           model.program
