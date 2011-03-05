@@ -304,6 +304,7 @@ module FluxxRequest
       insta.add_event_to_english :un_reject, 'Un-Reject'
       insta.add_event_to_english :become_grant, 'Promote to Grant'
       insta.add_event_to_english :close_grant, 'Close'
+      insta.add_event_to_english :fip_close_grant, 'Close'
       insta.add_event_to_english :cancel_grant, 'Cancel'        
       
       insta.add_non_validating_event :reject
@@ -441,7 +442,11 @@ module FluxxRequest
       end
 
       aasm_event :close_grant do
-        transitions :from => :granted, :to => :closed
+        transitions :from => :granted, :to => :closed, :guard => (lambda {|req| req.is_a?(GrantRequest)})
+      end
+
+      aasm_event :fip_close_grant do
+        transitions :from => :granted, :to => :closed, :guard => (lambda {|req| req.is_a?(FipRequest)})
       end
 
       aasm_event :cancel_grant do
