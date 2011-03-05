@@ -55,6 +55,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_bank_account_to_transaction.rb', 'db/migrate/fluxx_grant_add_bank_account_to_transaction.rb'
     handle_migration 'make_eval_metrics_fields_text.rb', 'db/migrate/fluxx_grant_make_eval_metrics_fields_text.rb'
     handle_migration 'add_c3_field_to_organization.rb', 'db/migrate/fluxx_grant_add_c3_field_to_organization.rb'
+    handle_migration 'add_prog_initiative_back_in_to_rfs.rb', 'db/migrate/fluxx_grant_add_prog_initiative_back_in_to_rfs.rb'
   end
   
   private

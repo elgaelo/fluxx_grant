@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110216004812) do
+ActiveRecord::Schema.define(:version => 20110305042251) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -654,11 +654,19 @@ ActiveRecord::Schema.define(:version => 20110216004812) do
     t.integer  "organization_payee_id"
     t.integer  "user_payee_id"
     t.integer  "bank_account_id"
+    t.integer  "program_id"
+    t.integer  "sub_program_id"
+    t.integer  "initiative_id"
+    t.integer  "sub_initiative_id"
   end
 
+  add_index "request_transactions", ["initiative_id"], :name => "request_transactions_initiative_id"
   add_index "request_transactions", ["organization_payee_id"], :name => "request_transactions_org_payee_id"
   add_index "request_transactions", ["payment_recorded_by_id"], :name => "index_request_transactions_on_payment_recorded_by_id"
+  add_index "request_transactions", ["program_id"], :name => "request_transactions_program_id"
   add_index "request_transactions", ["request_id"], :name => "index_request_transactions_on_request_id"
+  add_index "request_transactions", ["sub_initiative_id"], :name => "request_transactions_sub_initiative_id"
+  add_index "request_transactions", ["sub_program_id"], :name => "request_transactions_sub_program_id"
   add_index "request_transactions", ["user_payee_id"], :name => "request_transactions_user_payee_id"
 
   create_table "request_users", :force => true do |t|
