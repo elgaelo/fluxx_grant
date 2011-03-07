@@ -151,6 +151,10 @@ module FluxxGrantUser
         limit ?
         ", request_ids, granted_param, self.id, granted_param, limit_amount]
     end
+
+    def is_grantee?
+      self.has_permission?('grantee')
+    end
     
     def related_grants limit_amount=20
       related_requests true, limit_amount
