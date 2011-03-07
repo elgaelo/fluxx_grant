@@ -18,7 +18,7 @@ class FundingAllocationsByProgramReport < ActionController::ReportBase
 
       # Never include these requests
       rejected_states = Request.send(:sanitize_sql, ['(?)', Request.all_rejected_states])
-      paid_states = Request.send(:sanitize_sql, ['(?)', RequestTransaction.all_states_with_category('paid')])
+      paid_states = Request.send(:sanitize_sql, ['(?)', RequestTransaction.all_states_with_category('paid').map{|state| state.to_s}])
       
       always_exclude = "r.deleted_at IS NULL AND r.state not in #{rejected_states}"
 

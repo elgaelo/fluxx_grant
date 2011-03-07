@@ -193,14 +193,16 @@ module FluxxRequest
 
           :filter_state => (lambda do |search_with_attributes, request_params, name, val|
             states = val
-            states << 'pending_secondary_pd_approval' if states.include?('pending_pd_approval')
+            pending_pd_approval_state = Request.all_states_with_category('pending_pd_approval').first
+            pending_secondary_pd_approval_state = Request.all_states_with_category('pending_secondary_pd_approval').first
+            states << pending_secondary_pd_approval_state if pending_pd_approval_state && states.include?(pending_pd_approval_state.to_s)
 
-            if states.include?('pending_secondary_pd_approval') && search_with_attributes[:program_id]
+            if pending_secondary_pd_approval_state && states.include?(pending_secondary_pd_approval_state.to_s) && search_with_attributes[:program_id]
               # Have to consider that program_id may have been parsed before filter_state
               search_with_attributes[:all_request_program_ids] = search_with_attributes[:program_id]
               search_with_attributes.delete :program_id
             end
-            search_with_attributes[:filter_state] = states.map{|val|val.to_crc32} if states && !states.empty?
+            search_with_attributes[:filter_state] = states.map{|val|val.to_s.to_crc32} if states && !states.empty?
           end),
 
           :program_id => (lambda do |search_with_attributes, request_params, name, val|
@@ -215,8 +217,10 @@ module FluxxRequest
               end
             end.compact.flatten.map &:id
             # Have to consider that state may have been parsed before program_id
+            pending_secondary_pd_approval_state = Request.all_states_with_category('pending_secondary_pd_approval').first
+            
             if program_ids && !program_ids.empty?
-              if search_with_attributes[:filter_state] && search_with_attributes[:filter_state].is_a?(Array) && search_with_attributes[:filter_state].include?('pending_secondary_pd_approval')
+              if pending_secondary_pd_approval_state && search_with_attributes[:filter_state] && search_with_attributes[:filter_state].is_a?(Array) && search_with_attributes[:filter_state].include?(pending_secondary_pd_approval_state.to_s)
                 search_with_attributes[:all_request_program_ids] = program_ids
               else
                 search_with_attributes[:program_id] = program_ids
@@ -810,17 +814,21 @@ module FluxxRequest
     # This is a method meant to be run on requests that are currently in pending_secondary_pd_approval state
     # It figures out when it was switched to pending secondary approval, and if it's more than 5 days, it will promote it automatically
     def check_for_secondary_promotion
-      we = workflow_events.find :first, :conditions => {:new_state => 'pending_secondary_pd_approval'}, :order => 'id desc'
-      if we.created_at < (Time.now - 5.days)
-        # Time to promote this puppy!!
-        pending_request_programs = request_programs.select{|rp| !rp.is_approved? }
-        unless pending_request_programs.empty?
-          pending_request_programs.each{|rp| rp.approve}
+      pending_secondary_pd_approval_state = Request.all_states_with_category('pending_secondary_pd_approval').first
+      
+      if pending_secondary_pd_approval_state
+        we = workflow_events.find :first, :conditions => {:new_state => pending_secondary_pd_approval_state.to_s}, :order => 'id desc'
+        if we.created_at < (Time.now - 5.days)
+          # Time to promote this puppy!!
+          pending_request_programs = request_programs.select{|rp| !rp.is_approved? }
+          unless pending_request_programs.empty?
+            pending_request_programs.each{|rp| rp.approve}
+          end
+          if self.state == pending_secondary_pd_approval_state.to_s
+            self.secondary_pd_approve
+          end
+          self.save
         end
-        if self.state == 'pending_secondary_pd_approval'
-          self.secondary_pd_approve
-        end
-        self.save
       end
     end
     
@@ -941,8 +949,13 @@ module FluxxRequest
     
     def all_request_programs_approved? program=nil
       return running_timeline if running_timeline # for event_timeline purposes
-      checking_programs = request_programs.reject{|rp| rp.program == program}
-      result = checking_programs.select {|rp| rp.state != 'approved'}.empty?
+      checking_programs = if program
+        request_programs.reject{|rp| rp.program == program}
+      else
+        request_programs
+      end
+      p "ESH: all_request_programs_approved=#{checking_programs.inspect}"
+      result = checking_programs.select {|rp| !rp.is_approved?}.empty?
       result
     end
     
@@ -954,5 +967,24 @@ module FluxxRequest
         request_transactions.each {|trans| trans.safe_delete(user)}
       end
     end
+    
+    
+    # Deal with wonky behavior of secondary request programs
+    def fire_event_override event_name, user
+      result = if user && Request.all_states_with_category('pending_secondary_pd_approval').include?(state.to_sym)
+        self.request_programs.each do |rp|
+          # TODO ESH: consider adding categories to roles to be able to identify the program directory role; otherwise we rely on naming conventions for the roles.  Programme director would screw everything up for example
+          if !rp.is_approved? && user.has_role?(Program.program_director_role_name, rp.program)
+            rp.request = self # Make sure that this request_program doesn't load up a different request since we might be changing its state (don't want to change it in two places since the save will happen on this instance of request)
+            rp.approve
+            rp.save
+          end
+        end
+        # self.save # May have switched state in the request; save to be sure
+        # p "ESH: have errors = #{self.errors.inspect}"
+        true # Do not try to fire the regular event
+      end
+    end
+    
   end
 end

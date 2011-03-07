@@ -44,7 +44,7 @@ module PipelineBaseReport
               #{(granted.to_s == '1' && end_date) ? " AND grant_agreement_at < '#{end_date.sql}' " : ''} AND granted = #{granted} #{Request.prepare_request_types_for_where_clause(query_types)}
               #{is_type_org ? ' AND requests.program_organization_id = organizations.id ' : ''} 
               AND funding_source_allocations.id = request_funding_sources.funding_source_allocation_id
-              #{spending_year ? " AND spending_year = #{spending_year} " : ''}", RequestTransaction.all_states_with_category('paid'), Request.all_rejected_states])
+              #{spending_year ? " AND spending_year = #{spending_year} " : ''}", RequestTransaction.all_states_with_category('paid').map{|state| state.to_s}, Request.all_rejected_states])
       
       sql_clause = "SELECT id, entity_name, amount_requested, amount_recommended, program_id, sub_program_id, 
                  sum(funding_amount) funding_amount, 

@@ -26,14 +26,14 @@ class RequestTransactionTest < ActiveSupport::TestCase
   end
   
   test "take a report and mark_paid" do
-    @request_transaction.insta_fire_event :mark_paid
+    @request_transaction.insta_fire_event :mark_paid, User.make
     assert_equal 'paid', @request_transaction.state
   end
   
   test "take a report and mark paid from tentatively_due" do
     @request_transaction.state = 'tentatively_due'
     @request_transaction.save
-    @request_transaction.insta_fire_event :mark_paid
+    @request_transaction.insta_fire_event :mark_paid, User.make
     assert_equal 'paid', @request_transaction.state
   end
   
