@@ -55,7 +55,7 @@ module FluxxGrantProject
 
   module ModelInstanceMethods
     def related_requests granted_param=false
-      project_requests.where({:granted => granted_param}).map{|pr| pr.request}.reject{|req| req.deleted_at}.compact.sort_by{|req| [req.grant_agreement_at.to_i*-1, req.request_received_at.to_i*-1]}
+      project_requests.where({:granted => granted_param}).map{|pr| pr.request}.reject{|req| !req || req.deleted_at}.compact.sort_by{|req| [req.grant_agreement_at.to_i*-1, req.request_received_at.to_i*-1]}
     end
 
     def related_grants
