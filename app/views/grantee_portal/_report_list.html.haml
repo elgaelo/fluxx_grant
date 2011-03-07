@@ -12,6 +12,7 @@
       %th
         Status
       %th
+      %th
   -@data.each do |model|
     - documentable_id = model.id
     %tbody
@@ -20,9 +21,10 @@
         %td.border= mdy_date_format(model.due_at)
         %td.border= (model.state.nil? ? '' : model.state.humanize)
         %td.border= link_to "Upload", model_documents_path(:model_document => {:documentable_id => documentable_id, :documentable_type => documentable_class}), :class => 'to-upload', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable_class, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
-      -model.model_documents.each do |doc| 
+        %td.border= link_to "Submit"
+      -model.model_documents.each do |doc|
         - if doc
           %tr
-            %td{:colspan => 4}
+            %td{:colspan => 5}
               = link_to doc.document_file_name, doc.document.url, :target => '_blank', :class => mime_type_to_class(doc.document_content_type)
 = render :partial => "paging_actions"
