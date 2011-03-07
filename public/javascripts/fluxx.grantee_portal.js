@@ -54,7 +54,6 @@
           'a.to-upload': [
             'click', function(e) {
               e.preventDefault();
-              alert('foo');
               var $elem = $(this);
               $.modal('<div class="upload-queue"></div>', {
                 minWidth: 700,
@@ -69,22 +68,17 @@
                     url: $elem.attr('href'),
                     runtimes: 'html5',
                     multipart: false,
-                    documentTypeParam: $elem.data('document-type-param'),
-                    documentTypeUrl: $elem.data('document-type-url'),
                     filters: [{title: "Allowed file types", extensions: $elem.attr('data-extensions')}]
                   });
                 },
                 onClose: function(){
-                  if ($elem.parents('.partial').length) {
-                    $elem.refreshAreaPartial();
-                  } else {
-                    $elem.refreshCardArea();
-                  }
+                  var $area = $('.reports').first();
+                  $.fn.loadTable($area, 0);
                   $.modal.close();
                 }
               });
             }
-          ],
+          ]
 		 }
 	    }
 	});

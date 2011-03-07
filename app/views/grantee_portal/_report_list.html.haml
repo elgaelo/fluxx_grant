@@ -1,3 +1,4 @@
+- documentable_class = "RequestReport"
 .titlebar
   .title
     Reports
@@ -11,13 +12,14 @@
       %th
         Status
       %th
-  -@data.each do |model|    
+  -@data.each do |model|
+    - documentable_id = model.id
     %tbody
       %tr
         %td.border= "#{model.type_to_english} for #{model.request.grant_id}"
         %td.border= mdy_date_format(model.due_at)
         %td.border= (model.state.nil? ? '' : model.state.humanize)
-        %td.border= link_to "Upload", "#", :class => "to-upload"
+        %td.border= link_to "Upload", model_documents_path(:model_document => {:documentable_id => documentable_id, :documentable_type => documentable_class}), :class => 'to-upload', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable_class, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
       -model.model_documents.each do |doc| 
         - if doc
           %tr
