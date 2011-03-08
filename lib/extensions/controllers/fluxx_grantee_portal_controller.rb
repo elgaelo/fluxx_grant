@@ -13,7 +13,7 @@ module FluxxGranteePortalController
   module ModelInstanceMethods
     ITEMS_PER_PAGE = 10
     def index
-      org_ids = current_user.primary_user_organization_id
+      org_ids = current_user.primary_organization.id
 
       client_store = ClientStore.where(:user_id => fluxx_current_user.id, :client_store_type => 'grantee portal').first || 
                      ClientStore.create(:user_id => fluxx_current_user.id, :client_store_type => 'grantee portal', :data => {:pages => {:requests => 1, :grants => 1, :reports => 1, :transactions => 1}}.to_json, :name => "Default")
