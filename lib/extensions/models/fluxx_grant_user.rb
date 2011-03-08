@@ -153,7 +153,7 @@ module FluxxGrantUser
     end
 
     def is_grantee?
-      self.has_permission?('grantee')
+      self.user_profile == UserProfile.where(:name => 'Grantee').first
     end
     
     def related_grants limit_amount=20
