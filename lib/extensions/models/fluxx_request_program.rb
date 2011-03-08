@@ -42,7 +42,7 @@ module FluxxRequestProgram
     
     base.insta_workflow do |insta|
       insta.add_state_to_english :new, 'New Request'
-      insta.add_state_to_english :approved, 'Approved'
+      insta.add_state_to_english :approved, 'Approved', 'approved'
       
       insta.add_event_to_english :approve, 'Approve'
     end
@@ -63,7 +63,7 @@ module FluxxRequestProgram
       aasm_initial_state :new
 
       aasm_state :new
-      aasm_state :approved, :enter => [:adjust_approved_at, :try_to_transition_associated_request]
+      aasm_state :approved, :after_enter => [:adjust_approved_at, :try_to_transition_associated_request]
 
       def self.approved_state
         'approved'
@@ -76,17 +76,13 @@ module FluxxRequestProgram
   
   module ModelInstanceMethods
     def is_approved?
-      state.to_s == 'approved'
+      RequestProgram.all_states_with_category('approved').include?(state.to_sym)
     end
 
     def try_to_transition_associated_request
-      if request.state == 'pending_secondary_pd_approval'
-        if request.all_request_programs_approved? program
-          # A little bit odd trickery to convince the request that all request programs are in fact approved; at this point the current request program's state is not yet approved
-          cur_state = self.state
-          self.state = 'approved'
+      if Request.all_states_with_category('pending_secondary_pd_approval').include?(request.state.to_sym)
+        if request.all_request_programs_approved?
           request.secondary_pd_approve
-          self.state = cur_state
         end
       end
     end

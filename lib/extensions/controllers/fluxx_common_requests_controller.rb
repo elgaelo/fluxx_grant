@@ -43,7 +43,12 @@ module FluxxCommonRequestsController
         end
 
         insta.extract_related_object do |model|
-          model.program
+          result = if Request.all_states_with_category('pending_secondary_pd_approval').include?(model.state.to_sym)
+            model.request_programs.reject{|rp| rp.is_approved?}.map{|rp| rp.program}.compact
+          else
+            model.program
+          end
+          result
         end
       end
     end

@@ -57,8 +57,8 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
   
   test "autocomplete with enough balance" do
     program = Program.make
-    lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id
-    get :index, :format => :autocomplete, :funding_amount => 50000, :program_id => program.id
+    lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id, :spending_year => 2011
+    get :index, :format => :autocomplete, :funding_amount => 50000, :program_id => program.id, :spending_year => 2011
     assert_response :success
     p "ESH: have @response.body = #{@response.body}"
     p "ESH: have lookup_funding_source_allocation.amount_remaining.to_currency = #{lookup_funding_source_allocation.amount_remaining.to_currency}"
@@ -67,8 +67,8 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
   
   test "autocomplete without enough balance" do
     program = Program.make
-    lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id
-    get :index, :format => :autocomplete, :funding_amount => 250000, :program_id => program.id
+    lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id, :spending_year => 2011
+    get :index, :format => :autocomplete, :funding_amount => 250000, :program_id => program.id, :spending_year => 2011
     assert_response :success
     p "ESH: have body=#{@response.body}"
     assert @response.body.index("Less than #{250000.to_currency}")

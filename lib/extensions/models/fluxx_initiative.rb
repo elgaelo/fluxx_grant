@@ -1,8 +1,8 @@
 module FluxxInitiative
   SEARCH_ATTRIBUTES = [[:program_id, 'sub_programs'], :sub_program_id, :retired]
   LIQUID_METHODS = [:name]
-  INITIATIVE_FSA_JOIN_WHERE_CLAUSE = "(initiative_id = ?
-    or sub_initiative_id in (select sub_initiatives.id from sub_initiatives where initiative_id = ?)) and fsa.deleted_at is null"
+  INITIATIVE_FSA_JOIN_WHERE_CLAUSE = "(fsa.initiative_id = ?
+    or fsa.sub_initiative_id in (select sub_initiatives.id from sub_initiatives where initiative_id = ?)) and fsa.deleted_at is null"
     
   def self.included(base)
     base.belongs_to :sub_program

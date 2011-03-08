@@ -210,11 +210,11 @@ class FipRequestsControllerTest < ActionController::TestCase
     er_request = assigns(:model)
   end
 
-  test "try to have grant assistant approve an already approved request and make it closed" do
-    login_as_user_with_role Program.grants_assistant_role_name
+  test "try to have finance assistant approve an already approved request and make it closed" do
+    login_as_user_with_role Program.finance_administrator_role_name
     @request1.state = 'closed'
     @request1.save
-    check_models_are_not_updated{put :update, :id => @request1.to_param, :event_action => 'close_grant'}
+    check_models_are_not_updated{put :update, :id => @request1.to_param, :event_action => 'fip_close_grant'}
     assert_equal 'closed', @request1.reload().state
   end
 
@@ -229,11 +229,11 @@ class FipRequestsControllerTest < ActionController::TestCase
     er_request = assigns(:model)
   end
 
-  test "try to have grant administrator approve an already approved request and make it closed" do
-    login_as_user_with_role Program.grants_administrator_role_name
+  test "try to have finance administrator approve an already approved request and make it closed" do
+    login_as_user_with_role Program.finance_administrator_role_name
     @request1.state = 'granted'
     @request1.save
-    check_models_are_updated{put :update, :id => @request1.to_param, :event_action => 'close_grant'}
+    check_models_are_updated{put :update, :id => @request1.to_param, :event_action => 'fip_close_grant'}
     assert_equal 'closed', @request1.reload().state
     assert flash[:info]
   end
@@ -368,7 +368,7 @@ class FipRequestsControllerTest < ActionController::TestCase
   end
 
   test "try to cancel a grant" do
-    login_as_user_with_role Program.grants_administrator_role_name
+    login_as_user_with_role Program.finance_administrator_role_name
     @request1.state = 'granted'
     @request1.granted = true
     @request1.save
