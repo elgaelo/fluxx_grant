@@ -29,8 +29,10 @@
         %dt= "Initiatives:" 
         %dd
           -  program_names = []
-          -  program_names << funding_source.funding_source_allocation.program_display_name if funding_source.funding_source_allocation 
-          -  program_names << funding_source.funding_source_allocation.sub_program_display_name if funding_source.funding_source_allocation
+          -  program_names << funding_source.funding_source_allocation.program_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.program_display_name
+          -  program_names << funding_source.funding_source_allocation.sub_program_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_program_display_name
+          -  program_names << funding_source.funding_source_allocation.initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.initiative_display_name
+          -  program_names << funding_source.funding_source_allocation.sub_initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_initiative_display_name
           = program_names.join ', '
       <hr/>
   %strong
