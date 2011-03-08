@@ -19,9 +19,13 @@
       %tr
         %td.border= "#{model.type_to_english} for #{model.request.grant_id}"
         %td.border= mdy_date_format(model.due_at)
-        %td.border= (model.state.nil? ? '' : model.state.humanize)
-        %td.border= link_to "Upload", model_documents_path(:model_document => {:documentable_id => documentable_id, :documentable_type => documentable_class}), :class => 'to-upload', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable_class, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
-        %td.border= link_to "Submit"
+        %td.border= model.grantee_portal_state.humanize
+        - if model.state == 'new'
+          %td.border= link_to "Submit", request_report_path(model.id, "event_action".to_sym => "receive_report", "request_report[workflow_note]".to_sym => "Received from Grantee Portal"), :class => "submit-report"
+          %td.border= link_to "Upload", model_documents_path(:model_document => {:documentable_id => documentable_id, :documentable_type => documentable_class}), :class => 'to-upload', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable_class, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
+        - else
+          %td.border
+          %td.border
       -model.model_documents.each do |doc|
         - if doc
           %tr

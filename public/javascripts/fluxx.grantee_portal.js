@@ -7,15 +7,15 @@
 		},
 		loadTable: function($table, pageIncrement) {
 			$table.attr('data-src', $table.attr('data-src').replace(/page=(\d+)/, function(a,b){
-				var page = parseInt(b) + pageIncrement;
+			  var page = parseInt(b) + pageIncrement;
 			  return 'page=' + page;
 			}));
 			$.ajax({
-        url: $table.attr('data-src'),
-				success: function(data, status, xhr){
-					$table.html(data);
-        }
-      });
+              url: $table.attr('data-src'),
+		      success: function(data, status, xhr){
+				$table.html(data);
+              }
+            });
 		}
 	});
 	
@@ -77,6 +77,36 @@
                   $.modal.close();
                 }
               });
+            }
+          ],
+          'a.submit-report': [
+            'click', function(e) {
+              e.preventDefault();
+              var $elem = $(this);
+              var $area = $elem.parents('.content');
+              $.ajax({
+                url: $elem.attr('href'),
+                type: 'PUT',
+                data: {},
+		        success: function(data, status, xhr){
+				  $.fn.loadTable($area, 0);
+                }
+              });
+            }
+          ],
+          'a.as-delete': [
+            'click', function(e) {
+              e.preventDefault();
+              var $elem = $(this);
+              var $area = $elem.parents('.content');
+              if (confirm('This request will be deleted. Are you sure?'))
+                $.ajax({
+                  url: $elem.attr('href'),
+                  type: 'DELETE',
+		          success: function(data, status, xhr){
+				    $.fn.loadTable($area, 0);
+                  }
+                });
             }
           ]
 		 }

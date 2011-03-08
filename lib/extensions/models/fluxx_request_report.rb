@@ -439,5 +439,17 @@ module FluxxRequestReport
         end
       end
     end
+
+    def grantee_portal_state
+      if (state == 'new')
+        'due'
+      elsif (is_approved?)
+        'approved'
+      elsif (state == 'sent_back_to_pa' || state == 'sent_back_to_lead' || state == 'sent_back_to_grant_team')
+        'sent back'
+      else
+        'submitted'
+      end
+    end
   end
 end

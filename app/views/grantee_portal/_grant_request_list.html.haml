@@ -12,7 +12,8 @@
       %th
         Program
       %th
-        Status      
+        Status
+      %th
   -@data.each do |model|
     %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
       %tr
@@ -20,8 +21,12 @@
         %td.border= mdy_date_format(model.request_received_at)
         %td.border= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
         %td.border= (model.program ? model.program.name : '')
-        %td.border= (model.state.nil? ? '' : model.state.humanize)
+        %td.border= model.grantee_portal_state.humanize
+        - if model.grantee_portal_state == 'draft'
+          %td.border= link_to "Delete", grant_request_path(model), :class => "as-delete"
+        - else
+          %td.border
       %tr
-        %td{:colspan => 5}= model.project_summary
+        %td{:colspan => 6}= model.project_summary
 %p
 = render :partial => "paging_actions"
