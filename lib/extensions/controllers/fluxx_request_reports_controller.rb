@@ -13,12 +13,9 @@ module FluxxRequestReportsController
       insta.icon_style = ICON_STYLE
       insta.add_workflow
       insta.post do |triple|
-        p "ESH: in post request report"
         controller_dsl, model, outcome = triple
         request_report = model
-        p "ESH: in post request report, #{request_report.is_eval_report_type?}"
         unless request_report && request_report.is_eval_report_type?
-          p "ESH: in post request report, setting @edit_enabled = false"
           @edit_enabled = false
         end
       end
