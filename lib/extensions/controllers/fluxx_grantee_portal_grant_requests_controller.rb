@@ -41,11 +41,11 @@ module FluxxGranteePortalGrantRequestsController
       # TODO lamda stuff
       insta.format do |format|
         format.html do |triple|
-          if @model.grantee_portal_state != 'draft'
-            redirect_to grantee_portal_grant_request_path(@model)
-          else
+          if @model.in_state_with_category?("draft")
             controller_dsl, outcome, default_block = triple
             grant_request_edit_format_html controller_dsl, outcome, default_block if user_can_access_request
+          else
+            redirect_to grantee_portal_grant_request_path(@model)
           end
         end
       end
