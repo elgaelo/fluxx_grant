@@ -408,7 +408,7 @@ module FluxxRequest
       end
 
       aasm_event :recommend_funding do
-        transitions :from => :new, :to => :funding_recommended
+        transitions :from => [:new, :drafted], :to => :funding_recommended
       end
 
       aasm_event :complete_ierf do

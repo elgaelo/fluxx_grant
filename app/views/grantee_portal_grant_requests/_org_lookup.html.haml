@@ -7,10 +7,10 @@
 %ol
   - labels ||= {}
   - hidden_attribute_class = "#{org_name}_hidden_value"
-  - current_location = Organization.find(current_user.primary_user_organization_id)
-  - current_org = Organization.find(current_user.primary_user_organization_id)
+  - current_location = Organization.find(current_user.primary_organization.id)
+  - current_org = Organization.find(current_user.primary_organization.id)
 
-  = form.input :program_organization_id, :as => :hidden, :value => current_user.primary_user_organization_id
+  = form.input :program_organization_id, :as => :hidden, :value => current_user.primary_organization.id
   - program_users = []
   - program_users = current_location.users if current_location
   = form.input org_owner, :label => labels[:org_owner_label] || 'Primary Contact', :as => :select, :collection => program_users, :input_html => {:class => "#{org_name}-org-contact", 'data-cache'.to_sym => 'contact_select', 'data-required' => 1, 'data-src'.to_sym => users_path(:format => 'autocomplete'), 'data-param'.to_sym => 'related_organization_id'}

@@ -43,7 +43,7 @@ module FluxxGranteePortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           if @model.grantee_portal_state != 'draft'
-            redirect_to grantee_portal_grant_request_path
+            redirect_to grantee_portal_grant_request_path(@model.id)
           else
             controller_dsl, outcome, default_block = triple
             grant_request_edit_format_html controller_dsl, outcome, default_block if user_can_access_request
@@ -87,7 +87,7 @@ module FluxxGranteePortalGrantRequestsController
 
   module ModelInstanceMethods
     def user_can_access_request
-      can_access = (@model.program_organization_id == current_user.primary_user_organization_id || @model.fiscal_organization_id == current_user.primary_user_organization_id)
+      can_access = (@model.program_organization_id == current_user.primary_organization.id || @model.fiscal_organization_id == current_user.primary_organization.id)
       if  !can_access
         logger.debug("Grantee portal user #{current_user.login} tried to access request #{@model.grant_or_request_id} and was not authorized")
         render :text => "foo", :status => 404
