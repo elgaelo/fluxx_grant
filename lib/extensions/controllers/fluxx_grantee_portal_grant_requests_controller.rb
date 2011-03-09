@@ -24,7 +24,6 @@ module FluxxGranteePortalGrantRequestsController
       insta.post do |triple|
         controller_dsl, model, outcome = triple
         set_enabled_variables controller_dsl
-        redirect_to grantee_portal_index_path unless @model.granted
       end
     end
     base.add_grant_request_install_role GrantRequest
@@ -43,7 +42,7 @@ module FluxxGranteePortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           if @model.grantee_portal_state != 'draft'
-            redirect_to grantee_portal_grant_request_path(@model.id)
+            redirect_to grantee_portal_grant_request_path(@model)
           else
             controller_dsl, outcome, default_block = triple
             grant_request_edit_format_html controller_dsl, outcome, default_block if user_can_access_request
@@ -56,6 +55,12 @@ module FluxxGranteePortalGrantRequestsController
       insta.template = 'grant_request_form'
       insta.layout = 'grantee_portal'
       insta.icon_style = ICON_STYLE
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          redirect_to grantee_portal_index_path
+        end
+      end
     end
     base.insta_put GrantRequest do |insta|
       insta.use_redirect_not_201 = true
