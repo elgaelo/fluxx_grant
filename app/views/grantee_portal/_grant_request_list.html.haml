@@ -15,11 +15,15 @@
         Status
       %th
   -@data.each do |model|
-    - state = "Submitted"
-    - state = "Draft" if model.in_state_with_category?("draft")
-    - state = "More info Requested" if model.in_state_with_category?("sent_back")
-    - state = "Decision Pending" if model.in_state_with_category?("approval")
-    - state = "Declined" if model.in_state_with_category?("rejected")
+    - if model.is_grant?
+      - state = "Closed"
+      - state = "Active" if model.in_state_with_category?("become_grant")
+    - else
+      - state = "Submitted"
+      - state = "Draft" if model.in_state_with_category?("draft")
+      - state = "More info Requested" if model.in_state_with_category?("sent_back")
+      - state = "Decision Pending" if model.in_state_with_category?("approval")
+      - state = "Declined" if model.in_state_with_category?("rejected")
     %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
       %tr
         %td.border= model.grant_or_request_id
