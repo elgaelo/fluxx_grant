@@ -21,8 +21,8 @@
         %td.border= mdy_date_format(model.request_received_at)
         %td.border= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
         %td.border= (model.program ? model.program.name : '')
-        %td.border= model.grantee_portal_state.humanize
-        - if model.grantee_portal_state == 'draft'
+        %td.border= model.state.humanize
+        - if model.state == 'draft'
           %td.border= link_to "Delete", grant_request_path(model), :class => "as-delete"
         - else
           %td.border

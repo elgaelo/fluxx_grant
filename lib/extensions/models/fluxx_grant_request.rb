@@ -137,19 +137,5 @@ module FluxxGrantRequest
       end || ''
       org_name + fiscal_org_name
     end
-
-    def grantee_portal_state
-      if (granted)
-        state == 'closed' ? 'closed' : 'active'
-      elsif (state == 'new')
-        'draft'
-      elsif (state == '???')
-        'more info requested'
-      else
-        'submitted'
-      end
-      # todo: more information required
-      # Portal state draft, submitted, more info requested, discussion pending, declined
-    end
   end
 end

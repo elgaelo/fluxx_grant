@@ -284,6 +284,7 @@ module FluxxRequest
     
     base.insta_workflow do |insta|
       insta.add_state_to_english :new, 'New Request', 'new'
+      insta.add_state_to_english :draft, 'Draft', 'draft'
       insta.add_state_to_english :pending_grant_team_approval, 'Pending Grant Team Approval', 'approval'
       insta.add_state_to_english :pending_po_approval, 'Pending PO Approval', 'approval'
       insta.add_state_to_english :pending_president_approval, 'Pending President Approval', 'approval'
@@ -396,6 +397,7 @@ module FluxxRequest
       aasm_state :granted, :enter => :process_become_grant
       aasm_state :closed # Note that a user needs to close the grant.  The grants team would do this
       aasm_state :canceled # The grants team can cancel a grant after it has been granted
+      aasm_state :draft #Initial state for requests that come in through the grantee portal
 
       aasm_event :reject do
         (Request.all_states - Request.all_rejected_states).each do |cur_state|
@@ -408,7 +410,7 @@ module FluxxRequest
       end
 
       aasm_event :recommend_funding do
-        transitions :from => [:new, :drafted], :to => :funding_recommended
+        transitions :from => [:new, :draft], :to => :funding_recommended
       end
 
       aasm_event :complete_ierf do
