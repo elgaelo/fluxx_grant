@@ -1,5 +1,5 @@
 module FluxxFundingSourceAllocation
-  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :program_id, :sub_program_id, :initiative_id, :sub_initiative_id, :authority_id, :spending_year]
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :program_id, :sub_program_id, :initiative_id, :sub_initiative_id, :spending_year]
   
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
@@ -9,12 +9,10 @@ module FluxxFundingSourceAllocation
     base.belongs_to :sub_program
     base.belongs_to :initiative
     base.belongs_to :sub_initiative
-    base.belongs_to :authority, :class_name => 'MultiElementValue', :foreign_key => 'authority_id'
     base.has_many :request_funding_sources
+    base.has_many :funding_source_allocation_authorities
     base.validates_presence_of :funding_source
-    base.validates_presence_of :amount
     base.validates_presence_of :spending_year
-    base.validates_presence_of :authority
 
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
@@ -61,7 +59,7 @@ module FluxxFundingSourceAllocation
          		if(initiative_id is not null, initiative_id, 
               if(sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = sub_initiative_id), null)) initiative_id,
             sub_initiative_id,
-           deleted_at, spending_year, retired, amount, authority_id, funding_source_id
+           deleted_at, spending_year, retired, amount, funding_source_id
            from funding_source_allocations"
       retval = yield temp_table
       FundingSourceAllocation.connection.execute("DROP TABLE IF EXISTS #{temp_table}")
@@ -164,6 +162,10 @@ module FluxxFundingSourceAllocation
     
     def autocomplete_to_s
       title
+    end
+    
+    def recalculate_amount
+      self.update_attribute :amount, self.funding_source_allocation_authorities.inject(0){|acc, fsaa| acc + (fsaa.amount || 0)}
     end
   end
 end

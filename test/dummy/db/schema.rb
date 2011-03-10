@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110305042251) do
+ActiveRecord::Schema.define(:version => 20110309004439) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -106,6 +106,21 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
   add_index "favorites", ["favorable_type", "favorable_id"], :name => "index_favorites_on_favorable_type_and_favorable_id"
   add_index "favorites", ["user_id"], :name => "favorites_user_id"
 
+  create_table "funding_source_allocation_authorities", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.integer  "amount"
+    t.integer  "authority_id"
+    t.integer  "funding_source_allocation_id"
+  end
+
+  add_index "funding_source_allocation_authorities", ["authority_id"], :name => "fsa_authorities_authority_id"
+  add_index "funding_source_allocation_authorities", ["created_by_id"], :name => "fsa_authorities_created_by_id"
+  add_index "funding_source_allocation_authorities", ["funding_source_allocation_id"], :name => "fsa_authorities_fsa_id"
+  add_index "funding_source_allocation_authorities", ["updated_by_id"], :name => "fsa_authorities_updated_by_id"
+
   create_table "funding_source_allocations", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -116,7 +131,6 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "sub_program_id"
     t.integer  "initiative_id"
     t.integer  "sub_initiative_id"
-    t.integer  "authority_id"
     t.integer  "amount"
     t.boolean  "retired"
     t.integer  "locked_by_id"
@@ -125,7 +139,6 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "spending_year"
   end
 
-  add_index "funding_source_allocations", ["authority_id"], :name => "funding_source_allocations_authority_id"
   add_index "funding_source_allocations", ["created_by_id"], :name => "funding_source_allocations_created_by_id"
   add_index "funding_source_allocations", ["funding_source_id"], :name => "funding_source_allocations_funding_source_id"
   add_index "funding_source_allocations", ["initiative_id"], :name => "funding_source_allocations_initiative_id"
@@ -548,10 +561,18 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.integer  "funding_source_allocation_id"
+    t.integer  "program_id"
+    t.integer  "sub_program_id"
+    t.integer  "initiative_id"
+    t.integer  "sub_initiative_id"
   end
 
   add_index "request_funding_sources", ["funding_source_allocation_id"], :name => "rfs_funding_source_allocation_id"
+  add_index "request_funding_sources", ["initiative_id"], :name => "request_funding_sources_initiative_id"
+  add_index "request_funding_sources", ["program_id"], :name => "request_funding_sources_program_id"
   add_index "request_funding_sources", ["request_id"], :name => "index_request_funding_sources_on_request_id"
+  add_index "request_funding_sources", ["sub_initiative_id"], :name => "request_funding_sources_sub_initiative_id"
+  add_index "request_funding_sources", ["sub_program_id"], :name => "request_funding_sources_sub_program_id"
 
   create_table "request_geo_states", :force => true do |t|
     t.datetime "created_at"
@@ -654,19 +675,11 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "organization_payee_id"
     t.integer  "user_payee_id"
     t.integer  "bank_account_id"
-    t.integer  "program_id"
-    t.integer  "sub_program_id"
-    t.integer  "initiative_id"
-    t.integer  "sub_initiative_id"
   end
 
-  add_index "request_transactions", ["initiative_id"], :name => "request_transactions_initiative_id"
   add_index "request_transactions", ["organization_payee_id"], :name => "request_transactions_org_payee_id"
   add_index "request_transactions", ["payment_recorded_by_id"], :name => "index_request_transactions_on_payment_recorded_by_id"
-  add_index "request_transactions", ["program_id"], :name => "request_transactions_program_id"
   add_index "request_transactions", ["request_id"], :name => "index_request_transactions_on_request_id"
-  add_index "request_transactions", ["sub_initiative_id"], :name => "request_transactions_sub_initiative_id"
-  add_index "request_transactions", ["sub_program_id"], :name => "request_transactions_sub_program_id"
   add_index "request_transactions", ["user_payee_id"], :name => "request_transactions_user_payee_id"
 
   create_table "request_users", :force => true do |t|
@@ -703,7 +716,7 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "amount_requested"
     t.integer  "amount_recommended"
     t.integer  "duration_in_months"
-    t.string   "project_summary"
+    t.text     "project_summary"
     t.string   "base_request_id"
     t.string   "fip_title"
     t.string   "fip_consultant_name"
@@ -770,6 +783,7 @@ ActiveRecord::Schema.define(:version => 20110305042251) do
     t.integer  "updated_by_id"
     t.string   "name"
     t.string   "roleable_type"
+    t.datetime "deleted_at"
   end
 
   add_index "roles", ["created_by_id"], :name => "roles_created_by_id"
