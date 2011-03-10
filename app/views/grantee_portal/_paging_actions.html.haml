@@ -4,3 +4,5 @@
   = link_to("« Prev", "#", :class => "prev-page #{start > 1 ? '' : 'disabled'}")
   %span= "#{start} - #{stop} of #{@data.total_entries}"
   = link_to("Next »", "#", :class => "next-page #{stop < @data.total_entries ? '' : 'disabled'}")
+%p
+  &nbsp;

@@ -42,15 +42,6 @@
                 $.fn.loadTable($area, 1);
 	        }
 	      ],
-          'tbody' : [
-		    'click', function(e) {
-                e.preventDefault();
-                var $elem = $(this);
-                var url = $elem.attr('data-url');
-                if (url)
-                        window.location = url;
-            }
-		  ],
           'a.to-upload': [
             'click', function(e) {
               e.preventDefault();
