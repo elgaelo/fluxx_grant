@@ -12,7 +12,6 @@ module FluxxFundingSourceAllocation
     base.has_many :request_funding_sources
     base.has_many :funding_source_allocation_authorities
     base.validates_presence_of :funding_source
-    base.validates_presence_of :amount
     base.validates_presence_of :spending_year
 
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
