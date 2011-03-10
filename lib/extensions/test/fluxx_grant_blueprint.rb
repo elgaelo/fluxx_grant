@@ -111,9 +111,12 @@ module FluxxGrantBlueprint
       funding_source {FundingSource.make}
       amount rand(99999)
       spending_year Time.now.year
-      authority {MultiElementValue.first}
     end
     
+    FundingSourceAllocationAuthority.blueprint do
+      authority_id {MultiElementValue.first.id}
+    end
+  
     RequestProgram.blueprint do
     end
     
@@ -150,6 +153,11 @@ module FluxxGrantBlueprint
         MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'Bulleted'
         MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'To-Do'
         Project.add_multi_elements
+
+        # FundingSourceAllocationAuthorities authority
+        authority = MultiElementGroup.create :name => 'BoardAuthority', :description => 'authority', :target_class_name => 'FundingSourceAllocationAuthority'
+        MultiElementValue.create :multi_element_group_id => authority.id, :value => '0909'
+        FundingSourceAllocationAuthority.add_multi_elements
       end
     end
     
