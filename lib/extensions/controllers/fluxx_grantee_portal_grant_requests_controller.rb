@@ -20,8 +20,7 @@ module FluxxGranteePortalGrantRequestsController
           controller_dsl, outcome, default_block = triple
           if user_can_access_request
             org_ids = current_user.primary_organization.id
-            requests = Request.where("(requests.program_organization_id in (?) OR requests.fiscal_organization_id in (?)) AND requests.type = ? AND requests.deleted_at IS NULL", org_ids, org_ids, "GrantRequest")
-            request_ids = requests.map { |request| request.id }
+            request_ids = @model.id
             @reports = RequestReport.where(:request_id => request_ids).order("updated_at desc")
             @transactions = RequestTransaction.where(:request_id => request_ids).order("updated_at desc")
             grant_request_show_format_html controller_dsl, outcome, default_block
