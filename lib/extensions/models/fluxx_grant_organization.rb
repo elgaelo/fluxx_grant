@@ -306,7 +306,8 @@ module FluxxGrantOrganization
 
   # Return an array of grants related to an organization
   def self.foundation_center_api ein, pagenum=nil
-    response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
+    ein = '' unless ein
+    response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.strip.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
     Crack::JSON.parse(response.body)
   end
 
