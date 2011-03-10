@@ -99,6 +99,13 @@
                   }
                 });
             }
+          ],
+          'input.open-link' : [
+             'click', function(e) {
+               e.preventDefault();
+               var $elem = $(this);
+               window.location = $elem.attr('data-href');
+            }
           ]
 		 }
 	    }

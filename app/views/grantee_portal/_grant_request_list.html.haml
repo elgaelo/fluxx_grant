@@ -1,5 +1,8 @@
 .titlebar
-  .title= @title
+  .title
+    = @title
+    - if @title == 'Requests'
+      %input{:type => 'button', :name => 'new-request', :class => 'new-request open-link', :value => 'Create a Request', 'data-href'.to_sym => new_grantee_portal_grant_request_path}
 %table.tabular{:cellspacing => 0}
   %thead
     %tr
