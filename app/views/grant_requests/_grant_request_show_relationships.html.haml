@@ -1,9 +1,9 @@
 %h3 
   = "Relationships"
   %span.actions
-    - if model && current_user.has_create_for_model?(RequestOrganization)
+    - if model && current_user.has_create_for_model?(RequestOrganization) && !current_user.is_grantee?
       = render :partial => "request_organizations/organization_add", :locals => { :model => model} 
-    - if model && current_user.has_create_for_model?(RequestUser)
+    - if model && current_user.has_create_for_model?(RequestUser) && !current_user.is_grantee?
       &nbsp;|&nbsp;
       = render :partial => "request_users/user_add", :locals => { :model => model} 
 = render :partial => "request_organizations/list_request_organizations", :locals => { :model => model}

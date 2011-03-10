@@ -15,5 +15,5 @@
           - if model.program_organization
             = render :partial => "model_documents/list_model_documents", :locals => { :model => model.program_organization}
 
-    %input{:type => 'commit', :name => 'commit', :class => 'button create float_right', :value => 'Create Grant Request'}
-    %input{:type => 'button', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Cancel', 'data-href'.to_sym => grantee_portal_index_path}
+    %input{:type => 'submit', :name => 'commit', :class => 'button create float_right', :value => 'Create Grant Request'}
+    %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Cancel', 'data-href'.to_sym => grantee_portal_index_path}

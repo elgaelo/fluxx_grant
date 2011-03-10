@@ -6,6 +6,7 @@
 		  });
 		},
 		loadTable: function($table, pageIncrement) {
+            $table.css('opacity', '0.2');
 			$table.attr('data-src', $table.attr('data-src').replace(/page=(\d+)/, function(a,b){
 			  var page = parseInt(b) + pageIncrement;
 			  return 'page=' + page;
@@ -14,6 +15,7 @@
               url: $table.attr('data-src'),
 		      success: function(data, status, xhr){
 				$table.html(data);
+                $table.css('opacity', '1');
               }
             });
 		}

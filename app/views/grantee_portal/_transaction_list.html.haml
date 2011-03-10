@@ -19,4 +19,4 @@
         %td.border= dollars_format(model.amount_paid)
         %td.border= mdy_date_format(model.due_at)
         %td.border{:class => "right"}= mdy_date_format(model.paid_at)
-= render :partial => "paging_actions"        
+= render :partial => "grantee_portal/paging_actions"

@@ -14,6 +14,7 @@
     = csrf_meta_tag
   %body
     .header
+      = image_tag("/images/fluxx_engine/theme/_common/pinwheels/logo_pinwheel_24.png", :class => "logo")
       = @current_user.full_name.gsub(/\b\w/){$&.upcase}
       = link_to 'Logout', logout_path
     .container

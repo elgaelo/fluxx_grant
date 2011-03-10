@@ -36,4 +36,4 @@
           %tr
             %td{:class => "left right", :colspan => 5}
               = link_to doc.document_file_name, doc.document.url, :target => '_blank', :class => mime_type_to_class(doc.document_content_type)
-= render :partial => "paging_actions"
+= render :partial => "grantee_portal/paging_actions"
