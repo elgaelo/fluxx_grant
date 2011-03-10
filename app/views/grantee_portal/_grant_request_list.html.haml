@@ -29,7 +29,7 @@
       - state = "Declined" if model.in_state_with_category?("rejected")
     %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
       %tr
-        %td.border{:class => "left"}= link_to model.grant_or_request_id, grantee_portal_grant_request_path(:id => model.id)
+        %td.border{:class => "left"}= model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, grantee_portal_grant_request_path(:id => model.id))
         %td.border= mdy_date_format(model.request_received_at)
         %td.border= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
         %td.border= (model.program ? model.program.name : '')
