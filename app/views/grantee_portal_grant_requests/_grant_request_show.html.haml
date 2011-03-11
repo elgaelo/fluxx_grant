@@ -118,8 +118,8 @@
         .key= "#{plural_by_list model.china_means, 'Type', 'Types'} of Organization:"
         .value= model.china_means.map(&:value).join(', ')
     %p
-    = render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
+    .reports= render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
     %p
-    = render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
+    .transactions= render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
 
     %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}

@@ -65,7 +65,7 @@
                   });
                 },
                 onClose: function(){
-                  var $area = $('.reports').first();
+                  var $area = $('.reports').find('table:first');
                   $.fn.loadTable($area, 0);
                   $.modal.close();
                 }
