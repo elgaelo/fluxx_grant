@@ -7,4 +7,7 @@
 %h4
   = model.request.grant_id if model.request
   <br />
-  = model.request.program_organization.display_name if model.request && model.request.program_organization
+  - if model.request && model.request.is_a?(FipRequest)
+    %h2= model.request.fip_title
+  - else
+    = model.request.program_organization.display_name if model.request && model.request.program_organization
