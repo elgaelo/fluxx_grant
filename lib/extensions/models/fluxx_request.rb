@@ -83,8 +83,9 @@ module FluxxRequest
           block2 = ['Grantee', 'Grantee Street Address', 'Grantee Street Address2', 'Grantee City', 'Grantee State', 'Grantee Country', 'Grantee Postal Code', 'Grantee URL',
             'Fiscal Org', 'Fiscal Street Address', 'Fiscal Street Address2', 'Fiscal City', 'Fiscal State', 'Fiscal Country', 'Fiscal Postal Code', 'Fiscal URL',
             'Lead PO/PD', 'Program', 'Sub Program', ['Date Request Received', :date], ['Duration', :integer], 
-            'Constituents', 'Means', 'Type of Org', 'Funding Source', ['Date Created', :date], ['Date Last Updated', :date], 
+            'Constituents', 'Means', 'Type of Org', 'Funding Source', ['Date Created', :date], ['Date Last Updated', :date],
             'Primary Contact First Name', 'Primary Contact Last Name', 'Primary Contact Email',
+            'Program Lead First Name', 'Program Lead Last Name', 'Program Lead Contact Email',
             'Signatory First Name', 'Signatory Last Name', 'Signatory Email',
             'Request Summary']
           if with_clause && with_clause[:granted]==1
@@ -141,6 +142,7 @@ module FluxxRequest
           replace(group_concat(funding_sources.name, ', '), ', ', '') funding_source_name,
           requests.created_at, requests.updated_at, 
           owner_users.first_name, owner_users.last_name, owner_users.email,
+          lead_users.first_name, lead_users.last_name, lead_users.email,
           signatory_users.first_name, signatory_users.last_name, signatory_users.email,
           project_summary
                          FROM requests
@@ -155,7 +157,8 @@ module FluxxRequest
                          left outer join geo_countries as program_org_countries on program_org_countries.id = program_organization.geo_country_id
                          left outer join geo_states as fiscal_org_country_states on fiscal_org_country_states.id = fiscal_organization.geo_state_id
                          left outer join geo_countries as fiscal_org_countries on fiscal_org_countries.id = fiscal_organization.geo_country_id
-                         left outer join users as owner_users on requests.program_lead_id = owner_users.id
+                         left outer join users as owner_users on (if(requests.grantee_org_owner_id is not null, requests.grantee_org_owner_id, requests.fiscal_org_owner_id)) = owner_users.id
+                         left outer join users as lead_users on requests.program_lead_id = lead_users.id
                          left outer join users as signatory_users on requests.grantee_signatory_id = signatory_users.id
                          WHERE requests.id IN (?) GROUP BY requests.id"
          if with_clause[:granted]==1 || (with_clause[:granted].is_a?(Array) && with_clause[:granted].include?(1))
