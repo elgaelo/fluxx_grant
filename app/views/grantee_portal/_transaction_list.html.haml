@@ -12,6 +12,9 @@
         Scheduled
       %th
         Paid
+  - if @data.count == 0
+    %tr
+      %td{:class => "left right", :colspan => 6}=raw "&nbsp;"
   -@data.each do |model|    
     %tbody
       %tr

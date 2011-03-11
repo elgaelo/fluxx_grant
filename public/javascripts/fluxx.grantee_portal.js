@@ -6,18 +6,18 @@
 		  });
 		},
 		loadTable: function($table, pageIncrement) {
-            $table.css('opacity', '0.2');
+      $table.css('opacity', '0.2');
 			$table.attr('data-src', $table.attr('data-src').replace(/page=(\d+)/, function(a,b){
 			  var page = parseInt(b) + pageIncrement;
 			  return 'page=' + page;
 			}));
 			$.ajax({
-              url: $table.attr('data-src'),
-		      success: function(data, status, xhr){
-				$table.html(data);
-                $table.css('opacity', '1');
-              }
-            });
+        url: $table.attr('data-src'),
+		    success: function(data, status, xhr){
+				  $table.html(data);
+          $table.css('opacity', '1');
+        }
+      });
 		}
 	});
 	
@@ -76,13 +76,15 @@
             'click', function(e) {
               e.preventDefault();
               var $elem = $(this);
-              var $area = $elem.parents('.content');
+              var $area = $elem.parents('.reports');
+              if ($area.length == 0)
+                $area = $elem.parents('.content');
               $.ajax({
                 url: $elem.attr('href'),
                 type: 'PUT',
                 data: {},
-		        success: function(data, status, xhr){
-				  $.fn.loadTable($area, 0);
+		            success: function(data, status, xhr){
+				          $.fn.loadTable($area, 0);
                 }
               });
             }

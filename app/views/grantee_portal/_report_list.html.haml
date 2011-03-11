@@ -13,6 +13,9 @@
         Status
       %th
       %th
+  - if @data.count == 0
+    %tr
+      %td{:class => "left right", :colspan => 6}=raw "&nbsp;"
   -@data.each do |model|
     - documentable_id = model.id
     - state = "Approved"
