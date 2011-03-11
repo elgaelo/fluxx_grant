@@ -166,6 +166,12 @@ module FluxxRequestTransaction
   end
 
   module ModelClassMethods
+    # ESH: hack to rename User to Person
+    def model_name
+      rt = ActiveModel::Name.new RequestTransaction
+      rt.instance_variable_set '@human', 'Transaction'
+      rt
+    end
     def add_sphinx
       # Allow the overriding of the state name
       state_name = if self.respond_to? :sphinx_state_name
