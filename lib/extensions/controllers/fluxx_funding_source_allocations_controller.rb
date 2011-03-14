@@ -24,7 +24,7 @@ module FluxxFundingSourceAllocationsController
           if params[:spending_year].blank?
             []
           else
-            prog_entity.funding_source_allocations(:spending_year => params[:spending_year])
+            prog_entity.funding_source_allocations(:spending_year => params[:spending_year], :deleted_at => nil)
           end
         else
           []
