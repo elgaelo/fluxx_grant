@@ -31,7 +31,7 @@ module FluxxFundingSourceAllocationAuthoritiesController
         # level, and track the authority at the funding_source_allocation_authority.  As such, we are creating the funding_source_allocation_authority, but it has to be linked back to a
         # funding_source_allocation which may or may not exist.  That's what this handles
         if params[:funding_source_allocation_authority]
-          fsa = FundingSourceAllocation.where(derive_fsa_params).first || FundingSourceAllocation.create(derive_fsa_params)
+          fsa = FundingSourceAllocation.where(derive_fsa_params).where(:deleted_at => nil).first || FundingSourceAllocation.create(derive_fsa_params)
           model.funding_source_allocation = fsa
           model.funding_source_allocation_id = fsa.id if fsa
           model.save
