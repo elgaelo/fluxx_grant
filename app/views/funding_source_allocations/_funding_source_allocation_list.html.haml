@@ -8,8 +8,10 @@
 - if !models || models.empty?
   %p.caption= "There are no funding source allocations."
 - else
+  - total_funding = 0
   - models.each do |funding_source_allocation_model|
     - funding_source_allocation_model.funding_source_allocation_authorities.each do |model|
+      - total_funding += (model.amount || 0)
       - funding_source_name = funding_source_allocation_model.funding_source.name if funding_source_allocation_model.funding_source
       %div
         - if current_user.has_delete_for_model? model
@@ -23,6 +25,6 @@
           %dd= model.authority
           %dt= 'Spending Year:'
           %dd= funding_source_allocation_model.spending_year
-- total_funding = models.inject(0) {|acc, model|acc + (model.amount || 0)}
+
 %h4
   %strong= "#{total_funding.to_currency} Total Funding"
