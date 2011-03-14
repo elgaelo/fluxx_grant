@@ -165,7 +165,11 @@ module FluxxFundingSourceAllocation
     end
     
     def recalculate_amount
-      self.update_attribute :amount, self.funding_source_allocation_authorities.inject(0){|acc, fsaa| acc + (fsaa.amount || 0)}
+      if self.deleted_at
+        self.update_attribute :amount, 0
+      else
+        self.update_attribute :amount, self.funding_source_allocation_authorities.inject(0){|acc, fsaa| acc + (fsaa.amount || 0)}
+      end
     end
   end
 end
