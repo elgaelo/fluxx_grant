@@ -19,11 +19,20 @@ class UserSessionsController < ApplicationController
   
   def create
     @user_session = UserSession.new(params[:user_session])
-    if @user_session.save
-      flash[:notice] = "Login successful!"
-      redirect_back_or_default  @user_session.user.is_grantee? ? grantee_portal_index_path : dashboard_index_path
-    else
-      render :action => :new
+    User.suspended_delta(false) do
+      User.without_realtime do
+        User.without_auditing do
+            if @user_session.save
+              # ESH: total hack to not re-index delta; I couldn't find an appropriate place to tell TS not to toggle delta
+              # this is bad because if somebody had legitimately toggled the delta to reindex this user, it will not get reindexed
+              User.connection.execute User.send(:sanitize_sql, ["update users set delta = 0 where id = ?", @user_session.user.id])
+              flash[:notice] = "Login successful!"
+              redirect_back_or_default  @user_session.user.is_grantee? ? grantee_portal_index_path : dashboard_index_path
+            else
+              render :action => :new
+            end
+        end
+      end
     end
   end
   

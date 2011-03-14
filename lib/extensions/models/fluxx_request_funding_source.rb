@@ -37,7 +37,7 @@ module FluxxRequestFundingSource
     end
     
     def amount_remaining
-      funding_amount - request_transaction_funding_sources.inject(0){|acc, rtfs| acc - rtfs.amount}
+      funding_amount - request_transaction_funding_sources.inject(0){|acc, rtfs| acc + rtfs.amount}
     end
   end
 end

@@ -121,7 +121,7 @@ module FluxxRequestTransactionsController
     def update_transaction_funding_sources model
       model.request.request_funding_sources.each do |rfs|
         amount = params["funding_source_value_#{rfs.id}"]
-        rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
+        rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
         if !amount.blank?
           if rtfs
             rtfs.update_attributes :amount => amount, :updated_by_id => current_user.id
