@@ -37,7 +37,7 @@ module FluxxRequestTransaction
     base.belongs_to :organization_payee, :class_name => 'Organization', :foreign_key => 'organization_payee_id'
     base.has_many :request_transaction_funding_sources
     base.has_many :workflow_events, :as => :workflowable
-    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :updated_by, :created_by, :audits]})
+    base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :updated_by, :created_by, :audits]})
     base.has_many :model_documents, :as => :documentable
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable

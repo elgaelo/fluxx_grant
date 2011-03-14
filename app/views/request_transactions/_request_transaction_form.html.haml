@@ -1,5 +1,6 @@
-- if model.new_record?
+- if model.new_record? || current_user.is_admin?
   = form.input :amount_due
+- if model.new_record?
   - model.due_at = Time.now
   = form.input :due_at, :as => :hidden
   - model.state = 'due'
