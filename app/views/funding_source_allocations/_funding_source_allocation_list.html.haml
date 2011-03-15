@@ -1,10 +1,12 @@
+- do_suppress_add ||= grab_param(:funding_source_allocation, :do_suppress_add)
 - program_id ||= grab_param(:funding_source_allocation, :program_id)
 - sub_program_id ||= grab_param(:funding_source_allocation, :sub_program_id)
 - initiative_id ||= grab_param(:funding_source_allocation, :initiative_id)
 - sub_initiative_id ||= grab_param(:funding_source_allocation, :sub_initiative_id)
 %h3 
   Funding Source Allocations
-  %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_funding_source_allocation_authority_path(:program_id => program_id, :sub_program_id => sub_program_id, :initiative_id => initiative_id, :sub_initiative_id => sub_initiative_id), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Funding Source Allocation"
+  - if !do_suppress_add
+    %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_funding_source_allocation_authority_path(:program_id => program_id, :sub_program_id => sub_program_id, :initiative_id => initiative_id, :sub_initiative_id => sub_initiative_id), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Funding Source Allocation"
 - total_funding = 0
 - if !models || models.empty?
   %p.caption= "There are no funding source allocations."
