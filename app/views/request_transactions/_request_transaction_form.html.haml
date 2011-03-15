@@ -35,4 +35,6 @@
   = form.input :payment_confirmation_number, :label => 'Check/Confirmation Number:'
   = form.input :comment, :label => 'Comment:', :as => :text
 
+= form.input :condition, :label => "Please note any conditions or milestones associated to this payment", :input_html => { :rows => 5 }
+
 = form.commit_button
