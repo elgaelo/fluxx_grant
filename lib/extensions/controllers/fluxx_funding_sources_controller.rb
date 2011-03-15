@@ -5,7 +5,7 @@ module FluxxFundingSourcesController
       insta.template = 'funding_source_list'
       insta.filter_title = "FundingSources Filter"
       insta.filter_template = 'funding_sources/funding_source_filter'
-      insta.order_clause = 'updated_at desc'
+      insta.order_clause = 'name asc'
       insta.icon_style = ICON_STYLE
       insta.search_conditions = (lambda do |params, controller_dsl, controller|
         if params[:funding_source] && params[:funding_source][:not_retired]
