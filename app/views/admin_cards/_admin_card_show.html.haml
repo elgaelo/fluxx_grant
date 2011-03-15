@@ -1,8 +1,7 @@
-%h1 Budgeting
-
-= render :partial => 'funding_sources/list_funding_sources'
-= render :partial => 'groups/list_groups'
-
+%ul
+  %li= link_to 'Funding Sources', funding_sources_path, :class => 'new-listing', 'data-insert' => 'after', :title => 'Funding Sources'
+  %li= link_to "New Funding Source", new_funding_source_path, :class => 'to-modal', 'data-on-success' => 'close'
+  
 %ul
   - unless FLUXX_CONFIGURATION[:hide_program]
     %li= link_to "New #{I18n.t(:program_name)}", new_program_path, :class => 'to-modal', 'data-on-success' => 'close'
@@ -22,5 +21,9 @@
     %li= link_to (I18n.t(:initiative_name)).pluralize, initiatives_path, :class => 'new-listing', 'data-insert' => 'after', :title => (I18n.t(:initiative_name)).pluralize
   - unless FLUXX_CONFIGURATION[:hide_sub_initiative]
     %li= link_to (I18n.t(:sub_initiative_name)).pluralize, sub_initiatives_path, :class => 'new-listing', 'data-insert' => 'after', :title => (I18n.t(:sub_initiative_name)).pluralize
+
+%ul
+  %li= link_to 'Groups', groups_path, :class => 'new-listing', 'data-insert' => 'after', :title => 'Groups'
+  %li= link_to "New Group", new_group_path, :class => 'to-modal', 'data-on-success' => 'close'
 
 = render :partial => 'admin_cards/extra_admin'

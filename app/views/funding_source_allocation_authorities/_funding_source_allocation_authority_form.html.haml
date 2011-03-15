@@ -2,7 +2,7 @@
 %fieldset.inputs
   %ol
   - if model.new_record?
-    - all_funding_sources = FundingSource.all.sort_by {|fs| fs.name ? fs.name.downcase : ''}
+    - all_funding_sources = FundingSource.load_all.sort_by {|fs| fs.name ? fs.name.downcase : ''}
     = form.input :funding_source_id, :label => "Funding Source:", :as => :select, :collection => all_funding_sources
     = render :partial => "funding_source_allocation_authorities/programs", :locals => { :form => form, :model => model }
   - else

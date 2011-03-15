@@ -17,6 +17,10 @@ module FluxxFundingSource
   end
 
   module ModelClassMethods
+    def load_all
+      FundingSource.where(:retired => 0).order(:name).all
+    end
+    
   end
 
   module ModelInstanceMethods

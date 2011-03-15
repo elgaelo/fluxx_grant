@@ -1,1 +1,13 @@
-= model.id
+%h2= model.name
+
+.pairs
+  .key= 'Start Date:'
+  .value= model.start_at.mdy if model.start_at
+.pairs
+  .key= 'End Date:'
+  .value= model.end_at.mdy if model.end_at
+.pairs
+  .key= 'Amount Allocated:'
+  .value= number_to_currency(model.amount, :precision => 0) if model.amount
+- if model.retired
+  Funding Source is Retired
