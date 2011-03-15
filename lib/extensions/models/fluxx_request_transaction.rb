@@ -25,7 +25,7 @@ module FluxxRequestTransaction
 
   SEARCH_ATTRIBUTES = [:grant_program_ids, :grant_sub_program_ids, :state, :updated_at, :request_type, :amount_paid, :favorite_user_ids, :has_been_paid, :filter_state]
   FAR_IN_THE_FUTURE = Time.now + 1000.year
-  LIQUID_METHODS = [:amount_due, :due_at]
+  LIQUID_METHODS = [:amount_due, :due_at, :condition]
   
   def self.included(base)
     base.belongs_to :request
