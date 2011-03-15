@@ -58,6 +58,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_prog_initiative_back_in_to_rfs.rb', 'db/migrate/fluxx_grant_add_prog_initiative_back_in_to_rfs.rb'
     handle_migration 'make_project_summary_a_text_field.rb', 'db/migrate/fluxx_grant_make_project_summary_a_text_field.rb'
     handle_migration 'create_funding_source_allocation_authority.rb', 'db/migrate/fluxx_grant_create_funding_source_allocation_authority.rb'
+    handle_migration 'add_condition_to_request_transactions.rb', 'db/migrate/fluxx_grant_add_condition_to_request_transactions.rb'
   end
   
   private
