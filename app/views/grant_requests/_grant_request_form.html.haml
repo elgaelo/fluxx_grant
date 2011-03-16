@@ -5,6 +5,8 @@
 %fieldset.inputs
   %ol
     = form.input :amount_requested, :label => "Amount Requested"
+    -#TODO ESH: remove the below test code
+    = form.input :monkey, :label => 'My Monkey', :as => :dynamic
 
     = render :partial => "grant_requests/program",  :locals => { :model => model, :form => form }
 
