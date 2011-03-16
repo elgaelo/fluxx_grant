@@ -38,10 +38,10 @@ module PipelineBaseReport
       Request.connection.execute(Request.send :sanitize_sql, ["create temporary table #{report_temp_table_name}
          SELECT #{temp_select_fields} entity_name, amount_requested, amount_recommended, funding_source_allocations.program_id, funding_source_allocations.sub_program_id, 
            request_funding_sources.funding_amount funding_amount, 
-           (select sum(rtfs.amount) from request_transaction_funding_sources rtfs, request_transactions where request_funding_source_id = request_funding_sources.id and request_transactions.id = rtfs.request_transaction_id and request_transactions.state in (?)) paid_amount
+           (select sum(rtfs.amount) from request_transaction_funding_sources rtfs, request_transactions where request_funding_source_id = request_funding_sources.id and request_transactions.id = rtfs.request_transaction_id and request_transactions.state in (?) and request_transactions.deleted_at is null) paid_amount
         FROM requests, request_funding_sources #{is_type_org ? ', organizations' : ''}, #{temp_table} funding_source_allocations
-        WHERE requests.id = request_funding_sources.request_id AND requests.deleted_at IS NULL AND requests.state not in (?) #{(granted.to_s == '1' && start_date) ? " AND grant_agreement_at > '#{start_date.sql}' " : ''} 
-              #{(granted.to_s == '1' && end_date) ? " AND grant_agreement_at < '#{end_date.sql}' " : ''} AND granted = #{granted} #{Request.prepare_request_types_for_where_clause(query_types)}
+        WHERE requests.id = request_funding_sources.request_id AND requests.deleted_at IS NULL AND requests.state not in (?) #{(granted.to_s == '1' && start_date) ? " AND grant_agreement_at >= '#{start_date.sql}' " : ''} 
+              #{(granted.to_s == '1' && end_date) ? " AND grant_agreement_at <= '#{end_date.sql}' " : ''} AND granted = #{granted} #{Request.prepare_request_types_for_where_clause(query_types)}
               #{is_type_org ? ' AND requests.program_organization_id = organizations.id ' : ''} 
               AND funding_source_allocations.id = request_funding_sources.funding_source_allocation_id
               #{spending_year ? " AND spending_year = #{spending_year} " : ''}", RequestTransaction.all_states_with_category('paid').map{|state| state.to_s}, Request.all_rejected_states])
