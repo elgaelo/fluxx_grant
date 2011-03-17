@@ -1,25 +1,26 @@
 .titlebar
-  .title
+  %h4
     Transactions
-%table.tabular{:cellspacing => 0}
-  %thead
-    %tr
-      %th
-        Grant
-      %th
-        Amount
-      %th
-        Scheduled
-      %th
-        Paid
+.content
   - if @data.count == 0
-    %tr
-      %td{:class => "left right", :colspan => 6}=raw "&nbsp;"
-  -@data.each do |model|    
-    %tbody
-      %tr
-        %td.border{:class => "left"}= model.request.grant_id
-        %td.border= dollars_format(model.amount_paid)
-        %td.border= mdy_date_format(model.due_at)
-        %td.border{:class => "right"}= mdy_date_format(model.paid_at)
-= render :partial => "grantee_portal/paging_actions"
+    %p.caption{:colspan => 6}=raw "No transactions"
+  - else
+    %table{:cellspacing => 0}
+      %thead
+        %tr
+          %th
+            Grant
+          %th
+            Amount
+          %th
+            Scheduled
+          %th
+            Paid
+      -@data.each do |model|    
+        %tbody
+          %tr
+            %td= model.request.grant_id
+            %td= dollars_format(model.amount_paid)
+            %td= mdy_date_format(model.due_at)
+            %td= mdy_date_format(model.paid_at)
+    = render :partial => "grantee_portal/paging_actions"

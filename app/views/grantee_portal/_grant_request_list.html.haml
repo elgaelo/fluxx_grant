@@ -1,49 +1,49 @@
 .titlebar
-  .title
+  %h4
     = @title
     - if @title == 'Requests'
-      %input{:type => 'button', :name => 'new-request', :class => 'new-request open-link', :value => 'Create a Request', 'data-href'.to_sym => new_grantee_portal_grant_request_path}
-%table.tabular{:cellspacing => 0}
-  %thead
-    %tr
-      %th
-        Request
-      %th
-        Date Submitted
-      %th
-        Amount
-      %th
-        Program
-      %th
-        Status
-      %th
+      %input{:type => 'button', :name => 'new-request', :class => 'open-link float_right', :value => 'Create a Request', 'data-href'.to_sym => new_grantee_portal_grant_request_path}
+.content
   - if @data.count == 0
-    %tr
-      %td{:class => "left right", :colspan => 6}=raw "&nbsp;"
-  -@data.each do |model|
-    - if model.is_grant?
-      - state = "Closed"
-      - state = "Active" if model.in_state_with_category?("become_grant")
-    - else
-      - state = "Submitted"
-      - state = "Draft" if model.in_state_with_category?("draft")
-      - state = "More info Requested" if model.in_state_with_category?("sent_back")
-      - state = "Decision Pending" if model.in_state_with_category?("approval")
-      - state = "Declined" if model.in_state_with_category?("rejected")
-    %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
-      %tr
-        %td.border{:class => "left"}= model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, grantee_portal_grant_request_path(:id => model.id))
-        %td.border= mdy_date_format(model.request_received_at)
-        %td.border= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
-        %td.border= (model.program ? model.program.name : '')
-        %td.border{:class => "right"}= state
-        - if model.state == 'draft'
-          %td.border
-            = link_to image_tag("/images/fluxx_engine/theme/default/icons/pencil.png", :class => 'edit-button'), edit_grantee_portal_grant_request_path(:id => model.id)
-            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
+    %p.caption
+      No requests
+  - else
+    %table.tabular{:cellspacing => 0}
+      %thead
+        %tr
+          %th
+            Request
+          %th
+            Date Submitted
+          %th
+            Amount
+          %th
+            Program
+          %th
+            Status
+      -@data.each do |model|
+        - if model.is_grant?
+          - state = "Closed"
+          - state = "Active" if model.in_state_with_category?("become_grant")
         - else
-          %td.border
-      %tr
-        %td{:class => "left right", :colspan => 6}= model.project_summary
-%p
-= render :partial => "paging_actions"
+          - state = "Submitted"
+          - state = "Draft" if model.in_state_with_category?("draft")
+          - state = "More info Requested" if model.in_state_with_category?("sent_back")
+          - state = "Decision Pending" if model.in_state_with_category?("approval")
+          - state = "Declined" if model.in_state_with_category?("rejected")
+        %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
+          %tr
+            %td
+              = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, grantee_portal_grant_request_path(:id => model.id))
+              - if model.state == 'draft'
+                %span.actions
+                  = link_to image_tag("/images/fluxx_engine/theme/default/icons/pencil.png", :class => 'edit-button'), edit_grantee_portal_grant_request_path(:id => model.id)
+                  = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
+              <br/>
+              %p= model.project_summary
+            %td= mdy_date_format(model.request_received_at)
+            %td= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
+            %td= (model.program ? model.program.name : '')
+            %td= state
+    %p
+    = render :partial => "paging_actions"

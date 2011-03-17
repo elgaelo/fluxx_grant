@@ -1,8 +1,8 @@
-.content{"data-src".to_sym => url_for({:table => "requests", :page => @requests.current_page})}
+.container{"data-src".to_sym => url_for({:table => "requests", :page => @requests.current_page})}
   = render :partial => "grant_request_list", :locals => {:@data => @requests, :@title => "Requests"}
-.content{"data-src".to_sym => url_for({:table => "grants", :page => @grants.current_page})}
+.container{"data-src".to_sym => url_for({:table => "grants", :page => @grants.current_page})}
   = render :partial => "grant_request_list", :locals => {:@data => @grants, :@title => "Grants"}                    
-.content{"data-src".to_sym => url_for({:table => "reports", :page => @reports.current_page}), :class => "reports"}
+.container{"data-src".to_sym => url_for({:table => "reports", :page => @reports.current_page}), :class => "reports"}
   = render :partial => "report_list", :locals => {:@data => @reports}
-.content{"data-src".to_sym => url_for({:table => "transactions", :page => @transactions.current_page})}
+.container{"data-src".to_sym => url_for({:table => "transactions", :page => @transactions.current_page})}
   = render :partial => "transaction_list", :locals => {:@data => @transactions}

@@ -1,6 +1,7 @@
-.content
-  .title= "Create a Grant Request"
-  .padded-container
+.container
+  .titlebar
+    %h4= "Create a Grant Request"
+  .content
     = render :partial => "org_lookup", :locals => { :model => model, :form => form, :org_lookup_name => :program_organization_lookup, :org_name => :program_organization, :org_owner => :grantee_org_owner, :org_signatory => :grantee_signatory, :labels => defined?(labels) ? labels : {} }
     %fieldset.inputs
       %ol
@@ -10,10 +11,12 @@
 
         = form.input :project_summary, :label => "Project Summary", :as => :text
 
-        - unless model.in_new_state?
+      - unless model.in_new_state?
+        .reports
           = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
-          - if model.program_organization
+        - if model.program_organization
+          .reports
             = render :partial => "model_documents/list_model_documents", :locals => { :model => model.program_organization}
 
-    %input{:type => 'submit', :name => 'commit', :class => 'button create float_right', :value => 'Create Grant Request'}
-    %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Cancel', 'data-href'.to_sym => grantee_portal_index_path}
+    %input{:type => 'submit', :name => 'commit', :class => 'create', :value => 'Create Grant Request'}
+    %input{:type => 'submit', :name => 'cancel', :class => 'create open-link', :value => 'Cancel', 'data-href'.to_sym => grantee_portal_index_path}

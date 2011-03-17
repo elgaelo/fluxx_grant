@@ -1,6 +1,9 @@
-.content
-  .title= raw render_grant_or_request_id model
-  .padded-container
+.container
+  .titlebar
+    %h4
+      = raw render_grant_or_request_id model
+      %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}
+  .content
     %h1
       = raw render_program_name model
       = raw render_grant_or_request_id model
@@ -117,9 +120,9 @@
       .pairs
         .key= "#{plural_by_list model.china_means, 'Type', 'Types'} of Organization:"
         .value= model.china_means.map(&:value).join(', ')
-    %p
-    .reports{"data-src".to_sym => grantee_portal_index_path({:table => "reports", :page => 1})}= render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
-    %p
-    .transactions= render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
-
-    %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}
+.container
+  .reports{"data-src".to_sym => grantee_portal_index_path({:table => "reports", :page => 1})}= render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
+.container
+  .transactions= render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
+  
+%input{:type => 'submit', :name => 'cancel', :class => 'create open-link', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}
