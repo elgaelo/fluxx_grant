@@ -6,7 +6,7 @@
     %fieldset.inputs
       %ol
         = form.input :amount_requested, :label => "Amount Requested"
-
+        
         = render :partial => "program",  :locals => { :model => model, :form => form }
 
         = form.input :project_summary, :label => "Project Summary", :as => :text

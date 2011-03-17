@@ -19,10 +19,14 @@ module FluxxFundingSourceAllocationsController
           SubProgram.find params[:sub_program_id]
         elsif !params[:program_id].blank?
           Program.find params[:program_id]
+        elsif !params[:funding_source_id].blank?
+          FundingSource.find params[:funding_source_id]
         end
         self.pre_models = if prog_entity
           if params[:spending_year].blank?
             []
+          elsif prog_entity.is_a?(FundingSource)
+            prog_entity.load_funding_source_allocations(:spending_year => params[:spending_year])
           else
             prog_entity.funding_source_allocations(:spending_year => params[:spending_year], :deleted_at => nil)
           end

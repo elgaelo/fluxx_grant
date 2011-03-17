@@ -31,9 +31,18 @@
         %dd
           -  program_names = []
           -  program_names << funding_source.funding_source_allocation.program_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.program_display_name
-          -  program_names << funding_source.funding_source_allocation.sub_program_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_program_display_name
-          -  program_names << funding_source.funding_source_allocation.initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.initiative_display_name
-          -  program_names << funding_source.funding_source_allocation.sub_initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_initiative_display_name
+          - if FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_program]
+            -  program_names << funding_source.sub_program.name if funding_source.sub_program
+          - else
+            -  program_names << funding_source.funding_source_allocation.sub_program_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_program_display_name
+          - if FLUXX_CONFIGURATION[:no_funding_source_ripple_initiative]
+            -  program_names << funding_source.initiative.name if funding_source.initiative
+          - else
+            -  program_names << funding_source.funding_source_allocation.initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.initiative_display_name
+          - if FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_initiative]
+            -  program_names << funding_source.sub_initiative.name if funding_source.sub_initiative
+          - else
+            -  program_names << funding_source.funding_source_allocation.sub_initiative_display_name if funding_source.funding_source_allocation && funding_source.funding_source_allocation.sub_initiative_display_name
           = program_names.join ', '
       <hr/>
   %strong

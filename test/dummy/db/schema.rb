@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110309004439) do
+ActiveRecord::Schema.define(:version => 20110315191621) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -675,6 +675,7 @@ ActiveRecord::Schema.define(:version => 20110309004439) do
     t.integer  "organization_payee_id"
     t.integer  "user_payee_id"
     t.integer  "bank_account_id"
+    t.text     "condition"
   end
 
   add_index "request_transactions", ["organization_payee_id"], :name => "request_transactions_org_payee_id"

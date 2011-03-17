@@ -17,6 +17,10 @@ module FluxxFundingSource
   end
 
   module ModelClassMethods
+    def load_all
+      FundingSource.where(:retired => 0).order(:name).all
+    end
+    
   end
 
   module ModelInstanceMethods
@@ -26,6 +30,16 @@ module FluxxFundingSource
     
     def amount_available
       funding_source_allocations.inject(amount || 0){|acc, fsa| acc - (fsa.amount || 0)}
+    end
+    
+    def load_funding_source_allocations options={}
+      spending_year_clause = options[:spending_year] ? " spending_year = #{options[:spending_year]} and " : ''
+
+      FundingSourceAllocation.find_by_sql(FundingSourceAllocation.send(:sanitize_sql, ["select fsa.* from funding_source_allocations fsa where 
+        #{spending_year_clause}
+        funding_source_id = ?
+        and deleted_at is null",
+          self.id]))
     end
   end
 end

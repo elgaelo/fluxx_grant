@@ -62,7 +62,7 @@ module FundingAllocationsBaseReport
         when "Paid"
           query = "select sum(rtfs.amount) AS amount, COUNT(DISTINCT r.id) AS count from request_transactions rt, request_transaction_funding_sources rtfs, request_funding_sources rfs, #{temp_table_name} fsa, requests r
             WHERE #{always_exclude} AND rt.state = 'paid' AND rt.id = rtfs.request_transaction_id AND rfs.id = rtfs.request_funding_source_id AND fsa.id = rfs.funding_source_allocation_id AND r.id = rt.request_id
-            AND r.grant_agreement_at >= ? AND r.grant_agreement_at <= ? AND fsa.program_id IN (?) AND type = ?"
+            AND r.grant_agreement_at >= ? AND r.grant_agreement_at <= ? AND fsa.program_id IN (?) AND type = ? and rt.deleted_at is null"
           grant = [query, start_date, stop_date, program_ids, 'GrantRequest']
           fip = [query, start_date, stop_date, program_ids, 'FipRequest']  
         when "Budgeted"
