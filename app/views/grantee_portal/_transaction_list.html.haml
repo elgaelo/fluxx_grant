@@ -3,7 +3,7 @@
     Transactions
 .content
   - if @data.count == 0
-    %p.caption{:colspan => 6}=raw "No transactions"
+    %p.caption="No transactions"
   - else
     %table{:cellspacing => 0}
       %thead
@@ -16,11 +16,11 @@
             Scheduled
           %th
             Paid
-      -@data.each do |model|    
-        %tbody
-          %tr
-            %td= model.request.grant_id
-            %td= dollars_format(model.amount_paid)
-            %td= mdy_date_format(model.due_at)
-            %td= mdy_date_format(model.paid_at)
-    = render :partial => "grantee_portal/paging_actions"
+      %tbody
+      -@data.each do |model|            
+        %tr
+          %td= model.request.grant_id
+          %td= dollars_format(model.amount_paid)
+          %td= mdy_date_format(model.due_at)
+          %td= mdy_date_format(model.paid_at)
+  = render :partial => "grantee_portal/paging_actions"

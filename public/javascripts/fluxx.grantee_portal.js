@@ -30,7 +30,7 @@
                 var $elem = $(this);
                 if ($elem.hasClass('disabled'))
                     return;
-                var $area = $elem.parents('.content');
+                var $area = $elem.children('.container');
                     $.fn.loadTable($area, -1);
 	        }
 	      ],
@@ -40,7 +40,7 @@
                 var $elem = $(this);
                 if ($elem.hasClass('disabled'))
                     return;
-                var $area = $elem.parents('.content');
+                var $area = $elem.children('.container');
                 $.fn.loadTable($area, 1);
 	        }
 	      ],
@@ -65,7 +65,7 @@
                   });
                 },
                 onClose: function(){
-                  var $area = $('.reports').first();
+                  var $area = $elem.parents('.reports');
                   $.fn.loadTable($area, 0);
                   $.modal.close();
                 }
@@ -78,10 +78,28 @@
               var $elem = $(this);
               var $area = $elem.parents('.reports');
               if ($area.length == 0)
-                $area = $elem.parents('.content');
+                $area = $elem.parents('.container');
               $.ajax({
                 url: $elem.attr('href'),
                 type: 'PUT',
+                data: {},
+		            success: function(data, status, xhr){
+				          $.fn.loadTable($area, 0);
+                }
+              });
+            }
+          ],
+          'a.delete-report': [
+            'click', function(e) {
+              e.preventDefault();
+              var $elem = $(this);
+              var $area = $elem.parents('.reports');
+              if ($area.length == 0)
+                $area = $elem.parents('.container');
+              if (confirm('The report you recently submitted will be deleted. Are you sure?'))
+              $.ajax({
+                url: $elem.attr('href'),
+                type: 'DELETE',
                 data: {},
 		            success: function(data, status, xhr){
 				          $.fn.loadTable($area, 0);
@@ -93,7 +111,7 @@
             'click', function(e) {
               e.preventDefault();
               var $elem = $(this);
-              var $area = $elem.parents('.content');
+              var $area = $elem.parents('.container');
               if (confirm('This request will be deleted. Are you sure?'))
                 $.ajax({
                   url: $elem.attr('href'),

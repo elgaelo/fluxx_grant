@@ -9,7 +9,8 @@
       = raw render_grant_or_request_id model
     %h4.subhead= raw render_request_or_grant_amount model
     - unless model.project_summary.blank?
-      %p= simple_format(model.project_summary)
+      %p
+      = simple_format(model.project_summary)
     - warnings = []
     - warnings << 'This grant is funding general operating support.' if model.funding_general_operating_support
     - warnings << 'This grant requires direct board authority.' if model.board_authorization_required
@@ -95,7 +96,7 @@
         .pairs
           .key Amount Paid to Date:
           .value= number_to_currency(model.amount_funded, :precision => 0) if model.amount_funded
-    %p
+          
     = render :partial => "request_funding_sources/list_request_funding_sources", :locals => { :model => model}
     %div.partial
       = render :partial => "grant_requests/grant_request_show_relationships", :locals => { :model => model}
@@ -121,7 +122,9 @@
         .key= "#{plural_by_list model.china_means, 'Type', 'Types'} of Organization:"
         .value= model.china_means.map(&:value).join(', ')
 .container
-  .reports{"data-src".to_sym => grantee_portal_index_path({:table => "reports", :page => 1})}= render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
+  .reports{"data-src".to_sym => grantee_portal_index_path({:table => "reports", :page => 1})}
+    = render :partial => "grantee_portal/report_list", :locals => {:@data => @reports}
+    
 .container
   .transactions= render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
   
