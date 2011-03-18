@@ -1,5 +1,9 @@
 (function($){
   $.fn.extend({
+    initGranteePortal: function() {
+      $.fn.installFluxxDecorators();
+      $('.notice').delay(2000).fadeOut('slow');
+    },
 		installFluxxDecorators: function() {
 		  $.each($.fluxx.decorators, function(key,val) {
 		    $(key).live.apply($(key), val);
@@ -135,5 +139,5 @@
 })(jQuery);
 
 $(document).ready(function() {
-	$.fn.installFluxxDecorators();
+	$.fn.initGranteePortal();
 });
