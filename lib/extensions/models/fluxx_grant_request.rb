@@ -137,5 +137,9 @@ module FluxxGrantRequest
       end || ''
       org_name + fiscal_org_name
     end
+
+    def relates_to_user? user
+      (user.primary_organization.id == self.program_organization_id) || (user.primary_organization.id == self.fiscal_organization_id)
+    end
   end
 end
