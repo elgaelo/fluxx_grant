@@ -30,7 +30,7 @@
                 var $elem = $(this);
                 if ($elem.hasClass('disabled'))
                     return;
-                var $area = $elem.children('.container');
+                var $area = $elem.parents('.container');
                     $.fn.loadTable($area, -1);
 	        }
 	      ],
@@ -40,7 +40,7 @@
                 var $elem = $(this);
                 if ($elem.hasClass('disabled'))
                     return;
-                var $area = $elem.children('.container');
+                var $area = $elem.parents('.container');
                 $.fn.loadTable($area, 1);
 	        }
 	      ],
