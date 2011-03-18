@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110315191621) do
+ActiveRecord::Schema.define(:version => 20110318162557) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -928,8 +928,8 @@ ActiveRecord::Schema.define(:version => 20110315191621) do
     t.boolean  "test_user_flag",                               :default => false
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email"
+  add_index "users", ["login"], :name => "index_users_on_login"
   add_index "users", ["persistence_token"], :name => "index_users_on_persistence_token"
   add_index "users", ["personal_geo_country_id"], :name => "users_personal_country_id"
   add_index "users", ["personal_geo_state_id"], :name => "users_personal_geo_state_id"

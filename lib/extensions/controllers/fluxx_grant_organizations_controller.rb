@@ -73,7 +73,7 @@ module FluxxGrantOrganizationsController
       insta.add_related do |related|        
         related.display_name = 'People'
         related.for_search do |model|
-          model.related_users
+          model.related_users 1000
         end
         related.add_title_block do |model|
           model.full_name if model
