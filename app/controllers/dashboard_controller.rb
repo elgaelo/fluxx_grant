@@ -1,5 +1,9 @@
 class DashboardController < ApplicationController
   def index
-    render :index, :layout => nil
+    if current_user.is_grantee?
+      redirect_back_or_default grantee_portal_index_path
+    else
+      render :index, :layout => nil
+    end
   end
 end
