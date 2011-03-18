@@ -62,8 +62,12 @@ module FluxxGranteePortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          @model.update_attribute('state', 'draft')
-          redirect_to grantee_portal_index_path
+          if (outcome == :error)
+            grant_request_edit_format_html controller_dsl, outcome, default_block
+          else
+            @model.update_attribute('state', 'draft')
+            redirect_to grantee_portal_index_path
+          end
         end
       end
     end
