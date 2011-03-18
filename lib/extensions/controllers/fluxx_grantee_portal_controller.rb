@@ -29,24 +29,24 @@ module FluxxGranteePortalController
       request_ids = requests.map { |request| request.id }
 
       if table == :all || table == "requests"
-        @requests = requests.where(:granted => false).order("updated_at desc").paginate :page => settings["pages"]["requests"], :per_page => ITEMS_PER_PAGE
+        @requests = requests.where(:granted => false).order("created_at desc").paginate :page => settings["pages"]["requests"], :per_page => ITEMS_PER_PAGE
         @title = "Requests"
         template = "_grant_request_list"
       end
 
       if table == :all || table == "grants"
-        @grants = requests.where(:granted => true).order("updated_at desc").paginate :page => settings["pages"]["grants"], :per_page => ITEMS_PER_PAGE
+        @grants = requests.where(:granted => true).order("created_at desc").paginate :page => settings["pages"]["grants"], :per_page => ITEMS_PER_PAGE
         @title = "Grants"
         template = "_grant_request_list"
       end
 
       if table == :all || table == "reports"
-        @reports = RequestReport.where(:request_id => request_ids).order("updated_at desc").paginate :page => settings["pages"]["reports"], :per_page => ITEMS_PER_PAGE
+        @reports = RequestReport.where(:request_id => request_ids).order("created_at desc").paginate :page => settings["pages"]["reports"], :per_page => ITEMS_PER_PAGE
         template = "_report_list"
       end
 
       if table == :all || table == "transactions"
-        @transactions = RequestTransaction.where(:request_id => request_ids).order("updated_at desc").paginate :page => settings["pages"]["transactions"], :per_page => ITEMS_PER_PAGE
+        @transactions = RequestTransaction.where(:request_id => request_ids).order("created_at desc").paginate :page => settings["pages"]["transactions"], :per_page => ITEMS_PER_PAGE
         template = "_transaction_list"
       end
 

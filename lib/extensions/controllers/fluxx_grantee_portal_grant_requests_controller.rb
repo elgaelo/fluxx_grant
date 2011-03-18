@@ -20,8 +20,8 @@ module FluxxGranteePortalGrantRequestsController
           controller_dsl, outcome, default_block = triple
           org_ids = current_user.primary_organization.id
           request_ids = @model.id
-          @reports = RequestReport.where(:request_id => request_ids).order("updated_at desc")
-          @transactions = RequestTransaction.where(:request_id => request_ids).order("updated_at desc")
+          @reports = RequestReport.where(:request_id => request_ids).order("created_at desc")
+          @transactions = RequestTransaction.where(:request_id => request_ids).order("created_at desc")
           grant_request_show_format_html controller_dsl, outcome, default_block
         end
       end
