@@ -299,7 +299,8 @@ module FluxxRequest
       insta.add_state_to_english :granted, 'Granted', ['granted', 'become_grant']
       insta.add_state_to_english :closed, 'Closed', 'granted'
       insta.add_state_to_english :canceled, 'Canceled', 'granted'
-      
+
+      insta.add_event_to_english :submit_draft, 'Submit Draft'
       insta.add_event_to_english :recommend_funding, 'Recommend Funding'
       insta.add_event_to_english :complete_ierf, 'Mark IERF Completed'
       insta.add_event_to_english :grant_team_approve, 'Approve'
@@ -412,8 +413,12 @@ module FluxxRequest
         transitions :from => :rejected, :to => :new
       end
 
+      aasm_event :submit_draft do
+        transitions :from => :draft, :to => :new
+      end
+
       aasm_event :recommend_funding do
-        transitions :from => [:new, :drafted], :to => :funding_recommended
+        transitions :from => :new, :to => :funding_recommended
       end
 
       aasm_event :complete_ierf do
