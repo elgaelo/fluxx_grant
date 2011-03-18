@@ -163,10 +163,13 @@ module FluxxProgram
       spending_year_clause = options[:spending_year] ? " spending_year = #{options[:spending_year]} and " : ''
       retired_clause = options[:show_retired] ? " retired != 1 or retired is null " : ''
 
-      FundingSourceAllocation.find_by_sql(FundingSourceAllocation.send(:sanitize_sql, ["select fsa.* from funding_source_allocations fsa where 
+      FundingSourceAllocation.find_by_sql(FundingSourceAllocation.send(:sanitize_sql, 
+        ["select fsa.*, 
+          (select count(*) from funding_source_allocation_authorities where funding_source_allocation_id = fsa.id) num_allocation_authorities
+          from funding_source_allocations fsa where 
         #{spending_year_clause} #{program_fsa_join_where_clause}
           ", 
-        self.id, self.id, self.id, self.id]))
+        self.id, self.id, self.id, self.id])).select{|fsa| (fsa.num_allocation_authorities.to_i rescue 0) > 0}
     end
     
     def total_pipeline request_types=nil

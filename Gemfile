@@ -29,6 +29,9 @@ gem 'paperclip'
 gem 'mysql'
 gem 'compass'
 gem 'liquid'
+gem "delocalize"
+gem 'pdfkit'
+
 gem 'writeexcel', '>=0.6.1'
 gem 'httpi'
 gem 'crack'
