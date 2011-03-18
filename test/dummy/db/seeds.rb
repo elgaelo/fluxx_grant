@@ -100,10 +100,10 @@ UserProfileRule.create :user_profile => consultant_profile, :permission_name => 
 UserProfileRule.create :user_profile => consultant_profile, :permission_name => 'create_request'
 
 # define grantee
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'create_own', model_type => 'Request'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'view_own', model_type => 'Request'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', model_type => 'Request'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete_own', model_type => 'Request'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'create_own', model_type => 'ModelDocument'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete', model_type => 'ModelDocument'
-UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', model_type => 'RequestReport'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'create_own', :model_type => 'Request'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'view_own', :model_type => 'Request'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', :model_type => 'Request'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete_own', :model_type => 'Request'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'create_own', :model_type => 'ModelDocument'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete', :model_type => 'ModelDocument'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', :model_type => 'RequestReport'
