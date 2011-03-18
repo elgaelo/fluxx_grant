@@ -18,13 +18,11 @@ module FluxxGranteePortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          if user_can_access_request
-            org_ids = current_user.primary_organization.id
-            request_ids = @model.id
-            @reports = RequestReport.where(:request_id => request_ids).order("updated_at desc")
-            @transactions = RequestTransaction.where(:request_id => request_ids).order("updated_at desc")
-            grant_request_show_format_html controller_dsl, outcome, default_block
-          end
+          org_ids = current_user.primary_organization.id
+          request_ids = @model.id
+          @reports = RequestReport.where(:request_id => request_ids).order("updated_at desc")
+          @transactions = RequestTransaction.where(:request_id => request_ids).order("updated_at desc")
+          grant_request_show_format_html controller_dsl, outcome, default_block
         end
       end
       insta.post do |triple|
@@ -49,7 +47,7 @@ module FluxxGranteePortalGrantRequestsController
         format.html do |triple|
           if @model.in_state_with_category?("draft")
             controller_dsl, outcome, default_block = triple
-            grant_request_edit_format_html controller_dsl, outcome, default_block if user_can_access_request
+            grant_request_edit_format_html controller_dsl, outcome, default_block
           else
             redirect_to grantee_portal_grant_request_path(@model)
           end
@@ -78,7 +76,7 @@ module FluxxGranteePortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          grant_request_update_format_html controller_dsl, outcome, default_block  if user_can_access_request
+          grant_request_update_format_html controller_dsl, outcome, default_block
         end
       end
     end
@@ -98,13 +96,5 @@ module FluxxGranteePortalGrantRequestsController
   end
 
   module ModelInstanceMethods
-    def user_can_access_request
-      can_access = (@model.program_organization_id == current_user.primary_organization.id || @model.fiscal_organization_id == current_user.primary_organization.id)
-      if  !can_access
-        logger.debug("Grantee portal user #{current_user.login} tried to access request #{@model.grant_or_request_id} and was not authorized")
-        render :text => "foo", :status => 404
-      end
-      can_access
-    end
   end
 end
