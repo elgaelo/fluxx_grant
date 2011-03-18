@@ -76,7 +76,7 @@
               });
             }
           ],
-          'a.submit-report': [
+          'a.submit-workflow': [
             'click', function(e) {
               e.preventDefault();
               var $elem = $(this);
