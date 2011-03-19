@@ -11,6 +11,7 @@ module FluxxCommonRequestsController
     def add_grant_request_install_role model_class
       insta_role Request do |insta|
         # Define who is allowd to perform which events
+        insta.add_event_roles 'submit_draft', Program, Program.grantee_roles
         insta.add_event_roles 'reject', Program, Program.request_roles
         insta.add_event_roles 'un_reject', Program, Program.request_roles
         insta.add_event_roles 'recommend_funding', Program, Program.request_roles
