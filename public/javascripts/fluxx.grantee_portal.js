@@ -69,7 +69,10 @@
                   });
                 },
                 onClose: function(){
+
                   var $area = $elem.parents('.reports');
+                  if (!$area.attr('data-src'))
+                    $area = $elem.parents('.partial');
                   $.fn.loadTable($area, 0);
                   $.modal.close();
                 }
@@ -83,6 +86,8 @@
               var $area = $elem.parents('.reports');
               if ($area.length == 0)
                 $area = $elem.parents('.container');
+              if ($elem.attr('data-confirm') && !confirm($elem.attr('data-confirm')))
+                return false;
               $.ajax({
                 url: $elem.attr('href'),
                 type: 'PUT',
