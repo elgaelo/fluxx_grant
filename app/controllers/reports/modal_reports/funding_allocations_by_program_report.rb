@@ -18,8 +18,10 @@ class FundingAllocationsByProgramReport < ActionController::ReportBase
 
       # Never include these requests
       rejected_states = Request.send(:sanitize_sql, ['(?)', Request.all_rejected_states])
-      paid_states = Request.send(:sanitize_sql, ['(?)', RequestTransaction.all_states_with_category('paid').map{|state| state.to_s}])
-      
+      # TODO: this isn't working
+#      paid_states = Request.send(:sanitize_sql, ['(?)', RequestTransaction.all_states_with_category('paid').map{|state| state.to_s}])
+      paid_states = "('paid')"
+
       always_exclude = "r.deleted_at IS NULL AND r.state not in #{rejected_states}"
 
       # Selected Programs
@@ -50,6 +52,7 @@ class FundingAllocationsByProgramReport < ActionController::ReportBase
       hash = {:library => "jqPlot"}
 
       hash[:data] = [total_granted, paid, budgeted, pipeline]
+      p hash[:data]
       hash[:axes] = { :xaxis => {:ticks => xaxis, :tickOptions => { :angle => -30 }}, :yaxis => { :min => 0, :tickOptions => { :formatString => "#{I18n.t 'number.currency.format.unit'}%.2f" }}}
       hash[:series] = [ {:label => "Granted"}, {:label => "Paid"}, {:label => "Budgeted"}, {:label => "Pipeline"} ]
       hash[:stackSeries] = false;
