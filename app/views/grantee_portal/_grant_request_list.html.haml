@@ -47,6 +47,6 @@
             %td
               = state
               - if state == 'Draft'
-                %span= link_to "Submit", grant_request_path(model.id, "event_action".to_sym => "submit_draft", "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => "submit-workflow"
+                %span= link_to "Submit", grant_request_path(model.id, "event_action".to_sym => "submit_draft", "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => "submit-workflow", 'data-confirm'.to_sym => 'Are you sure you want to submit this request?'
     %p
     = render :partial => "paging_actions"
