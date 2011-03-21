@@ -25,3 +25,6 @@
     - unless model.request_reports.empty?
       = form.semantic_fields_for :request_reports do |req_report|
         = render :partial => 'grant_requests/edit_request_report', :locals => {:req_report => req_report}
+        
+= render :partial => 'grant_requests/extra_approve_grant_details', :locals => { :model => model, :form => form}
+  
