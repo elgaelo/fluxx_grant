@@ -207,18 +207,24 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
          end
          rt_stop_row = row
          worksheet.write(row += 1, 1, "Total #{program ? program.name : program.id}")
-         worksheet.write(row, 9, "=SUM(#{total_column_name}#{rt_start_row+1}:#{total_column_name}#{rt_stop_row+1})", sub_total_border_format)
+         unless rt_start_row == rt_stop_row
+           worksheet.write(row, 9, "=SUM(#{total_column_name}#{rt_start_row+1}:#{total_column_name}#{rt_stop_row+1})", sub_total_border_format)
+         end
          program_total_rows << row
        end
        worksheet.write(row += 1, 0, "Total #{Request.translate_grant_type(request_type).pluralize}", header_format)
-       total_col_name = program_total_rows.map{|program_row| "#{total_column_name}#{program_row+1}"}.join(',')
-       worksheet.write(row, 9, "=SUM(#{total_col_name})", sub_total_border_format)
+       unless program_total_rows.empty?
+         total_col_name = program_total_rows.map{|program_row| "#{total_column_name}#{program_row+1}"}.join(',')
+         worksheet.write(row, 9, "=SUM(#{total_col_name})", sub_total_border_format)
+       end
        request_type_total_rows << row
        row += 1 # Burn a row
      end
      worksheet.write(row += 1, 0, "Total", header_format)
-     total_col_name = request_type_total_rows.map{|total_row| "#{total_column_name}#{total_row+1}"}.join(',')
-     worksheet.write(row, 9, "=SUM(#{total_col_name})", sub_total_border_format)
+     unless request_type_total_rows.empty?
+       total_col_name = request_type_total_rows.map{|total_row| "#{total_column_name}#{total_row+1}"}.join(',')
+       worksheet.write(row, 9, "=SUM(#{total_col_name})", sub_total_border_format)
+     end
      
      workbook.close
      output.string

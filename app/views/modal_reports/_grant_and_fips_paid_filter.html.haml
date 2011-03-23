@@ -1,4 +1,4 @@
-= form.input :date_range_type, :as => :select, :required => true, :include_blank => false, :collection => [['This Week', 'this_week'], ['Last Week', 'last_week'], ['Custom', 'custom']]
+= form.input :date_range_type, :as => :select, :required => true, :include_blank => false, :collection => [['Custom', 'custom'], ['This Week', 'this_week'], ['Last Week', 'last_week']]
 - current_year = Time.now.year
 - form.object.start_date = Time.parse("1/1/#{current_year}")
 - form.object.end_date = Time.parse("1/1/#{current_year+1}")
