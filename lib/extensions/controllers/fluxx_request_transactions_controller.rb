@@ -16,7 +16,7 @@ module FluxxRequestTransactionsController
         controller_dsl, model, outcome = triple
         # You should not be able to edit or delete transactions
         # instance_variable_set '@edit_enabled', false
-        instance_variable_set '@delete_enabled', false
+        instance_variable_set '@delete_enabled', current_user.is_admin?
       end
     end
     base.insta_new RequestTransaction do |insta|

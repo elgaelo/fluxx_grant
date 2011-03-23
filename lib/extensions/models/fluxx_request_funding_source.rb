@@ -7,6 +7,7 @@ module FluxxRequestFundingSource
     base.has_many :request_transaction_funding_sources
     base.validates_presence_of     :funding_amount
     base.validates_presence_of     :funding_source_allocation
+    base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.belongs_to :program
     base.belongs_to :sub_program
