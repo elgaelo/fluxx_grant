@@ -114,6 +114,7 @@ UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'de
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'create_own', :model_type => 'ModelDocument'
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete', :model_type => 'ModelDocument'
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', :model_type => 'RequestReport'
+UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'listview', :model_type => 'ModelDocument'
 
 # project types 
 project_type_group = MultiElementGroup.create :name => 'project_type', :description => 'ProjectType', :target_class_name => 'Project'
