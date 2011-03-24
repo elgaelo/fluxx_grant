@@ -213,9 +213,10 @@ module FluxxGrantOrganization
       SELECT requests.*
         FROM requests, request_organizations
         WHERE deleted_at IS NULL AND requests.id = request_organizations.request_id AND request_organizations.organization_id = ?
+        AND granted = ?
       GROUP BY requests.id
       ORDER BY grant_agreement_at DESC, request_received_at DESC
-      LIMIT ?", self.id, self.id, granted_param, self.id, limit_amount])
+      LIMIT ?", self.id, self.id, granted_param, self.id, granted_param, limit_amount])
     end
 
     def related_grants limit_amount=20
