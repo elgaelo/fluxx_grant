@@ -28,7 +28,7 @@ module FluxxRequest
   begin FAR_IN_THE_FUTURE.to_i rescue FAR_IN_THE_FUTURE = Time.now + 10.year end
 
   # for liquid_methods info see: https://github.com/tobi/liquid/blob/master/lib/liquid/module_ex.rb
-  LIQUID_METHODS = [:grant_id, :project_summary, :grant_agreement_at, :grant_begins_at, :grant_ends_at, :request_received_at, :ierf_start_at, :fip_projected_end_at, :amount_requested, :amount_recommended, :duration_in_months, :program_lead, :signatory_contact, :signatory_user_org, :signatory_user_org_title, :address_org, :program, :initiative, :sub_program, :request_transactions, :request_reports, :request_evaluation_metrics, :letter_project_summary_without_leading_to, :ierf_proposed_end_at, :ierf_budget_end_at, :program_organization, :fiscal_organization, :grantee_org_owner_with_specific, :letter_project_summary, :signatory_contact_title]  
+  LIQUID_METHODS = [:grant_id, :project_summary, :grant_agreement_at, :grant_begins_at, :grant_ends_at, :request_received_at, :fip_projected_end_at, :amount_requested, :amount_recommended, :duration_in_months, :program_lead, :signatory_contact, :signatory_user_org, :signatory_user_org_title, :address_org, :program, :initiative, :sub_program, :request_transactions, :request_reports, :request_evaluation_metrics, :letter_project_summary_without_leading_to, :ierf_proposed_end_at, :ierf_budget_end_at, :program_organization, :fiscal_organization, :grantee_org_owner_with_specific, :letter_project_summary, :signatory_contact_title]  
 
   def self.included(base)
     base.belongs_to :program_organization, :class_name => 'Organization', :foreign_key => :program_organization_id
@@ -282,7 +282,7 @@ module FluxxRequest
       insta.updated_by_field = :updated_by_id
     end
     base.insta_utc do |insta|
-      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_start_at, :ierf_proposed_end_at, :ierf_budget_end_at] 
+      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_proposed_end_at, :ierf_budget_end_at] 
     end
     
     base.insta_workflow do |insta|
@@ -814,11 +814,7 @@ module FluxxRequest
     def generate_grant_dates
       self.grant_agreement_at = Time.now
       self.granted = true
-      if self.ierf_start_at && self.ierf_start_at.is_a?(Time)
-        self.grant_begins_at = self.ierf_start_at
-      else
-        self.grant_begins_at = Time.parse((grant_agreement_at + 1.month).strftime('%Y/%m/1')).next_business_day
-      end
+      self.grant_begins_at = Time.parse((grant_agreement_at + 1.month).strftime('%Y/%m/1')).next_business_day unless grant_begins_at
     end
     
     # This is a method meant to be run on requests that are currently in pending_secondary_pd_approval state

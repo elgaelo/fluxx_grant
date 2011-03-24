@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110318162557) do
+ActiveRecord::Schema.define(:version => 20110324001117) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -722,7 +722,6 @@ ActiveRecord::Schema.define(:version => 20110318162557) do
     t.string   "fip_title"
     t.string   "fip_consultant_name"
     t.datetime "fip_projected_end_at"
-    t.datetime "ierf_start_at"
     t.datetime "ierf_proposed_end_at"
     t.datetime "ierf_budget_end_at"
     t.text     "ierf_goals"
@@ -990,11 +989,12 @@ ActiveRecord::Schema.define(:version => 20110318162557) do
     t.datetime "due_at"
     t.integer  "task_order"
     t.integer  "assigned_user_id"
-    t.boolean  "task_completed",   :default => false
+    t.boolean  "task_completed",     :default => false
     t.datetime "deleted_at"
     t.datetime "locked_until"
     t.integer  "locked_by_id"
     t.datetime "completed_at"
+    t.text     "additional_details"
   end
 
   add_index "work_tasks", ["assigned_user_id"], :name => "work_tasks_assigned_user_id"

@@ -59,6 +59,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'make_project_summary_a_text_field.rb', 'db/migrate/fluxx_grant_make_project_summary_a_text_field.rb'
     handle_migration 'create_funding_source_allocation_authority.rb', 'db/migrate/fluxx_grant_create_funding_source_allocation_authority.rb'
     handle_migration 'add_condition_to_request_transactions.rb', 'db/migrate/fluxx_grant_add_condition_to_request_transactions.rb'
+    handle_migration 'coalesce_grant_begins_at_ierf_start_at_fields.rb', 'db/migrate/fluxx_grant_coalesce_grant_begins_at_ierf_start_at_fields.rb'
   end
   
   private
