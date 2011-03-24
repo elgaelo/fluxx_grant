@@ -59,6 +59,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'make_project_summary_a_text_field.rb', 'db/migrate/fluxx_grant_make_project_summary_a_text_field.rb'
     handle_migration 'create_funding_source_allocation_authority.rb', 'db/migrate/fluxx_grant_create_funding_source_allocation_authority.rb'
     handle_migration 'add_condition_to_request_transactions.rb', 'db/migrate/fluxx_grant_add_condition_to_request_transactions.rb'
+    handle_migration 'add_grantee_user_profile_roles.rb', 'db/migrate/fluxx_grant_add_grantee_user_profile_roles.rb'
   end
   
   private
