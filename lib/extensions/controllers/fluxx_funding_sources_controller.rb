@@ -39,11 +39,7 @@ module FluxxFundingSourcesController
       insta.template = 'funding_source_form'
       insta.icon_style = ICON_STYLE
     end
-    base.insta_related FundingSource do |insta|
-      insta.add_related do |related|
-      end
-    end
-    
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
