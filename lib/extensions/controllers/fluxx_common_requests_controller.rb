@@ -102,6 +102,9 @@ module FluxxCommonRequestsController
       if params[:view_states]
         local_model = instance_variable_get '@model'
         send :fluxx_show_card, controller_dsl, {:template => 'grant_requests/view_states', :footer_template => 'insta/simple_footer'}
+      elsif params[:finance_tracker]
+        local_model = instance_variable_get '@model'
+        send :fluxx_show_card, controller_dsl, {:template => 'grant_requests/finance_tracker', :footer_template => 'insta/simple_footer', :layout => 'printable_show'}
       else
         default_block.call
       end
