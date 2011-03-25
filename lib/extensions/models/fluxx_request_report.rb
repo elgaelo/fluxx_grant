@@ -1,6 +1,7 @@
 module FluxxRequestReport
   SEARCH_ATTRIBUTES = [:grant_program_ids, :grant_sub_program_ids, :due_at, :report_type, :state, :updated_at, :grant_state, :favorite_user_ids] 
   LIQUID_METHODS = [:type_to_english, :due_at]
+  FAR_IN_THE_FUTURE = Time.now + 1000.year
 
   def self.included(base)
     base.belongs_to :request
@@ -41,7 +42,7 @@ module FluxxRequestReport
           value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
             due_date_check = Time.now + value.to_i.days
-            search_with_attributes[:due_at] = (0..due_date_check.to_i)
+            search_with_attributes[:due_at] = (due_date_check.to_i..FAR_IN_THE_FUTURE.to_i)
             search_with_attributes[:has_been_approved] = false
           end || {}
         end),

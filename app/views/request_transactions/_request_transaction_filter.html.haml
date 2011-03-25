@@ -12,5 +12,5 @@
 = form.input :request_to_date, :label => 'To:', :required => false, :input_html => {:size => 40}, :as => :date
 = render :partial => "request_transactions/more_trans_filter", :locals => { :form => form}
 = form.input :favorite_user_ids, :label => 'Marked as Favorite', :required => false, :as => :boolean, :checked_value => (current_user ? current_user.id : nil), :unchecked_value => ''
-= form.input :sort_attribute, :label => 'Sort Field', :required => false, :as => :select, :include_blank => nil, :collection => [['Due Date', 'due_at'], ['Amount Due', 'amount_due'], ['Amount Paid', 'amount_paid'], ['Org Name', 'request_org_name']]
+= form.input :sort_attribute, :label => 'Sort Field', :required => false, :as => :select, :include_blank => nil, :collection => [['Due Date', 'due_at'], ['Paid Date', 'paid_at'], ['Amount Due', 'amount_due'], ['Amount Paid', 'amount_paid'], ['Org Name', 'request_org_name']]
 = form.input :sort_order, :label => 'Sort Order', :required => false, :as => :select, :include_blank => nil, :collection => [['Descending', 'desc'], ['Ascending', 'asc']]

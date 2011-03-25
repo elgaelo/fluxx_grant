@@ -77,7 +77,7 @@ module FluxxRequestTransaction
         value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
             due_date_check = Time.now + value.to_i.days
-            search_with_attributes[:due_at] = (0..due_date_check.to_i)
+            search_with_attributes[:due_at] = (due_date_check.to_i..FAR_IN_THE_FUTURE.to_i)
             search_with_attributes[:has_been_paid] = false
           end || {}
         end),
