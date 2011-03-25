@@ -85,6 +85,14 @@ module ApplicationGrantHelper
       ""
     end
   end
+  
+  def build_request_quicklinks
+    p "ESH: in build_request_quicklinks of application grant helper"
+    request_links = []
+    request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
+    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
+    request_links
+  end
 
   def build_quicklinks
     links = []
@@ -101,16 +109,13 @@ module ApplicationGrantHelper
       type: 'style-ql-user small'
     }" unless FLUXX_CONFIGURATION[:hide_people]
 
-    request_links = []
-    request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
-    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
 
     links << "{
       label: 'New Request',
       url: '#',
       className: 'noop',
       type: 'style-ql-documents small',
-      popup: [#{request_links.join ",\n"}
+      popup: [#{build_request_quicklinks.join ",\n"}
       ]
     }" unless FLUXX_CONFIGURATION[:hide_requests] && FLUXX_CONFIGURATION[:hide_grants]
     links << "{
