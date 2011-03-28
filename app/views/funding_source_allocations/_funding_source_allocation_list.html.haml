@@ -1,3 +1,4 @@
+- show_initiative_display ||= false
 - do_suppress_add ||= grab_param(:funding_source_allocation, :do_suppress_add)
 - program_id ||= grab_param(:funding_source_allocation, :program_id)
 - sub_program_id ||= grab_param(:funding_source_allocation, :sub_program_id)
@@ -27,6 +28,15 @@
           %dd= model.authority
           %dt= 'Spending Year:'
           %dd= funding_source_allocation_model.spending_year
+          - if show_initiative_display
+            %dt= "Initiatives:" 
+            %dd
+              -  program_names = []
+              -  program_names << funding_source_allocation_model.program_display_name if funding_source_allocation_model && funding_source_allocation_model.program_display_name
+              -  program_names << funding_source_allocation_model.sub_program_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_program_display_name
+              -  program_names << funding_source_allocation_model.initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.initiative_display_name
+              -  program_names << funding_source_allocation_model.sub_initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_initiative_display_name
+              = program_names.join ', '
 
 %h4
   %strong= "#{total_funding.to_currency} Total Funding"
