@@ -49,12 +49,12 @@ class RequestTransactionsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should update request_transaction" do
+  test "should update request_transaction; will error if no funding source is specified" do
     put :update, :id => @request_transaction1.to_param, :request_transaction => {}
-    assert flash[:info]
+    
+    assert assigns(:request_transaction).errors[:Missing_Funding_source]
     
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{request_transaction_path(assigns(:request_transaction))}$/
   end
 
   test "should destroy request_transaction" do
@@ -65,13 +65,17 @@ class RequestTransactionsControllerTest < ActionController::TestCase
   end
 
   test "should not be allowed to edit if somebody else is editing" do
-    @request_transaction1.update_attributes :locked_until => (Time.now + 5.minutes), :locked_by_id => User.make.id
+    @request_transaction1.locked_until = (Time.now + 5.minutes)
+    @request_transaction1.locked_by_id = User.make.id
+    @request_transaction1.save(false)
     get :edit, :id => @request_transaction1.to_param
     assert assigns(:not_editable)
   end
 
   test "should not be allowed to update if somebody else is editing" do
-    @request_transaction1.update_attributes :locked_until => (Time.now + 5.minutes), :locked_by_id => User.make.id
+    @request_transaction1.locked_until = (Time.now + 5.minutes)
+    @request_transaction1.locked_by_id = User.make.id
+    @request_transaction1.save(false)
     put :update, :id => @request_transaction1.to_param, :organization => {}
     assert assigns(:not_editable)
   end

@@ -58,6 +58,8 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
   test "autocomplete with enough balance" do
     program = Program.make
     lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id, :spending_year => 2011
+    lookup_funding_source_allocation_authority = FundingSourceAllocationAuthority.make :funding_source_allocation => lookup_funding_source_allocation, :amount => 150000
+    
     get :index, :format => :autocomplete, :funding_amount => 50000, :program_id => program.id, :spending_year => 2011
     assert_response :success
     p "ESH: have @response.body = #{@response.body}"
@@ -68,6 +70,7 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
   test "autocomplete without enough balance" do
     program = Program.make
     lookup_funding_source_allocation = FundingSourceAllocation.make :amount => 150000, :program_id => program.id, :spending_year => 2011
+    lookup_funding_source_allocation_authority = FundingSourceAllocationAuthority.make :funding_source_allocation => lookup_funding_source_allocation, :amount => 150000
     get :index, :format => :autocomplete, :funding_amount => 250000, :program_id => program.id, :spending_year => 2011
     assert_response :success
     p "ESH: have body=#{@response.body}"
