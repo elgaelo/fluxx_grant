@@ -119,14 +119,16 @@ module FluxxRequestTransactionsController
 
   module ModelInstanceMethods
     def populate_request_transaction_funding_source_param_hash model
-      rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
-        amount = params["funding_source_value_#{rfs.id}"]
-        amount = nil if amount.blank?
-        rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
-        acc[rtfs] = amount
-        acc
+      if model && model.request
+        rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
+          amount = params["funding_source_value_#{rfs.id}"]
+          amount = nil if amount.blank?
+          rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
+          acc[rtfs] = amount
+          acc
+        end
+        model.request_transaction_funding_source_param_hash = rfs_hash
       end
-      model.request_transaction_funding_source_param_hash = rfs_hash
     end
   end
 end
