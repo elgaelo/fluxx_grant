@@ -35,7 +35,7 @@ module FluxxRequestTransactionsController
       insta.template = 'request_transaction_form'
       insta.icon_style = ICON_STYLE
       insta.pre do |conf|
-        self.pre_model = conf.load_existing_model params
+        self.pre_model = conf.load_new_model params
         populate_request_transaction_funding_source_param_hash self.pre_model
       end
     end
@@ -119,15 +119,22 @@ module FluxxRequestTransactionsController
 
   module ModelInstanceMethods
     def populate_request_transaction_funding_source_param_hash model
-      if model && model.request
-        rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
-          amount = params["funding_source_value_#{rfs.id}"]
-          amount = nil if amount.blank?
-          rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
-          acc[rtfs] = amount
-          acc
+      if model
+        # For newly created request transactions, the request is not yet populated
+        if model.request_id && (model.request = Request.find model.request_id rescue nil)
+          rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
+            amount = params["funding_source_value_#{rfs.id}"]
+            amount = nil if amount.blank?
+            if model.new_record?
+              rtfs = RequestTransactionFundingSource.new(:request_transaction_id => nil, :request_funding_source_id => rfs.id)
+            else
+              rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
+            end
+            acc[rtfs] = amount
+            acc
+          end
+          model.request_transaction_funding_source_param_hash = rfs_hash
         end
-        model.request_transaction_funding_source_param_hash = rfs_hash
       end
     end
   end
