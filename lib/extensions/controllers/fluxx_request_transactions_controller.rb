@@ -43,9 +43,9 @@ module FluxxRequestTransactionsController
       insta.template = 'request_transaction_form'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
-      insta.post do |triple|
-        controller_dsl, model, outcome = triple
-        update_transaction_funding_sources model if outcome == :success
+      insta.pre do |conf|
+        self.pre_model = conf.load_existing_model params
+        populate_request_transaction_funding_source_param_hash self.pre_model
       end
     end
     base.insta_delete RequestTransaction do |insta|
@@ -118,20 +118,15 @@ module FluxxRequestTransactionsController
   end
 
   module ModelInstanceMethods
-    def update_transaction_funding_sources model
-      model.request.request_funding_sources.each do |rfs|
+    def populate_request_transaction_funding_source_param_hash model
+      rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
         amount = params["funding_source_value_#{rfs.id}"]
+        amount = nil if amount.blank?
         rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).last || RequestTransactionFundingSource.create(:request_transaction_id => model.id, :request_funding_source_id => rfs.id)
-        if !amount.blank?
-          if rtfs
-            rtfs.update_attributes :amount => amount, :updated_by_id => current_user.id
-          else
-          end
-        elsif rtfs
-          # The user removed the value, let's delete the record as well
-          rtfs.destroy
-        end
+        acc[rtfs] = amount
+        acc
       end
+      model.request_transaction_funding_source_param_hash = rfs_hash
     end
   end
 end

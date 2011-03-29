@@ -25,7 +25,7 @@
   - if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source
     = "#{rfs.funding_source_allocation.funding_source.name}: #{(rfs.funding_amount || 0).to_currency} allocated,"
     - rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
-    = "#{(rtfs ? rtfs.amount : 0).to_currency} spent, "
+    = "#{((rtfs ? rtfs.amount : 0) || 0).to_currency} spent, "
     = "#{(rfs.amount_remaining || 0).to_currency} available"
     <br>
 <br>

@@ -44,6 +44,9 @@ module FluxxRequestTransaction
     base.has_many :groups, :through => :group_members
     base.send :attr_accessor, :organization_lookup
     base.belongs_to :bank_account
+    base.send :attr_accessor, :request_transaction_funding_source_param_hash
+    base.validate :validate_required_funding_source
+    base.after_save :update_rtfs
     
     base.insta_favorite
     base.insta_export do |insta|
@@ -300,6 +303,38 @@ module FluxxRequestTransaction
       if request
         request.related_request_transactions - [self]
       end || []
+    end
+    
+    def validate_required_funding_source
+      has_funding_source = if request_transaction_funding_source_param_hash
+        rtfs_list = request_transaction_funding_source_param_hash.keys.map do |rtfs|
+          amount = request_transaction_funding_source_param_hash[rtfs]
+        end.compact
+        !rtfs_list.empty?
+      end
+      error = nil
+      unless has_funding_source
+        error = "You must specify an amount for at least one funding source."
+        errors[:Missing_Funding_source] << error
+      end
+      error
+    end
+    
+    def update_rtfs
+      if request_transaction_funding_source_param_hash
+        request_transaction_funding_source_param_hash.keys.each do |rtfs|
+          amount = request_transaction_funding_source_param_hash[rtfs]
+          if !amount.blank?
+            if rtfs
+              rtfs.update_attributes :amount => amount, :updated_by_id => self.updated_by_id
+            else
+            end
+          elsif rtfs
+            # The user removed the value, let's delete the record as well
+            rtfs.destroy
+          end
+        end
+      end
     end
   end
 end
