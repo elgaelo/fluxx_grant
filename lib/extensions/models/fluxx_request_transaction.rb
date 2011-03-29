@@ -45,7 +45,7 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :organization_lookup
     base.belongs_to :bank_account
     base.send :attr_accessor, :request_transaction_funding_source_param_hash
-    base.validate :validate_required_funding_source
+#    base.validate :validate_required_funding_source
     base.after_save :update_rtfs
     
     base.insta_favorite
