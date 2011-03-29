@@ -45,7 +45,7 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :organization_lookup
     base.belongs_to :bank_account
     base.send :attr_accessor, :request_transaction_funding_source_param_hash
-#    base.validate :validate_required_funding_source
+    base.validate :validate_required_funding_source
     base.after_save :update_rtfs
     
     base.insta_favorite
@@ -326,8 +326,10 @@ module FluxxRequestTransaction
           amount = request_transaction_funding_source_param_hash[rtfs]
           if !amount.blank?
             if rtfs
-              rtfs.update_attributes :amount => amount, :updated_by_id => self.updated_by_id
-            else
+              rtfs.request_transaction_id = self.id
+              rtfs.amount = amount
+              rtfs.updated_by_id = self.updated_by_id
+              rtfs.save
             end
           elsif rtfs
             # The user removed the value, let's delete the record as well
