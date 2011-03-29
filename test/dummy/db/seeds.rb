@@ -77,6 +77,7 @@ employee_profile = UserProfile.create :name => 'Employee'
 board_profile = UserProfile.create :name => 'Board'
 consultant_profile = UserProfile.create :name => 'Consultant'
 grantee_profile = UserProfile.create :name => 'Grantee'
+reviewer_profile = UserProfile.create :name => 'Reviewer'
 
 # define employee
 UserProfileRule.create :user_profile => employee_profile, :permission_name => 'create_all'
@@ -108,3 +109,10 @@ UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'cr
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'delete', :model_type => 'ModelDocument'
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'update_own', :model_type => 'RequestReport'
 UserProfileRule.create :user_profile => grantee_profile, :permission_name => 'listview', :model_type => 'ModelDocument'
+Role.create :name => 'Grantee', :roleable_type => 'Program'
+
+# define reviewer
+UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'view', :model_type => 'Request'
+UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'update', :model_type => 'Request'
+Role.create :name => 'Reviewer', :roleable_type => 'Program'
+
