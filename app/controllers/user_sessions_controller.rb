@@ -27,7 +27,13 @@ class UserSessionsController < ApplicationController
               # this is bad because if somebody had legitimately toggled the delta to reindex this user, it will not get reindexed
               User.connection.execute User.send(:sanitize_sql, ["update users set delta = 0 where id = ?", @user_session.user.id])
               flash[:notice] = "Login successful!"
-              redirect_back_or_default  @user_session.user.is_grantee? ? grantee_portal_index_path : dashboard_index_path
+              if @user_session.user.is_grantee?
+                redirect_back_or_default grantee_portal_index_path
+              elsif @user_session.user.is_reviewer?
+                redirect_back_or_default reviewer_portal_index_path
+              else
+                redirect_back_or_default dashboard_index_path
+              end
             else
               render :action => :new
             end
