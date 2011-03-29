@@ -207,9 +207,7 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
          end
          rt_stop_row = row
          worksheet.write(row += 1, 1, "Total #{program ? program.name : program.id}")
-         unless rt_start_row == rt_stop_row
-           worksheet.write(row, 9, "=SUM(#{total_column_name}#{rt_start_row+1}:#{total_column_name}#{rt_stop_row+1})", sub_total_border_format)
-         end
+         worksheet.write(row, 9, "=SUM(#{total_column_name}#{rt_start_row+1}:#{total_column_name}#{rt_stop_row+1})", sub_total_border_format)
          program_total_rows << row
        end
        worksheet.write(row += 1, 0, "Total #{Request.translate_grant_type(request_type).pluralize}", header_format)
