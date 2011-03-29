@@ -331,7 +331,7 @@ module FluxxRequestTransaction
               rtfs.updated_by_id = self.updated_by_id
               rtfs.save
             end
-          elsif rtfs
+          elsif rtfs && rtfs.id
             # The user removed the value, let's delete the record as well
             rtfs.destroy
           end
