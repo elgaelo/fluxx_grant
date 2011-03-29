@@ -34,9 +34,9 @@ module FluxxRequestTransactionsController
     base.insta_post RequestTransaction do |insta|
       insta.template = 'request_transaction_form'
       insta.icon_style = ICON_STYLE
-      insta.post do |triple|
-        controller_dsl, model, outcome = triple
-        update_transaction_funding_sources model if outcome == :success
+      insta.pre do |conf|
+        self.pre_model = conf.load_existing_model params
+        populate_request_transaction_funding_source_param_hash self.pre_model
       end
     end
     base.insta_put RequestTransaction do |insta|
