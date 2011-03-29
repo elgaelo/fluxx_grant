@@ -63,6 +63,22 @@ class RequestFundingSourcesControllerTest < ActionController::TestCase
     assert 201, @response.status
     assert @response.header["Location"] =~ /#{request_funding_source_path(:id => rfs.id)}$/
   end
+  test "should destroy request_funding_source that has a request transaction funding source linked to it" do
+    rfs = RequestFundingSource.make
+    rt = RequestTransaction.make
+    request_transaction_funding_source = RequestTransactionFundingSource.make :request_funding_source_id => rfs.id, :request_transaction => rt
+    delete :destroy, :id => rfs.to_param
+    assert_raises ActiveRecord::RecordNotFound do
+      rfs.reload()
+    end
+    assert_raises ActiveRecord::RecordNotFound do
+      request_transaction_funding_source.reload()
+    end
+
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{request_funding_source_path(:id => rfs.id)}$/
+    
+  end
   
   test "should not be allowed to edit if somebody else is editing" do
     rfs = RequestFundingSource.make
