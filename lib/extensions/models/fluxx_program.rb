@@ -112,7 +112,7 @@ module FluxxProgram
     end
     
     def all_program_users
-      User.joins(:role_users => :role).where({:role_users => {:roles => {:roleable_type => self.name}}}).group("users.id").compact
+      User.joins(:role_users => :role).where({:deleted_at => nil, :role_users => {:roles => {:roleable_type => self.name}}}).group("users.id").compact
     end
 
     def load_all_nonrollup
