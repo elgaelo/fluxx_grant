@@ -4,7 +4,6 @@ class FluxxGrantAddReviewerProfileAndRole < ActiveRecord::Migration
     UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'view', :model_type => 'Request'
     UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'create', :model_type => 'RequestReview'
     UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'update_own', :model_type => 'RequestReview'
-    Role.create :name => 'Reviewer', :roleable_type => 'Program'
   end
 
   def self.down
@@ -13,6 +12,5 @@ class FluxxGrantAddReviewerProfileAndRole < ActiveRecord::Migration
     UserProfileRule.where(:user_profile_id => reviewer_profile.object_id, :permission_name => 'create', :model_type => 'RequestReview').first.destroy
     UserProfileRule.where(:user_profile_id => reviewer_profile.object_id, :permission_name => 'update_own', :model_type => 'RequestReview').first.destroy
     reviewer_profile.first.destroy
-    reviewer_role = Role.where(:name => 'Reviewer', :roleable_type => 'Program').first.destroy
   end
 end
