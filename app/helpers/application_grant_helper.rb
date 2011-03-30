@@ -97,6 +97,14 @@ module ApplicationGrantHelper
   def build_quicklinks
     links = []
     links << "{
+      label: 'New Request',
+      url: '#',
+      className: 'noop',
+      type: 'style-ql-documents small',
+      popup: [#{build_request_quicklinks.join ",\n"}
+      ]
+    }" unless FLUXX_CONFIGURATION[:hide_requests] && FLUXX_CONFIGURATION[:hide_grants]
+    links << "{
       label: 'New Org',
       url: '#{new_organization_path}',
       className: 'new-detail',
@@ -108,16 +116,6 @@ module ApplicationGrantHelper
       className: 'new-detail',
       type: 'style-ql-user small'
     }" unless FLUXX_CONFIGURATION[:hide_people]
-
-
-    links << "{
-      label: 'New Request',
-      url: '#',
-      className: 'noop',
-      type: 'style-ql-documents small',
-      popup: [#{build_request_quicklinks.join ",\n"}
-      ]
-    }" unless FLUXX_CONFIGURATION[:hide_requests] && FLUXX_CONFIGURATION[:hide_grants]
     links << "{
       label: 'New Project',
       url: '#{new_project_path}',
