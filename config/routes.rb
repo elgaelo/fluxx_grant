@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :budget_requests
+
   resources :request_reviews
 
   resources :reviewer_portal
