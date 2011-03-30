@@ -23,12 +23,8 @@ module FluxxReviewerPortalController
         page = params[:page] ? params[:page] : settings["pages"][table]
         settings["pages"][table] = page if (table != :all)
 
-        requests = Request.where("requests.type = ? AND requests.deleted_at IS NULL", "GrantRequest")
-        request_ids = requests.map { |request| request.id }
-
         # TODO AML: We need to filter the request list based on the reviewers role and the request state
-        @requests = requests.where(:granted => false).order("created_at desc").paginate :page => settings["pages"]["requests"], :per_page => ITEMS_PER_PAGE
-        @title = "Requests"
+        @requests = find_requests settings["pages"]["requests"]
         template = "_grant_request_list"
 
         if params[:page]
@@ -41,6 +37,11 @@ module FluxxReviewerPortalController
       else
        redirect_back_or_default dashboard_index_path
       end
+    end
+
+    def find_requests  pageNum
+      requests = Request.where("requests.type = ? AND requests.deleted_at IS NULL", "GrantRequest")
+      @requests = requests.where(:granted => false).order("created_at desc").paginate :page => pageNum, :per_page => ITEMS_PER_PAGE
     end
 
   end
