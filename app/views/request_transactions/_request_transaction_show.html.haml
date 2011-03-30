@@ -19,17 +19,20 @@
     .pairs
       .key Payee (Organization):
       .value= model.organization_payee.name
-
-%h4 Funding Sources
-- model.request.request_funding_sources.each do |rfs|
-  - if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source
-    = "#{rfs.funding_source_allocation.funding_source.name}: #{(rfs.funding_amount || 0).to_currency} allocated,"
-    - rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
-    = "#{((rtfs ? rtfs.amount : 0) || 0).to_currency} spent, "
-    = "#{(rfs.amount_remaining || 0).to_currency} available"
-    <br>
-<br>
-  
+%div.partial
+  %h3 Funding Sources
+  %div
+    - model.request.request_funding_sources.each do |rfs|
+      - if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source
+        %h4= "#{rfs.funding_source_allocation.funding_source.name}"
+        %dl.inline
+          %dt= "Allocated:"
+          %dd= "#{(rfs.funding_amount || 0).to_currency}"
+          - rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
+          %dt= "Spent:"
+          %dd= "#{((rtfs ? rtfs.amount : 0) || 0).to_currency}"
+          %dt= "Available:"
+          %dd= "#{(rfs.amount_remaining || 0).to_currency}"  
 %div.partial
   - if model.paid_at
     .pairs

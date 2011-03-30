@@ -64,6 +64,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_reviewer_profile_and_role.rb', 'db/migrate/fluxx_grant_add_reviewer_profile_and_role.rb'
     handle_migration 'create_request_review.rb', 'db/migrate/fluxx_grant_create_request_review.rb'
     handle_migration 'add_initiative_id_to_requests.rb', 'db/migrate/fluxx_grant_add_initiative_id_to_requests.rb'
+    handle_migration 'create_grantee_role_if_needed.rb', 'db/migrate/fluxx_grant_create_grantee_role_if_needed.rb'
   end
   
   private
