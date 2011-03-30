@@ -51,10 +51,10 @@ class FundingAllocationsByProgramReport < ActionController::ReportBase
 
       hash = {:library => "jqPlot"}
 
-      hash[:data] = [total_granted, paid, budgeted, pipeline]
-      p hash[:data]
+      hash[:data] = [budgeted, pipeline, total_granted, paid]
+
       hash[:axes] = { :xaxis => {:ticks => xaxis, :tickOptions => { :angle => -30 }}, :yaxis => { :min => 0, :tickOptions => { :formatString => "#{I18n.t 'number.currency.format.unit'}%.2f" }}}
-      hash[:series] = [ {:label => "Granted"}, {:label => "Paid"}, {:label => "Budgeted"}, {:label => "Pipeline"} ]
+      hash[:series] = [ {:label => "Budgeted"}, {:label => "Pipeline"}, {:label => "Granted"}, {:label => "Paid"} ]
       hash[:stackSeries] = false;
       hash[:type] = "bar"
     end
