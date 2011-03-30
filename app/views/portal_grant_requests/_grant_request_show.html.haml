@@ -3,6 +3,8 @@
     %h4
       = raw render_grant_or_request_id model
       %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}
+      - if current_user.has_create_for_model?(RequestReview)
+        %input{:type => 'submit', :name => 'review', :class => 'button create open-link float_right', :value => 'Review', 'data-href'.to_sym => new_request_review_path(:request_review => {:request_id => model.id})}
   .content
     %h1
       = raw render_program_name model
@@ -127,5 +129,7 @@
     
 .container
   .transactions= render :partial => "grantee_portal/transaction_list", :locals => {:@data => @transactions}
-  
+
+- if current_user.has_create_for_model?(RequestReview)
+  %input{:type => 'submit', :name => 'review', :class => 'create open-link', :value => 'Review', 'data-href'.to_sym => new_request_review_path(:request_review => {:request_id => model.id})}
 %input{:type => 'submit', :name => 'cancel', :class => 'create open-link', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}

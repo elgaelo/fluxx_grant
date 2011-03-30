@@ -113,6 +113,6 @@ Role.create :name => 'Grantee', :roleable_type => 'Program'
 
 # define reviewer
 UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'view', :model_type => 'Request'
-UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'update', :model_type => 'Request'
-Role.create :name => 'Reviewer', :roleable_type => 'Program'
+UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'create', :model_type => 'RequestReview'
+UserProfileRule.create :user_profile => reviewer_profile, :permission_name => 'update_own', :model_type => 'RequestReview'
 

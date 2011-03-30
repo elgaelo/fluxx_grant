@@ -1,4 +1,4 @@
-module FluxxGranteePortalGrantRequestsController
+module FluxxPortalGrantRequestsController
   ICON_STYLE = 'style-grant-requests'
   def self.included(base)
     base.send :include, FluxxCommonRequestsController
@@ -49,7 +49,7 @@ module FluxxGranteePortalGrantRequestsController
             controller_dsl, outcome, default_block = triple
             grant_request_edit_format_html controller_dsl, outcome, default_block
           else
-            redirect_to grantee_portal_grant_request_path(@model)
+            redirect_to portal_grant_request_path(@model)
           end
         end
       end
