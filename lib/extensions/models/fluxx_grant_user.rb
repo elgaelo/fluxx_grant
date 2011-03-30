@@ -159,6 +159,10 @@ module FluxxGrantUser
     def is_reviewer?
       self.user_profile == UserProfile.where(:name => 'Reviewer').first
     end
+
+    def is_portal_user?
+      is_grantee? || is_reviewer?
+    end
     
     def related_grants limit_amount=20
       related_requests true, limit_amount

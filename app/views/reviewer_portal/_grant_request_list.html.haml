@@ -43,6 +43,6 @@
             %td
               = state
             %td
-              = mdy_date_format(model.request_reviews.where(:created_by_id => current_user.id).first.updated_at) rescue ""
+              = mdy_date_format(model.request_reviews.where(:created_by_id => current_user.id).first.created_at) rescue ""
     %p
     = render :partial => "paging_actions"
