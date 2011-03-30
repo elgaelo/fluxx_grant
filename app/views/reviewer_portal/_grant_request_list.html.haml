@@ -1,8 +1,6 @@
 .titlebar
   %h4
     = @title
-    - if @title == 'Requests'
-      %input{:type => 'button', :name => 'new-request', :class => 'open-link float_right', :value => 'Create a Request', 'data-href'.to_sym => new_grantee_portal_grant_request_path}
 .content
   - if @data.count == 0
     %p.caption
@@ -31,14 +29,10 @@
           - state = "More info Requested" if model.in_state_with_category?("sent_back")
           - state = "Decision Pending" if model.in_state_with_category?("approval")
           - state = "Declined" if model.in_state_with_category?("rejected")
-        %tbody{"data-url".to_sym => edit_grantee_portal_grant_request_path(:id => model.id)}
+        %tbody
           %tr
             %td
-              = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, grantee_portal_grant_request_path(:id => model.id))
-              - if state == 'Draft'
-                %span.actions
-                  = link_to image_tag("/images/fluxx_engine/theme/default/icons/pencil.png", :class => 'edit-button'), edit_grantee_portal_grant_request_path(:id => model.id)
-                  = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
+              = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, portal_grant_request_path(:id => model.id))
               <br/>
               %p= model.project_summary
             %td= mdy_date_format(model.request_received_at)
@@ -46,7 +40,5 @@
             %td= (model.program ? model.program.name : '')
             %td
               = state
-              - if state == 'Draft'
-                %span= link_to "Submit", grant_request_path(model.id, "event_action".to_sym => "submit_draft", "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => "submit-workflow", 'data-confirm'.to_sym => 'Are you sure you want to submit this request?'
     %p
     = render :partial => "paging_actions"

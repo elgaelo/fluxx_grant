@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :request_reviews
+
   resources :reviewer_portal
 
   resources :funding_source_allocation_authorities
@@ -34,6 +36,6 @@ Rails.application.routes.draw do
   resources :project_requests
   resources :outside_grants
   resources :grantee_portal
-  resources :grantee_portal_grant_requests
+  resources :portal_grant_requests
 
 end

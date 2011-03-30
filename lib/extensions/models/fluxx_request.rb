@@ -71,6 +71,8 @@ module FluxxRequest
     base.belongs_to :grantee_signatory, :class_name => 'User', :foreign_key => 'grantee_signatory_id'
     base.belongs_to :fiscal_org_owner, :class_name => 'User', :foreign_key => 'fiscal_org_owner_id'
     base.belongs_to :fiscal_signatory, :class_name => 'User', :foreign_key => 'fiscal_signatory_id'
+
+    base.has_many :request_reviews, :conditions => 'request_reviews.deleted_at IS NULL'
     
     base.insta_favorite
 
