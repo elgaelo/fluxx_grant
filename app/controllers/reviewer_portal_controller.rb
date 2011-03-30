@@ -1,3 +1,0 @@
-class ReviewerPortalController < ApplicationController
-  include FluxxReviewerPortalController
-end

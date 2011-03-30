@@ -61,7 +61,6 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_condition_to_request_transactions.rb', 'db/migrate/fluxx_grant_add_condition_to_request_transactions.rb'
     handle_migration 'add_grantee_user_profile_roles.rb', 'db/migrate/fluxx_grant_add_grantee_user_profile_roles.rb'
     handle_migration 'coalesce_grant_begins_at_ierf_start_at_fields.rb', 'db/migrate/fluxx_grant_coalesce_grant_begins_at_ierf_start_at_fields.rb'
-    handle_migration 'add_reviewer_profile_and_role.rb', 'db/migrate/fluxx_grant_add_reviewer_profile_and_role.rb'
   end
   
   private
