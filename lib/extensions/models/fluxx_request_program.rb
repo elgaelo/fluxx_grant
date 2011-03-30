@@ -7,6 +7,9 @@ module FluxxRequestProgram
     base.belongs_to :request
     base.belongs_to :program
     base.has_many :workflow_events, :as => :workflowable
+    base.validates_presence_of     :request
+    base.validates_presence_of     :program
+    
 
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
