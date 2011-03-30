@@ -148,7 +148,7 @@ module FluxxCommonRequestsController
       elsif Request.all_events_with_category('become_grant').include?(event_action) && outcome == :success
         send :fluxx_show_card, controller_dsl, {:template => 'grant_requests/request_became_grant', :footer_template => 'insta/simple_footer'}
       else
-        if actual_local_model.granted?
+        if actual_local_model.granted
           if outcome == :success
             redirect_to send("granted_request_path", actual_local_model)
           else

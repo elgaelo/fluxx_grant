@@ -38,7 +38,7 @@
               <br/>
               %p= model.project_summary
             %td= mdy_date_format(model.request_received_at)
-            %td= dollars_format(model.granted? ? model.amount_recommended : model.amount_requested)
+            %td= dollars_format(model.granted ? model.amount_recommended : model.amount_requested)
             %td= (model.program ? model.program.name : '')
             %td
               = state
