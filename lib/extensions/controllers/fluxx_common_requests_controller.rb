@@ -63,7 +63,7 @@ module FluxxCommonRequestsController
 
   module ModelInstanceMethods
     def funnel_allowed_states
-      Request.all_states - Request.all_rejected_states
+      Request.all_workflow_states - Request.all_rejected_states - Request.all_states_with_category('granted') + Request.all_states_with_category('become_grant')
     end
 
     def grant_request_index_format_html controller_dsl, outcome, default_block
