@@ -65,6 +65,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_request_review.rb', 'db/migrate/fluxx_grant_create_request_review.rb'
     handle_migration 'add_initiative_id_to_requests.rb', 'db/migrate/fluxx_grant_add_initiative_id_to_requests.rb'
     handle_migration 'create_grantee_role_if_needed.rb', 'db/migrate/fluxx_grant_create_grantee_role_if_needed.rb'
+    handle_migration 'add_po_number_extension_checkbox.rb', 'db/migrate/fluxx_grant_add_po_number_extension_checkbox.rb'
   end
   
   private
