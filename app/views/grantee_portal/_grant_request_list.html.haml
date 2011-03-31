@@ -35,7 +35,7 @@
           %tr
             %td
               = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, portal_grant_request_path(:id => model.id))
-              - if state == 'Draft'
+              - if state == 'Draft' && current_user.has_role?(Program.grantee_role_name, model.program)
                 %span.actions
                   = link_to image_tag("/images/fluxx_engine/theme/default/icons/pencil.png", :class => 'edit-button'), edit_portal_grant_request_path(:id => model.id)
                   = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
@@ -46,7 +46,7 @@
             %td= (model.program ? model.program.name : '')
             %td
               = state
-              - if state == 'Draft'
+              - if state == 'Draft' && current_user.has_role?(Program.grantee_role_name, model.program)
                 %span= link_to "Submit", grant_request_path(model.id, "event_action".to_sym => "submit_draft", "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => "submit-workflow", 'data-confirm'.to_sym => 'Are you sure you want to submit this request?'
     %p
     = render :partial => "paging_actions"
