@@ -159,10 +159,7 @@ module FluxxGrantOrganization
     end
 
     def sorted_tax_classes
-      group = MultiElementGroup.find :first, :conditions => {:name => 'tax_classes', :target_class_name => 'Organization'}
-      tax_status_choices = if group
-        MultiElementValue.find(:all, :conditions => ['multi_element_group_id = ?', group.id], :order => 'description asc, value asc').collect {|p| [ (p.description || p.value), p.id ] }
-      end || []
+      MultiElementGroup.find_values Organization, 'tax_classes'
     end
   end
 

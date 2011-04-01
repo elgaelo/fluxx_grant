@@ -10,8 +10,7 @@
     = allocation.funding_source.name if allocation && allocation.funding_source
     <p>
   
-  - group = MultiElementGroup.find_for_model_or_super FundingSourceAllocationAuthority, 'authority'
-  - authority_options = group ? group.elements_to_dropdown : []
+  - authority_options = MultiElementGroup.find_values FundingSourceAllocationAuthority, 'authority'
   = form.input :authority_id, :label => "Authority:", :as => :select, :collection => authority_options
   = form.input :amount, :label => "Amount Allocated:"
   - if model.new_record?
