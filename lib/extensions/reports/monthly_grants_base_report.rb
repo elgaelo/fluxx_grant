@@ -77,8 +77,8 @@ module MonthlyGrantsBaseReport
     if (!filter)
       filter = {}
     end
-    start_date = Date.parse(filter["request_from_date"]) if (!filter["request_from_date"].blank?)
-    end_date = Date.parse(filter["request_to_date"]) if (!filter["request_to_date"].blank?)
+    start_date = Date.parse((filter["request_from_date"]).is_a?(Array) ? (filter["request_from_date"]).first : filter["request_from_date"]) if (!filter["request_from_date"].blank?)
+    end_date = Date.parse((filter["request_to_date"]).is_a?(Array) ? (filter["request_to_date"]).first : filter["request_to_date"]) if (!filter["request_to_date"].blank?)
     
     start_date = Date.today if (!start_date)
     end_date = Date.today if (!end_date)
