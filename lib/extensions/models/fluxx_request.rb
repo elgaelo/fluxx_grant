@@ -185,7 +185,9 @@ module FluxxRequest
     
     
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id]
+
+      
 
       insta.derived_filters = {
           :has_been_rejected => (lambda do |search_with_attributes, request_params, name, val|
@@ -533,7 +535,10 @@ module FluxxRequest
         has "CONCAT(requests.program_id, CONCAT(',', GROUP_CONCAT(DISTINCT IFNULL(`request_programs`.`program_id`, '0') SEPARATOR ',')))", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has multi_element_choices.multi_element_value_id, :type => :multi, :as => :multi_element_value_ids
-
+        has "null", :type => :multi, :as => :funding_source_allocation_program_id
+        has "null", :type => :multi, :as => :funding_source_allocation_sub_program_id
+      	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
+        has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         set_property :delta => :delayed
       end
 
@@ -581,6 +586,18 @@ module FluxxRequest
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has "null", :type => :multi, :as => :multi_element_value_ids
 
+        # NOTE ESH: this is very simmilar to the fluxx_funding_source_allocation.rb build_temp_table method
+        has "if (funding_source_allocations.program_id is not null, funding_source_allocations.program_id, 
+              if(funding_source_allocations.sub_program_id is not null, (select program_id from sub_programs where id = funding_source_allocations.sub_program_id),
+                if(funding_source_allocations.initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = funding_source_allocations.initiative_id)), 
+                  if(funding_source_allocations.sub_initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id))), null))))", :type => :multi, :as => :funding_source_allocation_program_id
+        has "if(funding_source_allocations.sub_program_id is not null, funding_source_allocations.sub_program_id,
+      		    if(funding_source_allocations.initiative_id is not null, (select sub_program_id from initiatives where initiatives.id = funding_source_allocations.initiative_id),
+                if(funding_source_allocations.sub_initiative_id is not null, (select sub_program_id from initiatives where initiatives.id = (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id)), null)))", :type => :multi, :as => :funding_source_allocation_sub_program_id
+      	has "if(funding_source_allocations.initiative_id is not null, funding_source_allocations.initiative_id, 
+              if(funding_source_allocations.sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id), null))", :type => :multi, :as => :funding_source_allocation_initiative_id
+        has "funding_source_allocations.sub_initiative_id", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
+
         set_property :delta => :delayed
       end
 
@@ -626,6 +643,10 @@ module FluxxRequest
         has "null", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has "null", :type => :multi, :as => :multi_element_value_ids
+        has "null", :type => :multi, :as => :funding_source_allocation_program_id
+        has "null", :type => :multi, :as => :funding_source_allocation_sub_program_id
+      	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
+        has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
        
         set_property :delta => :delayed
       end
