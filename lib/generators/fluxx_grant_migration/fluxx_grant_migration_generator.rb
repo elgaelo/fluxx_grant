@@ -67,6 +67,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_grantee_role_if_needed.rb', 'db/migrate/fluxx_grant_create_grantee_role_if_needed.rb'
     handle_migration 'add_po_number_extension_checkbox.rb', 'db/migrate/fluxx_grant_add_po_number_extension_checkbox.rb'
     handle_migration 'relax_authority_mev_constraint.rb', 'db/migrate/fluxx_grant_relax_authority_mev_constraint.rb'
+    handle_migration 'create_budget_request.rb', 'db/migrate/fluxx_grant_create_budget_request.rb'
   end
   
   private
