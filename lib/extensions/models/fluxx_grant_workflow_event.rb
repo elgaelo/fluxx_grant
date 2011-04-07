@@ -11,7 +11,7 @@ module FluxxGrantWorkflowEvent
     #
     # Here is a way to calculate the time spent in each step of the workflow
     #
-    def workflow_funnel request_ids, funnel_allowed_states, sent_back_state_mapping_to_workflow, return_swe_diff_export=false
+    def workflow_funnel request_ids, funnel_allowed_states, funnel_not_allowed_old_states, sent_back_state_mapping_to_workflow, return_swe_diff_export=false
       WorkflowEvent.connection.execute "drop temporary table if exists swe"
 
       WorkflowEvent.connection.execute WorkflowEvent.send(:sanitize_sql, ["create temporary table swe select we.workflowable_id, we.workflowable_type, created_at, new_state, 
@@ -43,8 +43,10 @@ module FluxxGrantWorkflowEvent
       end
 
       WorkflowEvent.connection.execute "drop temporary table if exists swediff_visits"
-      WorkflowEvent.connection.execute "create temporary table swediff_visits select old_state, count(*) num_visits, workflowable_id, sum(time_lag) time_lag 
-          from swediff group by old_state, workflowable_id"
+      WorkflowEvent.connection.execute WorkflowEvent.send(:sanitize_sql, ["create temporary table swediff_visits select old_state, count(*) num_visits, workflowable_id, sum(time_lag) time_lag 
+          from swediff
+          where old_state not in (?)
+          group by old_state, workflowable_id", (funnel_not_allowed_old_states.map{|stsym| stsym.to_s})])
 
       results = WorkflowEvent.connection.execute "select avg(time_lag) avg_time_lag, avg(num_visits) avg_num_visits_per_request, count(*) total_visits, 
           count(distinct(workflowable_id)) total_workflowable_ids, old_state 
