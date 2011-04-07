@@ -9,6 +9,7 @@ module FluxxGrantRequest
     base.has_many :group_members, :foreign_key => :groupable_id, :conditions => {:groupable_type => base.name}
     base.has_many :model_documents, :foreign_key => :documentable_id, :conditions => {:documentable_type => base.name}
     base.has_many :wiki_documents, :foreign_key => :model_id, :conditions => {:model_type => base.name}
+    base.has_many :budget_requests, :foreign_key => :request_id
     
     base.validates_presence_of     :program_organization
     base.validates_presence_of     :program

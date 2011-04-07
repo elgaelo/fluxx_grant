@@ -1,0 +1,42 @@
+%table.tabular{:cellspacing => 0}
+  %thead
+    %tr
+      %th
+        = "Budget Line Items"
+        %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_budget_request_path(:budget_request => {:request_id => request.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Budget Request Item"
+  %tbody
+    - if !defined?(models) || models.empty?
+      %tr
+        %td= "No Budget Request Items"
+    - else
+      %tr
+        %td
+          %table.clean-table
+            %thead
+              %tr
+                %th
+                %th= "Budget Item"
+                %th= "Grant Amt Requested"
+                %th= "Grant Amt Recommended"
+            %tbody
+              -requested_total = 0
+              -recommended_total = 0
+              - models.sort_by{|br| br.created_at ? (-1 * br.created_at.to_i) : Time.at(0).to_i }.each do |model|
+                %tr
+                  %td
+                    - if current_user.has_delete_for_model? model
+                      %span.actions
+                        %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_budget_request_url(:id => model.id, :as_modal => '1'), :class => 'to-modal', :title => "Edit Budget Request Item", 'data-on-success' => 'refreshDetail,close'
+                        %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), budget_request_path(model), {:class => 'as-delete', :title => "Delete Budget Request Item", 'data-on-success' => 'refreshCaller'}
+                  %td= model.name
+                  %td= number_to_currency(model.amount_requested, :precision => 0) if model.amount_requested
+                  %td= number_to_currency(model.amount_recommended, :precision => 0) if model.amount_recommended
+                  -requested_total += model.amount_requested.to_f if model.amount_requested
+                  -recommended_total += model.amount_recommended.to_f if model.amount_recommended
+              %tr
+                %td{:colspan => 2}
+                  Total:
+                %td= number_to_currency(requested_total, :precision => 0)
+                %td= number_to_currency(recommended_total, :precision => 0)
+    %tr
+      %td

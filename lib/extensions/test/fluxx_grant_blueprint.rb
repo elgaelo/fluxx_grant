@@ -122,7 +122,12 @@ module FluxxGrantBlueprint
     
     RequestTransactionFundingSource.blueprint do
     end
-  
+
+    BudgetRequest.blueprint do
+      request {GrantRequest.make}
+      name Sham.words
+    end
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

@@ -178,7 +178,7 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
      worksheet.set_column(9, 9, 15)
 
 
-     ["Type", I18n.t(:program_name), "Date", "Check #", "First Name", "Last Name", "Paid At", "Name",	"Id", "Amount"].
+     ["Type", I18n.t(:program_name), "Paid By", "Check #", "First Name", "Last Name", "Paid At", "Name",	"Grant ID", "Amount"].
        each_with_index{|label, index| worksheet.write(5, index, label, header_format)}
 
      row_start = 6
