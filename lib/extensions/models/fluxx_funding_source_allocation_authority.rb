@@ -8,6 +8,7 @@ module FluxxFundingSourceAllocationAuthority
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :funding_source_allocation
     base.after_save :recalculate_allocation_amount
+    base.after_destroy :recalculate_allocation_amount
     base.send :attr_accessor, :program_id
     base.send :attr_accessor, :sub_program_id
     base.send :attr_accessor, :initiative_id

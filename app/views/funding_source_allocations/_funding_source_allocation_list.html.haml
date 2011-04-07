@@ -13,30 +13,44 @@
   %p.caption= "There are no funding source allocations."
 - else
   - models.each do |funding_source_allocation_model|
+    %dl.inline
+      - if show_initiative_display
+        %dt= "Initiatives:" 
+        %dd
+          -  program_names = []
+          -  program_names << funding_source_allocation_model.program_display_name if funding_source_allocation_model && funding_source_allocation_model.program_display_name
+          -  program_names << funding_source_allocation_model.sub_program_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_program_display_name
+          -  program_names << funding_source_allocation_model.initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.initiative_display_name
+          -  program_names << funding_source_allocation_model.sub_initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_initiative_display_name
+          = program_names.join ', '
+      %dt= 'Allocated:'
+      %dd= funding_source_allocation_model.amount ? funding_source_allocation_model.amount.to_currency : 'NONE'
+      %dt= 'Pipeline:'
+      %dd= link_to (funding_source_allocation_model.amount_granted_in_queue ? funding_source_allocation_model.amount_granted_in_queue.to_currency : 'NONE'), grant_requests_path, 'data-filter' => "&request[funding_source_allocation_id][]=#{funding_source_allocation_model.id}", :class => 'new-listing', 'data-insert' => 'after', :title => 'Requests'
+      %dt= 'Granted:'
+      %dd= link_to (funding_source_allocation_model.amount_granted ? funding_source_allocation_model.amount_granted.to_currency : 'NONE'), granted_requests_path, 'data-filter' => "&request[funding_source_allocation_id][]=#{funding_source_allocation_model.id}", :class => 'new-listing', 'data-insert' => 'after', :title => 'Grants'
+      %dt= 'Paid:'
+      %dd= link_to (funding_source_allocation_model.amount_paid ? funding_source_allocation_model.amount_paid.to_currency : 'NONE'), request_transactions_path, 'data-filter' => "&request_transaction[filter_state][]=paid&request_transaction[funding_source_allocation_id][]=#{funding_source_allocation_model.id}", :class => 'new-listing', 'data-insert' => 'after', :title => 'Transactions'
+    
     - funding_source_allocation_model.funding_source_allocation_authorities.each do |model|
       - total_funding += (model.amount || 0)
       - funding_source_name = funding_source_allocation_model.funding_source.name if funding_source_allocation_model.funding_source
       %div
         - if current_user.has_delete_for_model? model
           %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), funding_source_allocation_authority_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-        %dl.inline
-          %dt= 'Amount:'
-          %dd= link_to (model.amount ? model.amount.to_currency : 'NONE'), edit_funding_source_allocation_authority_path(model), :class => 'to-modal', :title => 'Update Funding Source Allocation', 'data-on-success' => 'refreshCaller,close'
-          %dt= 'Source:'
-          %dd= funding_source_allocation_model.funding_source.name if funding_source_allocation_model.funding_source
-          %dt= 'Authority:'
-          %dd= model.authority
-          %dt= 'Spending Year:'
-          %dd= funding_source_allocation_model.spending_year
-          - if show_initiative_display
-            %dt= "Initiatives:" 
-            %dd
-              -  program_names = []
-              -  program_names << funding_source_allocation_model.program_display_name if funding_source_allocation_model && funding_source_allocation_model.program_display_name
-              -  program_names << funding_source_allocation_model.sub_program_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_program_display_name
-              -  program_names << funding_source_allocation_model.initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.initiative_display_name
-              -  program_names << funding_source_allocation_model.sub_initiative_display_name if funding_source_allocation_model && funding_source_allocation_model.sub_initiative_display_name
-              = program_names.join ', '
+        %table
+          %tr
+            %td
+            %td
+              %dl.inline
+                %dt= 'Source:'
+                %dd= funding_source_allocation_model.funding_source.name if funding_source_allocation_model.funding_source
+                %dt= 'Authority:'
+                %dd= model.authority
+                %dt= 'Spending Year:'
+                %dd= funding_source_allocation_model.spending_year
+                %dt= 'Allocated:'
+                %dd= link_to (model.amount ? model.amount.to_currency : 'NONE'), edit_funding_source_allocation_authority_path(model), :class => 'to-modal', :title => 'Update Funding Source Allocation', 'data-on-success' => 'refreshCaller,close'
 
 %h4
   %strong= "#{total_funding.to_currency} Total Funding"

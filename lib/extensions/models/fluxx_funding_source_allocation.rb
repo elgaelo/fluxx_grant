@@ -76,8 +76,23 @@ module FluxxFundingSourceAllocation
       (amount || 0) - (amount_granted || 0)
     end
 
+    # Pipeline
     def amount_granted_in_queue
       request_funding_sources.reject{|rfs| rfs.request.granted}.inject(0){|acc, rfs| acc + (rfs.funding_amount || 0)}
+    end
+    
+    # Look at each funding source transaction associated with each funding source associated with this allocation and sum up the amount paid
+    def amount_paid
+      a = RequestTransactionFundingSource.find_by_sql ["select sum(request_transaction_funding_sources.amount) paid_amount
+      from request_funding_sources, request_transaction_funding_sources, request_transactions 
+      where 
+      request_transaction_funding_sources.request_funding_source_id = request_funding_sources.id and
+      request_transaction_funding_sources.request_transaction_id = request_transactions.id and
+      funding_source_allocation_id = ? and
+      request_transactions.state = 'paid'", self.id]
+      if a && a.is_a?(Array)
+        (a.first.paid_amount ? a.first.paid_amount.to_i : 0)
+      end || 0
     end
     
     def derive_program
