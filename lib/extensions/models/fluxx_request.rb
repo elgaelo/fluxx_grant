@@ -987,7 +987,6 @@ module FluxxRequest
       else
         request_programs
       end
-      p "ESH: all_request_programs_approved=#{checking_programs.inspect}"
       result = checking_programs.select {|rp| !rp.is_approved?}.empty?
       result
     end
