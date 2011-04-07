@@ -3,8 +3,8 @@
   - stop = (@data.current_page - 1) * @data.per_page + @data.count
   %p.paging
     = 'Viewing Records '
-    = link_to("« Prev", "#", :class => "prev-page #{start > 1 ? '' : 'disabled'}")
-    %span= "#{start} - #{stop} of #{@data.total_entries}"
-    = link_to("Next »", "#", :class => "next-page #{stop < @data.total_entries ? '' : 'disabled'}")
-  / %p
-  /   &nbsp;
+    = "#{start} - #{stop} of #{@data.total_entries}"
+    %span.actions
+      = link_to("« Prev", "#", :class => "prev-page #{start > 1 ? '' : 'disabled'}")
+      = ' | '
+      = link_to("Next »", "#", :class => "next-page #{stop < @data.total_entries ? '' : 'disabled'}")

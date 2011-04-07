@@ -4,7 +4,7 @@
       External Review for
       = model.request
       %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => portal_grant_request_path(model.request)}
-  .content
+  %ul.content
     = form.input :request_id, :as => :hidden
     = form.input :review_type, :label => "Review Type"
     = form.input :rating, :label => "Rating"
