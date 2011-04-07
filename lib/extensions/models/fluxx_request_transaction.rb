@@ -75,7 +75,7 @@ module FluxxRequestTransaction
               where rt.id IN (?)"
     end
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES  + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :grant_multi_element_value_ids, :request_from_date, :request_to_date]
+      insta.filter_fields = SEARCH_ATTRIBUTES  + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :grant_multi_element_value_ids, :request_from_date, :request_to_date, :funding_source_allocation_id]
       insta.derived_filters = {:due_in_days => (lambda do |search_with_attributes, request_params, name, value|
         value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
@@ -204,6 +204,8 @@ module FluxxRequestTransaction
         has grant.program_lead(:id), :as => :lead_user_ids
         has group_members.group(:id), :type => :multi, :as => :group_ids
         has favorites.user(:id), :as => :favorite_user_ids
+        has request_transaction_funding_sources.request_funding_source.funding_source_allocation(:id), :as => :funding_source_allocation_id
+        
       end
     end
 
@@ -314,7 +316,7 @@ module FluxxRequestTransaction
       end
       error = nil
       unless has_funding_source
-        error = "You must specify an amount for at least one funding source."
+        error = "You must specify an amount for at least one of the funding sources associated with the grant."
         errors[:Missing_Funding_source] << error
       end
       error

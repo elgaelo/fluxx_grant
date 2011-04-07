@@ -71,7 +71,7 @@ module FluxxRequest
     base.belongs_to :grantee_signatory, :class_name => 'User', :foreign_key => 'grantee_signatory_id'
     base.belongs_to :fiscal_org_owner, :class_name => 'User', :foreign_key => 'fiscal_org_owner_id'
     base.belongs_to :fiscal_signatory, :class_name => 'User', :foreign_key => 'fiscal_signatory_id'
-    
+
     base.insta_favorite
 
     base.insta_lock
@@ -183,7 +183,9 @@ module FluxxRequest
     
     
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id]
+
+      
 
       insta.derived_filters = {
           :has_been_rejected => (lambda do |search_with_attributes, request_params, name, val|
@@ -531,7 +533,7 @@ module FluxxRequest
         has "CONCAT(requests.program_id, CONCAT(',', GROUP_CONCAT(DISTINCT IFNULL(`request_programs`.`program_id`, '0') SEPARATOR ',')))", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has multi_element_choices.multi_element_value_id, :type => :multi, :as => :multi_element_value_ids
-
+        has "null", :type => :multi, :as => :funding_source_allocation_id
         set_property :delta => :delayed
       end
 
@@ -579,6 +581,7 @@ module FluxxRequest
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has "null", :type => :multi, :as => :multi_element_value_ids
 
+        has request_funding_sources.funding_source_allocation(:id), :as => :funding_source_allocation_id
         set_property :delta => :delayed
       end
 
@@ -624,6 +627,7 @@ module FluxxRequest
         has "null", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has "null", :type => :multi, :as => :multi_element_value_ids
+        has "null", :type => :multi, :as => :funding_source_allocation_id
        
         set_property :delta => :delayed
       end
@@ -964,7 +968,6 @@ module FluxxRequest
       else
         request_programs
       end
-      p "ESH: all_request_programs_approved=#{checking_programs.inspect}"
       result = checking_programs.select {|rp| !rp.is_approved?}.empty?
       result
     end
