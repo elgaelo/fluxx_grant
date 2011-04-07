@@ -65,11 +65,14 @@ module FluxxCommonRequestsController
     def funnel_allowed_states
       Request.all_workflow_states - Request.all_rejected_states - Request.all_states_with_category('granted') + Request.all_states_with_category('become_grant')
     end
+    def funnel_not_allowed_old_states
+      Request.all_states_with_category('granted')
+    end
 
     def grant_request_index_format_html controller_dsl, outcome, default_block
       if params[:view_funnel]
         local_models = instance_variable_get '@models'
-        funnel_map = WorkflowEvent.workflow_funnel local_models.map(&:id), funnel_allowed_states, Request.sent_back_state_mapping_to_workflow, request.format.csv?
+        funnel_map = WorkflowEvent.workflow_funnel local_models.map(&:id), funnel_allowed_states, funnel_not_allowed_old_states, Request.sent_back_state_mapping_to_workflow, request.format.csv?
         funnel = funnel_allowed_states.map {|state| funnel_map[:workflow_results][state.to_s]}.compact
         instance_variable_set '@funnel_map', funnel_map
         instance_variable_set '@funnel', funnel
@@ -83,7 +86,7 @@ module FluxxCommonRequestsController
     def grant_request_index_format_csv controller_dsl, outcome, default_block
       if params[:view_funnel]
         local_models = instance_variable_get '@models'
-        funnel_map = WorkflowEvent.workflow_funnel local_models.map(&:id), funnel_allowed_states, Request.sent_back_state_mapping_to_workflow, request.format.csv?
+        funnel_map = WorkflowEvent.workflow_funnel local_models.map(&:id), funnel_allowed_states, funnel_not_allowed_old_states, Request.sent_back_state_mapping_to_workflow, request.format.csv?
         filename = 'fluxx_funnel_' + Time.now.strftime("%m%d%y") + '.csv'
 
         stream_csv( filename ) do |csv|
