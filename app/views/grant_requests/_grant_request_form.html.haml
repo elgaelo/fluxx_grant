@@ -21,6 +21,7 @@
       = form.input :board_authorization_required, :label => "This grant required direct board authority.", :label_class=>'wide_label'
       = form.input :renewal_grant, :label => "This grant is a renewal.", :label_class=>'wide_label'
       = form.input :initiative_types, :label => "Initiative types.", :label_class=>''
+      = render :partial => "budget_requests/list_budget_requests", :locals => { :model => model}
       = form.input(:amount_recommended, :label => "Recommended amount to fund.", :label_class=>'')
       = form.input :duration_in_months, {:label => 'Duration (months):', :as => :select, :collection => (1..36).to_a, :input_html => {:class => 'select_short'}}
       - unless model.granted
