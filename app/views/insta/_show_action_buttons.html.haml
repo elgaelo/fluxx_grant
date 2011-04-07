@@ -8,7 +8,7 @@
   - # There are a couple of special cases where action buttons should go to edit; one is for turning a request into a grant, the other is when marking a request transaction as paid; see below
   - if GrantRequest.all_events_with_category('become_grant').include?(event_name) || FipRequest.all_events_with_category('become_grant').include?(event_name)
     %li= link_to english_event_name, current_edit_path(@model.id, {:approve_grant_details => event_name}), :class => 'to-self'
-  - elsif RequestTransaction.all_events_with_category('mark_paid').include?(event_name)
+  - elsif RequestTransaction.all_workflow_events.include?(event_name)
     %li= link_to english_event_name, current_edit_path(@model.id, {:hidden_event_action => event_name}), :class => 'to-self'
   - else
     %li= link_to english_event_name, current_put_path(@model.id, {:event_action => event_name}), :class => 'as-put with-note', 'data-note-param'.to_sym => "#{@model_name}[workflow_note]"
