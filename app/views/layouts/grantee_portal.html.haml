@@ -14,8 +14,11 @@
   %body
     .header
       %p
-        = image_tag("/images/fluxx_engine/theme/_common/pinwheels/logo_pinwheel_24.png", :class => "logo")
-        %span= @current_user.full_name.gsub(/\b\w/){$&.upcase}
+        %span
+          = 'Welcome, ' 
+          = @current_user.full_name.gsub(/\b\w/){$&.upcase}
         = link_to 'Logout', logout_path
     .page
       = yield
+      %p
+        = image_tag("/images/fluxx_engine/theme/_common/powered_by.png", :class => "logo")
