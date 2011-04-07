@@ -1,10 +1,10 @@
 - model ||= nil
 - unless model
   - if params[:request_id]
-    - model = BlobStruct.new :id => params[:request_id], :class => Request
+    - model = Request.find params[:request_id] rescue nil
 %h3
   = "Funding Sources"
-  - if model && current_user.has_create_for_model?(RequestFundingSource)
+  - if model && current_user.has_create_for_model?(RequestFundingSource) && model && (!model.granted || current_user.has_role?(Program.finance_administrator_role_name, model.program))
     &nbsp;&nbsp;
     = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_request_funding_source_path(:request_funding_source => {:request_id => model.id}), :title => 'Add A Funding Source', :class => 'to-modal', 'data-on-success' => 'refreshCaller,close' if params[:skip_wrapper] || current_user.has_create_for_model?(RequestFundingSource)
 
@@ -16,12 +16,12 @@
     - total += funding_source.funding_amount if funding_source.funding_amount
     %div
       %span.actions
-        - if current_user.has_delete_for_model?(funding_source)
+        - if current_user.has_delete_for_model?(funding_source) && model && (!model.granted || current_user.has_role?(Program.finance_administrator_role_name, model.program))
           = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), funding_source, :class => 'as-delete', 'data-on-success' => 'refreshCaller'
       %dl.inline
         %dt= "Amount:"
         %dd
-          - if current_user.has_update_for_model?(funding_source)
+          - if current_user.has_update_for_model?(funding_source) && model && (!model.granted || current_user.has_role?(Program.finance_administrator_role_name, model.program))
             = link_to "#{funding_source.funding_amount ? funding_source.funding_amount.to_currency : 'NONE'}", edit_request_funding_source_path(:id => funding_source, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
           - else
             = number_to_currency funding_source.funding_amount 
