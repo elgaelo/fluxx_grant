@@ -22,6 +22,32 @@ module FluxxRequest
       search_with_attributes
     end || {}
   end
+
+  # This allows us to take a "--52-,3---,---15" hierarchy string of prog/subprog/init/subinit and match it against the request
+  def self.prepare_hierarchy search_with_attributes, name, val
+    if val
+      search_with_attributes[name] = []
+      val = val.first if val.is_a?(Array)
+      val.split(',').each do |tuple|
+        prog_id, subprog_id, init_id, subinit_id = tuple.split('-')
+        if !prog_id.blank?
+          program = Program.find prog_id rescue nil
+          if program
+            if program.children_programs && !program.children_programs.empty?
+              program.children_programs.each do |child_program|
+                search_with_attributes[name] << "#{child_program.id}---"
+              end
+            else
+              search_with_attributes[name] << tuple
+            end
+          end
+        else
+          search_with_attributes[name] << tuple if tuple && tuple != '---'
+        end
+      end
+    end
+    
+  end
   
   SEARCH_ATTRIBUTES = [:program_id, :sub_program_id, :created_by_id, :filter_state, :program_organization_id, :fiscal_organization_id, :favorite_user_ids, :lead_user_ids, :org_owner_user_ids, :granted, :filter_type]
   FAR_IN_THE_FUTURE = Time.now + 1000.year
@@ -185,7 +211,7 @@ module FluxxRequest
     
     
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id, :funding_source_allocation_id]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id, :funding_source_allocation_id, :request_hierarchy, :allocation_hierarchy]
 
       
 
@@ -233,6 +259,12 @@ module FluxxRequest
                 search_with_attributes[:program_id] = program_ids
               end
             end
+          end),
+          :request_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+            prepare_hierarchy search_with_attributes, name, val
+          end),
+          :allocation_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+            prepare_hierarchy search_with_attributes, name, val
           end),
           :greater_amount_recommended => (lambda do |search_with_attributes, request_params, name, val|
             val = val.first if val && val.is_a?(Array)
@@ -540,6 +572,13 @@ module FluxxRequest
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_id
+        
+        has "concat(CRC32(concat(ifnull(requests.program_id, ''), '-', '-', '-')), ',', 
+            CRC32(concat('-', ifnull(requests.sub_program_id, ''), '-', '-')), ',',
+            CRC32(concat('-', '-', ifnull(requests.initiative_id, ''), '-')), ',',
+            CRC32(concat('-', '-', '-', ifnull(requests.sub_initiative_id, ''))))", :type => :multi, :as => :request_hierarchy
+        has "null", :type => :multi, :as => :allocation_hierarchy
+            
         set_property :delta => :delayed
       end
 
@@ -599,6 +638,29 @@ module FluxxRequest
               if(funding_source_allocations.sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id), null))", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "funding_source_allocations.sub_initiative_id", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         has request_funding_sources.funding_source_allocation(:id), :as => :funding_source_allocation_id
+        has "null", :type => :multi, :as => :request_hierarchy
+        
+        has "concat(CRC32(concat(ifnull(if (funding_source_allocations.program_id is not null, funding_source_allocations.program_id, 
+                      if(funding_source_allocations.sub_program_id is not null, (select program_id from sub_programs where id = funding_source_allocations.sub_program_id),
+                        if(funding_source_allocations.initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = funding_source_allocations.initiative_id)), 
+                          if(funding_source_allocations.sub_initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id))), null)))), ifnull(request_funding_sources.program_id, '')), '-', '-', '-')),
+                          ',',
+              CRC32(concat('-',
+              ifnull(if(funding_source_allocations.sub_program_id is not null, funding_source_allocations.sub_program_id,
+              		    if(funding_source_allocations.initiative_id is not null, (select sub_program_id from initiatives where initiatives.id = funding_source_allocations.initiative_id),
+                        if(funding_source_allocations.sub_initiative_id is not null, (select sub_program_id from initiatives where initiatives.id = (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id)), null))), ifnull(request_funding_sources.sub_program_id, '')), '-', '-')),
+                          ',',
+              CRC32(concat('-','-',
+              ifnull(
+                if(funding_source_allocations.initiative_id is not null, funding_source_allocations.initiative_id, 
+                      if(funding_source_allocations.sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id), null)),
+                      ifnull(request_funding_sources.initiative_id, '')
+              ), '-')),
+                          ',',
+              CRC32(concat('-','-','-',ifnull(funding_source_allocations.sub_initiative_id, ifnull(request_funding_sources.sub_initiative_id, ''))))
+              )
+        ", :type => :multi, :as => :allocation_hierarchy
+        
 
         set_property :delta => :delayed
       end
@@ -650,6 +712,8 @@ module FluxxRequest
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_id
+        has "null", :type => :multi, :as => :request_hierarchy
+        has "null", :type => :multi, :as => :allocation_hierarchy
        
         set_property :delta => :delayed
       end

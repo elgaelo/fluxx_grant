@@ -18,7 +18,7 @@
         %tr
           %td
             - if model.respond_to? :note
-              -if model.created_by_id == current_user.id
+              -if model.created_by_id == current_user.id || current_user.is_admin?
                 = link_to model.note, edit_note_path(:id => model.id, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
               - else
                 = model.note
