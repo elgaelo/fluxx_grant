@@ -12,27 +12,27 @@
       %thead
         %tr
           %th
-            Request
-          %th
-            Date Submitted
+            
           %th
             Amount
+          %th
+            Date Submitted
           %th
             Program
           %th
             Status
-      -@data.each do |model|
-        - if model.is_grant?
-          - state = "Closed"
-          - state = "Active" if model.in_state_with_category?("become_grant")
-        - else
-          - state = "Submitted"
-          - state = "Draft" if model.in_state_with_category?("draft")
-          - state = "More info Requested" if model.in_state_with_category?("sent_back")
-          - state = "Decision Pending" if model.in_state_with_category?("approval")
-          - state = "Declined" if model.in_state_with_category?("rejected")
-        %tbody{"data-url".to_sym => edit_portal_grant_request_path(:id => model.id)}
-          %tr
+      %tbody
+        -@data.each do |model|
+          - if model.is_grant?
+            - state = "Closed"
+            - state = "Active" if model.in_state_with_category?("become_grant")
+          - else
+            - state = "Submitted"
+            - state = "Draft" if model.in_state_with_category?("draft")
+            - state = "More info Requested" if model.in_state_with_category?("sent_back")
+            - state = "Decision Pending" if model.in_state_with_category?("approval")
+            - state = "Declined" if model.in_state_with_category?("rejected")
+          %tr{"data-url".to_sym => edit_portal_grant_request_path(:id => model.id)}
             %td
               = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, portal_grant_request_path(:id => model.id))
               - if state == 'Draft' && current_user.has_role?(Program.grantee_role_name, model.program)
@@ -41,8 +41,8 @@
                   = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
               <br/>
               %p= model.project_summary
-            %td= mdy_date_format(model.request_received_at)
             %td= dollars_format(model.granted ? model.amount_recommended : model.amount_requested)
+            %td= mdy_date_format(model.request_received_at)
             %td= (model.program ? model.program.name : '')
             %td
               = state

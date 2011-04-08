@@ -10,7 +10,6 @@
       %thead
         %tr
           %th
-            Report
           %th
             Due Date
           %th
@@ -24,7 +23,7 @@
         - state = "Sent Back" if model.in_state_with_category?("sent_back")
         - state = "" if model.state.nil?        
         %tr
-          %td
+          %td{:width => '70%'}
             = "#{model.type_to_english} for #{model.request.grant_id}"
             %ul
               -model.model_documents.each do |doc|
@@ -43,6 +42,8 @@
           %td
             = state
             - if state == 'Due' && current_user.has_role?(Program.grantee_role_name, model.request.program)
-              %span= link_to "Submit Now", request_report_path(model.id, "event_action".to_sym => "receive_report", "request_report[workflow_note]".to_sym => "Received from Grantee Portal"), :class => "submit-workflow"
+              %span
+                = '- '
+                = link_to "Submit Now", request_report_path(model.id, "event_action".to_sym => "receive_report", "request_report[workflow_note]".to_sym => "Received from Grantee Portal"), :class => "submit-workflow"
 
   = render :partial => "grantee_portal/paging_actions"
