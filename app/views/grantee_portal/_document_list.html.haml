@@ -1,10 +1,9 @@
 - @data = Dir.glob("#{Rails.root}/public/documents/*.pdf").map{|filename| filename.gsub("#{Rails.root}/public/documents/", '')}.sort
 
-.titlebar
-  %h4
-    Documents
-
-%table
+/ .titlebar
+/   %h4
+/     Documents
+%table.tabular{:cellspacing => 0}
   %thead
     %tr
       %th
