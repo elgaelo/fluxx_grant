@@ -27,7 +27,7 @@
   - initiatives << form.object.initiative if form.object.initiative && (!initiatives.include?(form.object.initiative))
   - sub_initiatives << form.object.sub_initiative if form.object.sub_initiative && (!sub_initiatives.include?(form.object.sub_initiative))
 
-.program_filter{:class => 'hierarchical-filter'}
+.program_filter{:class => 'hierarchical-filter', "data-rollup" => rollup}
   = form.input "#{prefix}program_id".to_sym, :label => "#{label_prefix}#{I18n.t(:program_name)}", :as => :select, :collection => programs.map{|program| [program.description || program.name, program.id]}, :input_html => {:class => "#{prefix}program-dropdown-select add-another show-child-if-selected", 'data-related-child-param' => 'program_id', 'data-related-child' => ".#{prefix}sub-program-select"}
   - unless FLUXX_CONFIGURATION[:hide_sub_program]
     .sub_program_filter
