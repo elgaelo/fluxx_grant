@@ -1,11 +1,3 @@
-.container
-  %div.c60l
-    = image_tag("/images/logo-placeholder.png", :class => "logo")
-    %p
-      Pellentesque vel dui sed orci faucibus iaculis. Suspendisse dictum magna id purus tincidunt rutrum. Nulla congue. Vivamus sit amet lorem posuere dui vulputate ornare. Phasellus mattis sollicitudin ligula.
-    
-  %div.c40r
-    = render :partial => "document_list", :locals => {:@data => @transactions}
 .container{"data-src".to_sym => url_for({:table => "requests", :page => @requests.current_page})}
   = render :partial => "grant_request_list", :locals => {:@data => @requests, :@title => "Requests"}
 .container{"data-src".to_sym => url_for({:table => "grants", :page => @grants.current_page})}
@@ -14,3 +6,5 @@
   = render :partial => "report_list", :locals => {:@data => @reports}
 .container{"data-src".to_sym => url_for({:table => "transactions", :page => @transactions.current_page})}
   = render :partial => "transaction_list", :locals => {:@data => @transactions}
+.container
+  = render :partial => "document_list", :locals => {:@data => @transactions}

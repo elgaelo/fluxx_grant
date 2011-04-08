@@ -26,7 +26,6 @@
         %tr
           %td
             = "#{model.type_to_english} for #{model.request.grant_id}"
-            /- if model.model_documents.count != 0
             %ul
               -model.model_documents.each do |doc|
                 - if doc
