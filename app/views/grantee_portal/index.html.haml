@@ -6,3 +6,5 @@
   = render :partial => "report_list", :locals => {:@data => @reports}
 .container{"data-src".to_sym => url_for({:table => "transactions", :page => @transactions.current_page})}
   = render :partial => "transaction_list", :locals => {:@data => @transactions}
+.container
+  = render :partial => "document_list", :locals => {:@data => @transactions}
