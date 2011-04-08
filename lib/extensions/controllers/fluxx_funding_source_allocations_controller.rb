@@ -39,11 +39,15 @@ module FluxxFundingSourceAllocationsController
       insta.format do |format|
         format.autocomplete do |triple|
           controller_dsl, outcome, default_block = triple
+          funding_amount_string = params[:funding_amount]
+          funding_amount_string = funding_amount_string.gsub(/[^\d.]+/, '') if funding_amount_string
+          request_amount = if funding_amount_string && funding_amount_string.to_i > 0
+            funding_amount_string.to_i
+          end
           out_text = @models.map do |model|
-              request_amount = params[:funding_amount].to_i if params[:funding_amount] && params[:funding_amount].to_i > 0
               controller_url = url_for(model)
-              {:label => model.funding_source_title(request_amount), :value => model.id, :url => controller_url}
-            end.to_json
+              {:label => model.funding_source_title(request_amount), :value => model.id, :url => controller_url} if model.amount_remaining && request_amount && model.amount_remaining >= request_amount
+            end.compact.to_json
           render :text => out_text, :layout => false
         end
       end

@@ -7,6 +7,7 @@ module FluxxRequestFundingSource
     base.has_many :request_transaction_funding_sources, :dependent => :destroy
     base.validates_presence_of     :funding_amount
     base.validates_presence_of     :funding_source_allocation
+    base.validate :funding_source_allocation_has_enough_money
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.belongs_to :program
@@ -39,6 +40,12 @@ module FluxxRequestFundingSource
     
     def amount_remaining
       funding_amount - request_transaction_funding_sources.inject(0){|acc, rtfs| acc + (rtfs.amount || 0)}
+    end
+    
+    def funding_source_allocation_has_enough_money
+      if funding_source_allocation && funding_source_allocation.amount_remaining && !(funding_source_allocation.amount_remaining >= funding_amount)
+        errors[:funding_source_allocation] << "Please select a funding source with sufficient allocation."
+      end
     end
   end
 end
