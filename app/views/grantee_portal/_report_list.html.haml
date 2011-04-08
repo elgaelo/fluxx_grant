@@ -31,13 +31,7 @@
               -model.model_documents.each do |doc|
                 - if doc
                   %li
-                    = link_to doc.document_file_name, doc.document.url, :target => '_blank', :class => mime_type_to_class(doc.document_content_type)
-                    
-                    / - if doc.is_file?
-                    /   = link_to(truncate(doc.document_file_name, :length => 25), doc.document.url, :target => '_blank', :class => "air-download #{mime_type_to_class(doc.document_content_type)}")
-                    / - elsif doc.is_text?
-                    /   = link_to truncate(model.document_file_name, :length => 25), model_document_path(model), :class => 'new-detail', 'data-insert' => 'after', :title => "view/edit doc"
-                    
+                    = link_to doc.document_file_name, doc.document.url, :target => '_blank', :class => mime_type_to_class(doc.document_content_type)                    
                     
                     - if state == 'Due' && current_user.has_role?(Program.grantee_role_name, model.request.program)
                       %span.actions

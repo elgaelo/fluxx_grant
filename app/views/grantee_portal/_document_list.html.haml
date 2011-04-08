@@ -1,0 +1,22 @@
+- @data = Dir.glob("#{Rails.root}/public/documents/*.pdf").map{|filename| filename.gsub("#{Rails.root}/public/documents/", '')}.sort
+/ 
+/ .titlebar
+/   %h4
+/     Documents
+
+%table.tabular{:cellspacing => 0}
+  %thead
+    %tr
+      %th
+        Additional Forms
+  %tbody
+  - if @data.count == 0
+    %tr
+      %td
+        %p.caption
+          No documents
+  -@data.each do |filename|
+    %tr
+      %td
+        - name = filename.humanize.gsub('.pdf', '')
+        = link_to name, "/documents/#{filename}", :target => "_blank", :class => "file-type file-type-pdf"
