@@ -23,13 +23,21 @@ module FluxxRequest
     end || {}
   end
 
-  # This allows us to take a "--52-,3---,---15" hierarchy string of prog/subprog/init/subinit and match it against the request
+  # This allows us to take a "3-8-52-,3---,1-99-2-15" hierarchy string of prog/subprog/init/subinit and match it against the request
   def self.prepare_hierarchy search_with_attributes, name, val
     if val
       search_with_attributes[name] = []
       val = val.first if val.is_a?(Array)
       val.split(',').each do |tuple|
         prog_id, subprog_id, init_id, subinit_id = tuple.split('-')
+        if !subinit_id.blank?
+          prog_id = subprog_id = init_id = ''
+        elsif !init_id.blank?
+          prog_id = subprog_id = ''
+        elsif !subprog_id.blank?
+          prog_id = ''
+        end
+          
         if !prog_id.blank?
           program = Program.find prog_id rescue nil
           if program
@@ -38,11 +46,11 @@ module FluxxRequest
                 search_with_attributes[name] << "#{child_program.id}---"
               end
             else
-              search_with_attributes[name] << tuple
+              search_with_attributes[name] << "#{prog_id}-#{subprog_id}-#{init_id}-#{subinit_id}"
             end
           end
         else
-          search_with_attributes[name] << tuple if tuple && tuple != '---'
+          search_with_attributes[name] << "#{prog_id}-#{subprog_id}-#{init_id}-#{subinit_id}" if tuple && tuple != '---'
         end
       end
     end
@@ -73,6 +81,8 @@ module FluxxRequest
 
     base.belongs_to :program
     base.belongs_to :sub_program
+    base.belongs_to :initiative
+    base.belongs_to :sub_initiative
     base.after_create :generate_request_id
     base.after_save :process_before_save_blocks
     base.after_save :handle_cascading_deletes
