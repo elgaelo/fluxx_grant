@@ -30,7 +30,7 @@
           %dd= "#{(rfs.funding_amount || 0).to_currency}"
           - rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
           %dt= "Spent:"
-          %dd= "#{((rtfs ? rtfs.amount : 0) || 0).to_currency}"
+          %dd= "#{(rfs.amount_spent || 0).to_currency}"
           %dt= "Available:"
           %dd= "#{(rfs.amount_remaining || 0).to_currency}"  
 %div.partial
