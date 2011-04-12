@@ -9,7 +9,7 @@ module FluxxFundingSourceAllocation
     base.belongs_to :sub_program
     base.belongs_to :initiative
     base.belongs_to :sub_initiative
-    base.has_many :request_funding_sources
+    base.has_many :request_funding_sources, :include => :request, :conditions => "requests.deleted_at is null"
     base.has_many :funding_source_allocation_authorities
     base.validates_presence_of :funding_source
     base.validates_presence_of :spending_year
