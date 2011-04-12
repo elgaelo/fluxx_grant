@@ -1,15 +1,15 @@
 %h1= model.name
 
-- unless FLUXX_CONFIGURATION[:hide_program]
+- unless Program.is_hidden?
   .pairs
     .key= I18n.t(:program_name)
     .value= model.program.name if model.program
-- unless FLUXX_CONFIGURATION[:hide_sub_program]
+- unless SubProgram.is_hidden?
   .pairs
     .key= I18n.t(:sub_program_name)
     .value= model.sub_program.name if model.sub_program
 
-- unless FLUXX_CONFIGURATION[:hide_initiative]
+- unless Initiative.is_hidden?
   .pairs
     .key= I18n.t(:initiative_name)
     .value= model.initiative.name if model.initiative

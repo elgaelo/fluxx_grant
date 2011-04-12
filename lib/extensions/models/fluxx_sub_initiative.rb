@@ -34,6 +34,10 @@ module FluxxSubInitiative
   end
 
   module ModelClassMethods
+    def is_hidden?
+      FLUXX_CONFIGURATION[:hide_program] && FLUXX_CONFIGURATION[:funding_source_allocation_hide_program]
+    end
+
     def load_all
       SubInitiative.where(:retired => 0).order(:name).all
     end

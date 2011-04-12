@@ -43,6 +43,10 @@ module FluxxInitiative
   end
 
   module ModelClassMethods
+    def is_hidden?
+      FLUXX_CONFIGURATION[:hide_initiative] && FLUXX_CONFIGURATION[:funding_source_allocation_hide_initiative]
+    end
+
     def load_all
       Initiative.where(:retired => 0).order(:name).all
     end

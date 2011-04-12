@@ -1,19 +1,5 @@
-- unless FLUXX_CONFIGURATION[:hide_program]
-  = form.input :program_id, :label => I18n.t(:program_name), :as => :select, :required => false, :collection => Program.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-- unless FLUXX_CONFIGURATION[:hide_sub_program]
-  = form.input :sub_program_id, :label => I18n.t(:sub_program_name), :as => :select, :required => false, :collection => SubProgram.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-
-- unless FLUXX_CONFIGURATION[:hide_program]
-  = form.input :funding_source_allocation_program_id, :label => "Request Funding Source #{I18n.t(:program_name)}", :as => :select, :required => false, :collection => Program.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-
-- unless FLUXX_CONFIGURATION[:hide_sub_program]
-  = form.input :funding_source_allocation_sub_program_id, :label => "Request Funding Source #{I18n.t(:sub_program_name)}", :as => :select, :required => false, :collection => SubProgram.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-
-- unless FLUXX_CONFIGURATION[:hide_initiative]
-  = form.input :funding_source_allocation_initiative_id, :label => "Request Funding Source #{I18n.t(:initiative_name)}", :as => :select, :required => false, :collection => Initiative.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-
-- unless FLUXX_CONFIGURATION[:hide_sub_initiative]
-  = form.input :funding_source_allocation_sub_initiative_id, :label => "Request Funding Source #{I18n.t(:sub_initiative_name)}", :as => :select, :required => false, :collection => SubInitiative.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
+= render :partial => 'grant_requests/program_filter',  :locals => {:form => form, :prefix => '', :label_prefix => '', :rollup => 'request_hierarchy'}
+= render :partial => 'grant_requests/program_filter',  :locals => {:form => form, :prefix => 'funding_source_allocation_', :label_prefix => 'Request Funding Source ', :rollup => 'allocation_hierarchy'}
 
 = form.input :filter_type, :label => 'Request Type', :required => false, :as => :select, :collection => [['Grants', GrantRequest.name], [I18n.t(:fip_name).pluralize, FipRequest.name]], :input_html => {:class => 'add-another'}
 = form.input :filter_state, :label => 'Status:', :required => false, :as => :select, :collection => (FipRequest.all_states - FipRequest.all_states_with_category('granted')).map{|state|[Request.state_to_english_translation(state), state]}, :input_html => {:class => 'add-another'}
