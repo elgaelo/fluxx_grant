@@ -22,6 +22,7 @@ gem 'ts-delayed-delta', '>=1.1.0'
 gem 'paperclip'
 #gem 'devise', '>=1.1.2'
 gem "authlogic"
+gem 'ruby-net-ldap'
 
 gem "aasm", '2.2.0'
 gem 'acts_as_audited_rails3', '>=1.1.2'

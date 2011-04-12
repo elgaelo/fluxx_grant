@@ -75,7 +75,7 @@ module FluxxRequestTransaction
               where rt.id IN (?)"
     end
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES  + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :grant_multi_element_value_ids, :request_from_date, :request_to_date, :funding_source_allocation_id]
+      insta.filter_fields = SEARCH_ATTRIBUTES  + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :grant_multi_element_value_ids, :request_from_date, :request_to_date, :funding_source_allocation_id, :request_hierarchy, :allocation_hierarchy]
       insta.derived_filters = {:due_in_days => (lambda do |search_with_attributes, request_params, name, value|
         value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
@@ -83,6 +83,12 @@ module FluxxRequestTransaction
             search_with_attributes[:due_at] = (due_date_check.to_i..FAR_IN_THE_FUTURE.to_i)
             search_with_attributes[:has_been_paid] = false
           end || {}
+        end),
+        :request_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+          FluxxGrantSphinxHelper.prepare_hierarchy search_with_attributes, name, val
+        end),
+        :allocation_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+          FluxxGrantSphinxHelper.prepare_hierarchy search_with_attributes, name, val
         end),
         :overdue_by_days => (lambda do |search_with_attributes, request_params, name, value|
           value = value.first if value && value.is_a?(Array)
@@ -205,7 +211,8 @@ module FluxxRequestTransaction
         has group_members.group(:id), :type => :multi, :as => :group_ids
         has favorites.user(:id), :as => :favorite_user_ids
         has request_transaction_funding_sources.request_funding_source.funding_source_allocation(:id), :as => :funding_source_allocation_id
-        
+        has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
+        has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
       end
     end
 

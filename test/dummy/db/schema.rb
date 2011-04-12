@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110401181903) do
+ActiveRecord::Schema.define(:version => 20110411213741) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -67,6 +67,24 @@ ActiveRecord::Schema.define(:version => 20110401181903) do
   add_index "bank_accounts", ["owner_organization_id"], :name => "bank_accounts_owner_organization_id"
   add_index "bank_accounts", ["owner_user_id"], :name => "bank_accounts_owner_user_id"
   add_index "bank_accounts", ["updated_by_id"], :name => "bank_accounts_updated_by_id"
+
+  create_table "budget_requests", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.integer  "request_id",         :null => false
+    t.integer  "amount_requested"
+    t.integer  "amount_recommended"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
+  end
+
+  add_index "budget_requests", ["created_by_id"], :name => "budget_requests_created_by_id"
+  add_index "budget_requests", ["request_id"], :name => "index_budget_requests_on_request_id"
+  add_index "budget_requests", ["updated_by_id"], :name => "budget_requests_updated_by_id"
 
   create_table "client_stores", :force => true do |t|
     t.datetime "created_at"

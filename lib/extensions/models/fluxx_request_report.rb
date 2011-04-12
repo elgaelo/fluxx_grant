@@ -37,7 +37,7 @@ module FluxxRequestReport
     
     base.insta_favorite
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :request_hierarchy, :allocation_hierarchy]
       insta.derived_filters = {:due_in_days => (lambda do |search_with_attributes, request_params, name, value|
           value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
@@ -53,6 +53,12 @@ module FluxxRequestReport
             search_with_attributes[:due_at] = (0..due_date_check.to_i)
             search_with_attributes[:has_been_approved] = false
           end || {}
+        end),
+        :request_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+          FluxxGrantSphinxHelper.prepare_hierarchy search_with_attributes, name, val
+        end),
+        :allocation_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
+          FluxxGrantSphinxHelper.prepare_hierarchy search_with_attributes, name, val
         end),
         :grant_program_ids => (lambda do |search_with_attributes, request_params, name, val|
           program_id_strings = val
@@ -208,6 +214,10 @@ module FluxxRequestReport
         has grant.program_lead(:id), :as => :lead_user_ids
         
         has group_members.group(:id), :type => :multi, :as => :group_ids
+
+        has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
+        has 'null', :type => :multi, :as => :funding_source_ids
+        has 'null', :type => :multi, :as => :allocation_hierarchy
       end
 
       define_index :req_report_second do
@@ -230,6 +240,10 @@ module FluxxRequestReport
         has 'null', :type => :multi, :as => :related_organization_ids
         has 'null', :type => :multi, :as => :lead_user_ids
         has 'null', :type => :multi, :as => :group_ids
+        
+        has 'null', :type => :multi, :as => :request_hierarchy
+        has grant.request_funding_sources.funding_source_allocation.funding_source(:id), :as => :funding_source_ids
+        has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
       end
     end
     
