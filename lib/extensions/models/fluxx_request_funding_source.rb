@@ -4,7 +4,7 @@ module FluxxRequestFundingSource
   def self.included(base)
     base.belongs_to :request
     base.belongs_to :funding_source_allocation
-    base.has_many :request_transaction_funding_sources, :dependent => :destroy
+    base.has_many :request_transaction_funding_sources, :dependent => :destroy, :include => :request_transaction, :conditions => "request_transactions.deleted_at is null"
     base.validates_presence_of     :funding_amount
     base.validates_presence_of     :funding_source_allocation
     base.validate :funding_source_allocation_has_enough_money
