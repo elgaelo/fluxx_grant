@@ -51,6 +51,10 @@ module FluxxProgram
   end
 
   module ModelClassMethods
+    def is_hidden?
+      FLUXX_CONFIGURATION[:hide_program] && FLUXX_CONFIGURATION[:funding_source_allocation_hide_program]
+    end
+
     def finance_administrator_role_name
       'Finance Administrator'
     end
