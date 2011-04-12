@@ -51,7 +51,7 @@ module FluxxSubProgram
   
   module ModelInstanceMethods
     def autocomplete_to_s
-      description || name
+      !description || description.empty? ? name : description
     end
 
     def to_s
