@@ -22,5 +22,26 @@
     = f.label :remember_me
 
 :javascript
-  CFInstall.check({mode: 'overlay'});
+  function IsGCFNeeded() {
+    if($.browser.msie) {
+      try {
+        var i = new ActiveXObject('ChromeTab.ChromeFrame');
+        if (i) {
+          return false;
+        }
+      } catch(e) {
+        return true;
+        // squelch
+      }
+      return true;
+    }
+    return false;
+  };
+  if (IsGCFNeeded()) {
+    $('.content, .pinwheel').hide();
+    CFInstall.check({
+      url: '/install_chrome_frame.html',
+      mode: 'inline'
+    });
+  }
 
