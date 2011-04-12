@@ -37,8 +37,12 @@ module FluxxRequestFundingSource
       write_attribute(:funding_amount, filter_amount(new_amount))
     end
     
+    def amount_spent
+      request_transaction_funding_sources.inject(0){|acc, rtfs| acc + (rtfs.amount || 0)}
+    end
+    
     def amount_remaining
-      funding_amount - request_transaction_funding_sources.inject(0){|acc, rtfs| acc + (rtfs.amount || 0)}
+      funding_amount - amount_spent
     end
   end
 end
