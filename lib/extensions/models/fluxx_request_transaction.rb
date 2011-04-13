@@ -29,7 +29,7 @@ module FluxxRequestTransaction
   
   def self.included(base)
     base.belongs_to :request
-    base.belongs_to :grant, :class_name => 'GrantRequest', :foreign_key => 'request_id', :conditions => {:granted => 1}
+    base.belongs_to :grant, :class_name => 'Request', :foreign_key => 'request_id', :conditions => {:granted => 1}
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :payment_recorded_by, :class_name => 'User', :foreign_key => 'payment_recorded_by_id'
