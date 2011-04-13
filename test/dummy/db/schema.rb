@@ -663,13 +663,11 @@ ActiveRecord::Schema.define(:version => 20110411213741) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.integer  "rating"
-    t.string   "review_type"
+    t.string   "review_type",   :default => "RequestReport", :null => false
     t.text     "comment"
     t.text     "benefits"
     t.text     "outcomes"
     t.text     "merits"
-    t.text     "recommendation"
-    t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
   end

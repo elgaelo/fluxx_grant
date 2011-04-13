@@ -24,8 +24,12 @@ module FluxxGrantRequestsController
       insta.add_workflow
       insta.format do |format|
         format.html do |triple|
-          controller_dsl, outcome, default_block = triple
-          grant_request_show_format_html controller_dsl, outcome, default_block
+          if @model and @model.granted?
+            redirect_to granted_request_path(@model)
+          else
+            controller_dsl, outcome, default_block = triple
+            grant_request_show_format_html controller_dsl, outcome, default_block
+          end
         end
       end
       insta.post do |triple|
