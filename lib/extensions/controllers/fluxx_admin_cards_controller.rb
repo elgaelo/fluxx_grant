@@ -4,6 +4,7 @@ module FluxxAdminCardsController
     base.insta_show User do |insta|
       insta.template = 'admin_card_show'
       insta.icon_style = ICON_STYLE
+      insta.footer_template =  'insta/simple_footer'
 
       insta.pre do |conf|
         self.pre_model = 'n/a'
