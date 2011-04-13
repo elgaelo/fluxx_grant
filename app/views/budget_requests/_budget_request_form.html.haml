@@ -2,7 +2,7 @@
   %ol
     = form.input :request_id, :as => :hidden
     = form.input :name, :label => "Budget Item"
-    = form.input :amount_requested, :label => "Grant Amount Requested"
-    = form.input :amount_recommended, :label => "Grant Amount Recommended"
+    = form.input :amount_requested, :label => "Grant Amount Requested", :input_html => {:class => "budget-request-amount-requested"}
+    = form.input :amount_recommended, :label => "Grant Amount Recommended", :input_html => {:class => "budget-request-amount-recommended"}
     = render :partial => "budget_requests/extra_budget_request_form", :locals => {:model => model, :form => form}
     = form.commit_button
