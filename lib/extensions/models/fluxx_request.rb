@@ -526,7 +526,7 @@ module FluxxRequest
 
         has :type, :type => :string, :crc => true, :as => :filter_type
         has "requests.#{state_name}", :type => :string, :crc => true, :as => :filter_state
-        has program_lead(:id), :as => :lead_user_ids
+        has program_lead(:id), :type => :multi, :as => :lead_user_ids
 
         has "null", :type => :multi, :as => :org_owner_user_ids
         has "null", :type => :multi, :as => :favorite_user_ids
@@ -540,7 +540,7 @@ module FluxxRequest
         has "null", :type => :multi, :as => :funding_source_ids
 
         has "null", :type => :multi, :as => :group_ids
-        has request_programs(:id), :as => :request_program_ids
+        has request_programs(:id), :type => :multi, :as => :request_program_ids
         has "CONCAT(requests.program_id, CONCAT(',', GROUP_CONCAT(DISTINCT IFNULL(`request_programs`.`program_id`, '0') SEPARATOR ',')))", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
         has multi_element_choices.multi_element_value_id, :type => :multi, :as => :multi_element_value_ids
@@ -584,15 +584,15 @@ module FluxxRequest
         has "requests.#{state_name}", :type => :string, :crc => true, :as => :filter_state
         has "null", :type => :multi, :as => :lead_user_ids
 
-        has grantee_org_owner(:id), :as => :org_owner_user_ids
+        has grantee_org_owner(:id), :type => :multi, :as => :org_owner_user_ids
         has "null", :type => :multi, :as => :favorite_user_ids
         has "null", :type => :multi, :as => :user_ids
         has "null", :type => :multi, :as => :raw_request_org_ids
 
         has "null", :type => :multi, :as => :request_org_ids
         has "null", :type => :multi, :as => :grant_org_ids
-        has request_users(:id), :as => :request_user_ids
-        has request_funding_sources.funding_source_allocation.funding_source(:id), :as => :funding_source_ids
+        has request_users(:id), :type => :multi, :as => :request_user_ids
+        has request_funding_sources.funding_source_allocation.funding_source(:id), :type => :multi, :as => :funding_source_ids
 
         has "null", :type => :multi, :as => :group_ids
         has "null", :type => :multi, :as => :request_program_ids
@@ -611,7 +611,7 @@ module FluxxRequest
       	has "if(funding_source_allocations.initiative_id is not null, funding_source_allocations.initiative_id, 
               if(funding_source_allocations.sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id), null))", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "funding_source_allocations.sub_initiative_id", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
-        has request_funding_sources.funding_source_allocation(:id), :as => :funding_source_allocation_id
+        has request_funding_sources.funding_source_allocation(:id), :type => :multi, :as => :funding_source_allocation_id
         has "null", :type => :multi, :as => :request_hierarchy
         
         has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
@@ -649,7 +649,7 @@ module FluxxRequest
         has "null", :type => :multi, :as => :lead_user_ids
 
         has "null", :type => :multi, :as => :org_owner_user_ids
-        has favorites.user(:id), :as => :favorite_user_ids
+        has favorites.user(:id), :type => :multi, :as => :favorite_user_ids
         has "null", :type => :multi, :as => :user_ids
         has request_organizations.organization(:id), :type => :multi, :as => :raw_request_org_ids
         has "GROUP_CONCAT(DISTINCT if(granted = 0, IFNULL(`organizations_request_organizations`.`id`, '0'), null) SEPARATOR ',')", :type => :multi, :as => :request_org_ids

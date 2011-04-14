@@ -1,14 +1,14 @@
 # Centralize some complex queries used in multiple files
 class FluxxGrantSphinxHelper
   def self.request_hierarchy
-    "concat(CRC32(concat(ifnull(requests.program_id, ''), '-', '-', '-')), ',', 
+    "group_concat(CRC32(concat(ifnull(requests.program_id, ''), '-', '-', '-')), ',', 
         CRC32(concat('-', ifnull(requests.sub_program_id, ''), '-', '-')), ',',
         CRC32(concat('-', '-', ifnull(requests.initiative_id, ''), '-')), ',',
         CRC32(concat('-', '-', '-', ifnull(requests.sub_initiative_id, ''))))"
   end
   
   def self.allocation_hierarchy
-    "concat(CRC32(concat(ifnull(if (funding_source_allocations.program_id is not null, funding_source_allocations.program_id, 
+    "group_concat(CRC32(concat(ifnull(if (funding_source_allocations.program_id is not null, funding_source_allocations.program_id, 
                   if(funding_source_allocations.sub_program_id is not null, (select program_id from sub_programs where id = funding_source_allocations.sub_program_id),
                     if(funding_source_allocations.initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = funding_source_allocations.initiative_id)), 
                       if(funding_source_allocations.sub_initiative_id is not null, (select program_id from sub_programs where id = (select sub_program_id from initiatives where initiatives.id = (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id))), null)))), ifnull(request_funding_sources.program_id, '')), '-', '-', '-')),
@@ -61,7 +61,7 @@ class FluxxGrantSphinxHelper
         end
       end
     end
-    
+    search_with_attributes.delete(name) if search_with_attributes[name] && search_with_attributes[name].empty?
   end
   
 end
