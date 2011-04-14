@@ -447,6 +447,12 @@ class GrantRequestsControllerTest < ActionController::TestCase
     assert @response.body.index "Could not find detail record in system"
   end
 
+  test "try to show a granted request" do
+    @request1.update_attributes :state => "granted"
+    get :show, :id => @request1.to_param
+    assert_redirected_to granted_request_path(assigns(:model))
+  end
+
   test "should get edit" do
     get :edit, :id => @request1.to_param
     assert_response :success
