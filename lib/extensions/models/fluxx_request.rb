@@ -612,7 +612,7 @@ module FluxxRequest
               if(funding_source_allocations.sub_initiative_id is not null, (select initiative_id from sub_initiatives where sub_initiatives.id = funding_source_allocations.sub_initiative_id), null))", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "funding_source_allocations.sub_initiative_id", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         has request_funding_sources.funding_source_allocation(:id), :type => :multi, :as => :funding_source_allocation_id
-        has "null", :type => :multi, :as => :request_hierarchy
+        has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
         
         has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
         
@@ -667,7 +667,7 @@ module FluxxRequest
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_id
-        has "null", :type => :multi, :as => :request_hierarchy
+        has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
         has "null", :type => :multi, :as => :allocation_hierarchy
        
         set_property :delta => :delayed
