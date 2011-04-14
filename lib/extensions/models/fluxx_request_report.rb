@@ -241,7 +241,7 @@ module FluxxRequestReport
         has 'null', :type => :multi, :as => :lead_user_ids
         has 'null', :type => :multi, :as => :group_ids
         
-        has 'null', :type => :multi, :as => :request_hierarchy
+        has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
         has grant.request_funding_sources.funding_source_allocation.funding_source(:id), :as => :funding_source_ids
         has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
       end

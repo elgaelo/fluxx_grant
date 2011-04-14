@@ -22,6 +22,24 @@ module FluxxRequest
       search_with_attributes
     end || {}
   end
+  
+  def self.prepare_program_ids search_with_attributes, name, val
+    program_id_strings = val
+    programs = Program.where(:id => program_id_strings).all.compact
+    program_ids = programs.map do |program| 
+      children = program.children_programs
+      if children.empty?
+        program
+      else
+        [program] + children
+      end
+    end.compact.flatten.map &:id
+    
+    if program_ids && !program_ids.empty?
+      search_with_attributes[name] = program_ids
+    end
+  end
+
 
   
   SEARCH_ATTRIBUTES = [:program_id, :sub_program_id, :created_by_id, :filter_state, :program_organization_id, :fiscal_organization_id, :favorite_user_ids, :lead_user_ids, :org_owner_user_ids, :granted, :filter_type]
@@ -201,41 +219,12 @@ module FluxxRequest
             end
           end),
 
-          :filter_state => (lambda do |search_with_attributes, request_params, name, val|
-            states = val
-            pending_pd_approval_state = Request.all_states_with_category('pending_pd_approval').first
-            pending_secondary_pd_approval_state = Request.all_states_with_category('pending_secondary_pd_approval').first
-            states << pending_secondary_pd_approval_state if pending_pd_approval_state && states.include?(pending_pd_approval_state.to_s)
-
-            if pending_secondary_pd_approval_state && states.include?(pending_secondary_pd_approval_state.to_s) && search_with_attributes[:program_id]
-              # Have to consider that program_id may have been parsed before filter_state
-              search_with_attributes[:all_request_program_ids] = search_with_attributes[:program_id]
-              search_with_attributes.delete :program_id
-            end
-            search_with_attributes[:filter_state] = states.map{|val|val.to_s.to_crc32} if states && !states.empty?
-          end),
-
           :program_id => (lambda do |search_with_attributes, request_params, name, val|
-            program_id_strings = val
-            programs = Program.where(:id => program_id_strings).all.compact
-            program_ids = programs.map do |program| 
-              children = program.children_programs
-              if children.empty?
-                program
-              else
-                [program] + children
-              end
-            end.compact.flatten.map &:id
-            # Have to consider that state may have been parsed before program_id
-            pending_secondary_pd_approval_state = Request.all_states_with_category('pending_secondary_pd_approval').first
-            
-            if program_ids && !program_ids.empty?
-              if pending_secondary_pd_approval_state && search_with_attributes[:filter_state] && search_with_attributes[:filter_state].is_a?(Array) && search_with_attributes[:filter_state].include?(pending_secondary_pd_approval_state.to_s)
-                search_with_attributes[:all_request_program_ids] = program_ids
-              else
-                search_with_attributes[:program_id] = program_ids
-              end
-            end
+            prepare_program_ids search_with_attributes, name, val
+          end),
+          
+          :request_program_ids => (lambda do |search_with_attributes, request_params, name, val|
+            prepare_program_ids search_with_attributes, name, val
           end),
           :request_hierarchy => (lambda do |search_with_attributes, request_params, name, val|
             FluxxGrantSphinxHelper.prepare_hierarchy search_with_attributes, name, val
@@ -548,10 +537,10 @@ module FluxxRequest
         has "null", :type => :multi, :as => :funding_source_allocation_sub_program_id
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
-        has "null", :type => :multi, :as => :funding_source_allocation_id
+        has request_funding_sources.funding_source_allocation(:id), :type => :multi, :as => :funding_source_allocation_id
         
         has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
-        has "null", :type => :multi, :as => :allocation_hierarchy
+        has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
             
         set_property :delta => :delayed
       end
@@ -666,9 +655,9 @@ module FluxxRequest
         has "null", :type => :multi, :as => :funding_source_allocation_sub_program_id
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_initiative_id
-        has "null", :type => :multi, :as => :funding_source_allocation_id
+        has request_funding_sources.funding_source_allocation(:id), :type => :multi, :as => :funding_source_allocation_id
         has FluxxGrantSphinxHelper.request_hierarchy, :type => :multi, :as => :request_hierarchy
-        has "null", :type => :multi, :as => :allocation_hierarchy
+        has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
        
         set_property :delta => :delayed
       end
