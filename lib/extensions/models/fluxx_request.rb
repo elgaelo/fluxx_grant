@@ -109,7 +109,7 @@ module FluxxRequest
             'Constituents', 'Means', 'Type of Org', 'Funding Source', ['Date Created', :date], ['Date Last Updated', :date],
             'Primary Contact First Name', 'Primary Contact Last Name', 'Primary Contact Email',
             'Program Lead First Name', 'Program Lead Last Name', 'Program Lead Contact Email',
-            'Signatory First Name', 'Signatory Last Name', 'Signatory Email',
+            'Signatory First Name', 'Signatory Last Name', 'Signatory Email', "#{I18n.t(:fip_name)} Title",
             'Request Summary']
           if with_clause && with_clause[:granted]==1
             block1 + grant_block + block2
@@ -166,7 +166,7 @@ module FluxxRequest
           requests.created_at, requests.updated_at, 
           owner_users.first_name, owner_users.last_name, owner_users.email,
           lead_users.first_name, lead_users.last_name, lead_users.email,
-          signatory_users.first_name, signatory_users.last_name, signatory_users.email,
+          signatory_users.first_name, signatory_users.last_name, signatory_users.email, requests.fip_title
           project_summary
                          FROM requests
                          LEFT OUTER JOIN programs program ON program.id = requests.program_id
