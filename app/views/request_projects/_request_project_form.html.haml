@@ -1,0 +1,5 @@
+= form.input :request_id, :as => :hidden, :value => params[:request_project][:request_id]
+= form.input :project, :label => "Title", :as => :autocomplete, :autocomplete_url => projects_path(:format => :autocomplete), :related_attribute_name => :title
+= form.input :description, :as => :text
+
+= form.commit_button

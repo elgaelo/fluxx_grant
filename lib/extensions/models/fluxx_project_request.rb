@@ -22,5 +22,8 @@ module FluxxProjectRequest
   end
 
   module ModelInstanceMethods
+    def title
+      project.title
+    end
   end
 end
