@@ -104,6 +104,16 @@ module FluxxGrantedRequestsController
         end
         related.display_template = '/request_reports/related_documents'
       end
+      insta.add_related do |related|
+        related.display_name = 'Projects'
+        related.add_title_block do |model|
+          model.title if model
+        end
+        related.for_search do |model|
+          model.related_projects
+        end
+        related.display_template = '/projects/related_project'
+      end
     end
 
     base.extend(ModelClassMethods)

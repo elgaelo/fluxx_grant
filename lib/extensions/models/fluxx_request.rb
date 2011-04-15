@@ -56,6 +56,8 @@ module FluxxRequest
     base.send :attr_accessor, :fiscal_organization_lookup
     base.has_many :request_organizations
     base.has_many :request_users
+    base.has_many :project_requests
+    base.has_many :projects, :through => :project_requests
     base.has_many :request_transactions, :order => "due_at"
     base.accepts_nested_attributes_for :request_transactions, :allow_destroy => true
     base.has_many :request_funding_sources
@@ -915,6 +917,10 @@ module FluxxRequest
       (request_organizations.map{|ro| ro.organization} + [program_organization, fiscal_organization]).compact.sort_by{|o| o.name || ''}.reject{|o| o.deleted_at}
     end
     
+    def related_projects limit_amount=20
+      projects.limit(limit_amount)
+    end
+
     def related_request_transactions limit_amount=20
       request_transactions.where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
     end

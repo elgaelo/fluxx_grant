@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :fip_requests
   resources :request_letters
   resources :request_users
+  resources :request_projects
   resources :granted_requests
   resources :request_organizations
   resources :programs

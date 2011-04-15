@@ -61,5 +61,9 @@ module FluxxGrantProject
     def related_grants
       related_requests true
     end
+
+    def autocomplete_to_s
+      title
+    end
   end
 end
