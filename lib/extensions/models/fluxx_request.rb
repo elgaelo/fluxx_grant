@@ -42,7 +42,7 @@ module FluxxRequest
 
 
   
-  SEARCH_ATTRIBUTES = [:program_id, :sub_program_id, :created_by_id, :filter_state, :program_organization_id, :fiscal_organization_id, :favorite_user_ids, :lead_user_ids, :org_owner_user_ids, :granted, :filter_type]
+  SEARCH_ATTRIBUTES = [:program_id, :sub_program_id, :created_by_id, :filter_state, :program_organization_id, :fiscal_organization_id, :favorite_user_ids, :lead_user_ids, :org_owner_user_ids, :granted, :filter_type, :request_hierarchy, :allocation_hierarchy]
   FAR_IN_THE_FUTURE = Time.now + 1000.year
   begin FAR_IN_THE_FUTURE.to_i rescue FAR_IN_THE_FUTURE = Time.now + 10.year end
 
@@ -206,7 +206,7 @@ module FluxxRequest
     
     
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id, :funding_source_allocation_id, :request_hierarchy, :allocation_hierarchy]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :greater_amount_recommended, :lesser_amount_recommended, :request_from_date, :request_to_date, :grant_begins_from_date, :grant_begins_to_date, :grant_ends_from_date, :grant_ends_to_date, :missing_request_id, :has_been_rejected, :funding_source_ids, :all_request_program_ids, :request_program_ids, :multi_element_value_ids, :funding_source_allocation_program_id, :funding_source_allocation_sub_program_id, :funding_source_allocation_initiative_id, :funding_source_allocation_sub_initiative_id, :funding_source_allocation_id]
 
       
 
@@ -891,6 +891,16 @@ module FluxxRequest
 
     def lead_user_ids
       program_lead ? program_lead.id : nil
+    end
+    
+    def request_hierarchy
+      "#{program_id}-#{sub_program_id}-#{initiative_id}-#{sub_initiative_id}"
+    end
+    
+    def allocation_hierarchy
+      request_funding_sources.map do |rfs|
+        "#{rfs.program_id}-#{rfs.sub_program_id}-#{rfs.initiative_id}-#{rfs.sub_initiative_id}"
+      end.join(RealtimeUpdate.delimiter)
     end
 
     def org_owner_user_ids
