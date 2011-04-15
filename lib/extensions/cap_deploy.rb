@@ -1,10 +1,9 @@
 # NOTE: to deploy a branch you need to do something like this:
 # cap staging deploy --set-before branch=shakti-1.0-rc1 --set-before engine_branch=fluxx_engine-1.0-rc1 --set-before crm_branch=fluxx_crm-1.0-rc1 --set-before grant_branch=fluxx_grant-1.0-rc1 deploy:migrations
-set :stages, %w(standalone staging demo production)
+set :stages, %w(standalone staging demo testing production)
 set :default_stage, 'standalone'
 require 'capistrano/ext/multistage'
 require 'delayed/recipes'
-
 
 fluxx_application_name = FLUXX_APPLICATION_NAME
 set :application, fluxx_application_name
@@ -25,7 +24,11 @@ set :try_sudo, 'sudo'
 set :use_sudo, false 
 
 default_run_options[:pty] = true
-set :repository,  "git@github.com:fluxxlabs/fluxx_#{fluxx_application_name}.git"
+if defined? FLUXX_REPO_SPEC
+  set :repository,  FLUXX_REPO_SPEC
+else
+  set :repository,  "git@github.com:fluxxlabs/fluxx_#{fluxx_application_name}.git"
+end
 set :scm, "git"
 set :git_enable_submodules, 1
 
