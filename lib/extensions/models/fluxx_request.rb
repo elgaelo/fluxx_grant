@@ -900,7 +900,7 @@ module FluxxRequest
     def allocation_hierarchy
       request_funding_sources.map do |rfs|
         "#{rfs.program_id}-#{rfs.sub_program_id}-#{rfs.initiative_id}-#{rfs.sub_initiative_id}"
-      end.join(RealtimeUpdate.delimiter)
+      end
     end
 
     def org_owner_user_ids
