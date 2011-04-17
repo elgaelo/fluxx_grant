@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110414003544) do
+ActiveRecord::Schema.define(:version => 20110417035527) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -663,11 +663,13 @@ ActiveRecord::Schema.define(:version => 20110414003544) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.integer  "rating"
-    t.string   "review_type",   :default => "RequestReport", :null => false
+    t.string   "review_type"
     t.text     "comment"
     t.text     "benefits"
     t.text     "outcomes"
     t.text     "merits"
+    t.text     "recommendation"
+    t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
   end
