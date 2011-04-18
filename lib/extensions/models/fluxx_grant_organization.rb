@@ -1,5 +1,6 @@
 module FluxxGrantOrganization
   require 'rexml/document'
+  require 'net/https'
   include REXML
 
   SEARCH_ATTRIBUTES = [:parent_org_id, :grant_program_ids, :grant_sub_program_ids, :state, :updated_at, :request_ids, :grant_ids, :favorite_user_ids, :related_org_ids]
