@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110417035527) do
+ActiveRecord::Schema.define(:version => 20110417175227) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -304,13 +304,21 @@ ActiveRecord::Schema.define(:version => 20110417035527) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.string   "name",                            :null => false
-    t.string   "model_type",                      :null => false
-    t.boolean  "required",      :default => true, :null => false
+    t.string   "name",                                :null => false
+    t.string   "model_type",                          :null => false
+    t.boolean  "required",          :default => true, :null => false
+    t.integer  "program_id"
+    t.integer  "sub_program_id"
+    t.integer  "initiative_id"
+    t.integer  "sub_initiative_id"
   end
 
   add_index "model_document_types", ["created_by_id"], :name => "model_document_types_created_by_id"
+  add_index "model_document_types", ["initiative_id"], :name => "model_document_types_initiative_id"
   add_index "model_document_types", ["model_type"], :name => "index_model_document_types_on_model_type"
+  add_index "model_document_types", ["program_id"], :name => "model_document_types_program_id"
+  add_index "model_document_types", ["sub_initiative_id"], :name => "model_document_types_sub_initiative_id"
+  add_index "model_document_types", ["sub_program_id"], :name => "model_document_types_sub_program_id"
   add_index "model_document_types", ["updated_by_id"], :name => "model_document_types_updated_by_id"
 
   create_table "model_documents", :force => true do |t|
