@@ -329,6 +329,20 @@ module FluxxRequestTransaction
       error
     end
     
+    def request_hierarchy
+      request ? "#{request.program_id}-#{request.sub_program_id}-#{request.initiative_id}-#{request.sub_initiative_id}" : ''
+    end
+    
+    def allocation_hierarchy
+      if request
+        request.request_funding_sources.map do |rfs|
+          "#{rfs.program_id}-#{rfs.sub_program_id}-#{rfs.initiative_id}-#{rfs.sub_initiative_id}"
+        end
+      else
+        ''
+      end
+    end
+    
     def update_rtfs
       if request_transaction_funding_source_param_hash
         request_transaction_funding_source_param_hash.keys.each do |rtfs|
