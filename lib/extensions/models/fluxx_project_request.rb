@@ -6,7 +6,10 @@ module FluxxProjectRequest
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :project
     base.belongs_to :request
-    
+   
+    base.validates :request, :presence => true
+    base.validates :project, :presence => true
+
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
