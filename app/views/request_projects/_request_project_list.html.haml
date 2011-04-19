@@ -8,6 +8,6 @@
       - if current_user.has_delete_for_model? model
         %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
       = image_tag("/images/fluxx_engine/theme/default/card-icons/button_card_projects.png", :class=> 'float_left', :width=> '18px')
-      = model.title if model
+      = model.project.title if model.project
       <br/>
-      %p.caption= model.description
+      %p.caption= model.project.description
