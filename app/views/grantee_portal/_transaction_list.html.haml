@@ -25,5 +25,5 @@
           %td= dollars_format(model.amount_paid)
           %td= mdy_date_format(model.due_at)
           %td= mdy_date_format(model.paid_at)
-          %td
+          %td= model.state.humanize
   = render :partial => "grantee_portal/paging_actions"
