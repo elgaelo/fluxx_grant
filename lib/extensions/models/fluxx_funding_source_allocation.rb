@@ -164,7 +164,7 @@ module FluxxFundingSourceAllocation
     def funding_source_title request_amount=nil
       current_amount_remaining = self.amount_remaining
       funds_available = if request_amount
-        if current_amount_remaining > request_amount
+        if current_amount_remaining >= request_amount
           "#{current_amount_remaining.to_currency} (#{amount_granted_in_queue.to_currency} in pipeline)"
         else
           "Less than #{request_amount.to_currency} available"
