@@ -71,6 +71,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'migrate_client_stores_to_program_hierarchy.rb', 'db/migrate/fluxx_grant_migrate_client_stores_to_program_hierarchy.rb'
     handle_migration 'add_hierarchy_marker_to_existing_dashboards.rb', 'db/migrate/fluxx_grant_add_hierarchy_marker_to_existing_dashboards.rb'
     handle_migration 'add_model_type_hierarchy_to_model_document_types.rb', 'db/migrate/fluxx_grant_add_model_type_hierarchy_to_model_document_types.rb'
+    handle_migration 'use_class_names_for_modal_reports.rb', 'db/migrate/fluxx_grant_use_class_names_for_modal_reports.rb'
   end
   
   private
