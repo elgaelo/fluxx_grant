@@ -2,7 +2,7 @@
   $.fn.extend({
     initGranteePortal: function() {
       $.fn.installFluxxDecorators();
-      $('.notice').delay(2000).fadeOut('slow');
+      $('.notice').delay(5000).fadeOut('slow');
     },
 		installFluxxDecorators: function() {
 		  $.each($.fluxx.decorators, function(key,val) {
