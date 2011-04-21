@@ -24,7 +24,13 @@
       });
 		}
 	});
-	
+
+  $.fn.extend({
+    fluxxCard: function() {
+      return $(document);
+    }
+  });
+
 	$.extend(true, {
 		fluxx: {
 		  decorators: {
