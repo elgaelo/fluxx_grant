@@ -74,5 +74,8 @@ module FluxxBudgetRequest
   end
   
   module ModelInstanceMethods
+    def relates_to_user? user
+      (user.id == self.created_by_id)
+    end
   end
 end
