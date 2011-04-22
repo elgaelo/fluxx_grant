@@ -28,6 +28,29 @@
   $.fn.extend({
     fluxxCard: function() {
       return $(document);
+    },
+    openCardModal: function(options) {
+      $.modal('<div id="modal-content"></div>', {
+        minWidth: 500,
+        minHeight: 500,
+        closeHTML: '<span>Close</span>',
+        close: true,
+        closeOverlay: true,
+        escClose:true,
+        opacity: 50,
+        onShow: function () {
+          $.ajax({
+            url: options.url,
+            type: 'GET',
+            success: function(data, status, xhr){
+             $('#modal-content').append(data);
+            }
+          });
+        },
+        onClose: function(){
+          $.modal.close();
+        }
+      });
     }
   });
 
@@ -143,8 +166,19 @@
                var $elem = $(this);
                window.location = $elem.attr('data-href');
             }
+          ],
+          'a.to-modal': [
+            'click', function(e) {
+              e.preventDefault();
+              var $elem = $(this);
+              $elem.openCardModal({
+                url:    $elem.attr('href'),
+                header: $elem.attr('title') || $elem.text(),
+                target: $elem
+              });
+            }
           ]
-		 }
+		    }
 	    }
 	});
 })(jQuery);
