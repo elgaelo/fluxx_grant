@@ -44,6 +44,7 @@
             type: 'GET',
             success: function(data, status, xhr){
              $('#modal-content').append(data);
+             $(document).data('modal-target', options.target);
             }
           });
         },
@@ -149,13 +150,13 @@
             'click', function(e) {
               e.preventDefault();
               var $elem = $(this);
-              var $area = $elem.parents('.container');
+              $area = $elem.parents('[data-src]');
               if (confirm('This request will be deleted. Are you sure?'))
                 $.ajax({
                   url: $elem.attr('href'),
                   type: 'DELETE',
-		          success: function(data, status, xhr){
-				    $.fn.loadTable($area, 0);
+		              success: function(data, status, xhr){
+    		    		    $.fn.loadTable($area, 0);
                   }
                 });
             }
@@ -175,6 +176,25 @@
                 url:    $elem.attr('href'),
                 header: $elem.attr('title') || $elem.text(),
                 target: $elem
+              });
+            }
+          ],
+          '#modal-content form' : [
+            'submit', function(e) {
+              e.preventDefault();
+              $form = $(this);
+              $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(data, status, xhr){
+                  if (xhr.getResponseHeader('fluxx_result_success')) {
+                    $.fn.loadTable($(document).data('modal-target').parents('[data-src]'), 0);
+                    $.modal.close();
+                  } else {
+                    $('#modal-content').html(data);
+                  }
+                }
               });
             }
           ]
