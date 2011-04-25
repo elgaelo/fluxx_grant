@@ -45,6 +45,7 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :organization_lookup
     base.belongs_to :bank_account
     base.send :attr_accessor, :request_transaction_funding_source_param_hash
+    base.send :attr_accessor, :using_transaction_form
     base.validate :validate_required_funding_source, :if => Proc.new{|model| !model.new_record?}
     base.after_save :update_rtfs
     
@@ -315,18 +316,18 @@ module FluxxRequestTransaction
     end
     
     def validate_required_funding_source
-      has_funding_source = if request_transaction_funding_source_param_hash
+      if request_transaction_funding_source_param_hash
         rtfs_list = request_transaction_funding_source_param_hash.keys.map do |rtfs|
           amount = request_transaction_funding_source_param_hash[rtfs]
         end.compact
-        !rtfs_list.empty?
+        has_funding_source = !rtfs_list.empty?
+        error = nil
+        unless has_funding_source
+          error = "You must specify an amount for at least one of the funding sources associated with the grant."
+          errors[:Missing_Funding_source] << error
+        end
+        error
       end
-      error = nil
-      unless has_funding_source
-        error = "You must specify an amount for at least one of the funding sources associated with the grant."
-        errors[:Missing_Funding_source] << error
-      end
-      error
     end
     
     def request_hierarchy

@@ -119,7 +119,7 @@ module FluxxRequestTransactionsController
 
   module ModelInstanceMethods
     def populate_request_transaction_funding_source_param_hash model
-      if model
+      if model && params[:request_transaction] && params[:request_transaction][:using_transaction_form] == '1'
         # For newly created request transactions, the request is not yet populated
         if model.request_id && (model.request = Request.find model.request_id rescue nil)
           rfs_hash = model.request.request_funding_sources.inject({}) do |acc, rfs|
