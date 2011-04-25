@@ -1,0 +1,18 @@
+- unless model.funding_warnings.empty?
+  %div.funding_warnings_title
+    Warning - there may be problems with this Request.
+
+    %ol.funding_warnings
+      - unless model.funding__warnings.first.empty?
+        %li
+	  This grant may require a second payment:
+	  %ul
+	    - model.funding_warnings.first.each do |warning|
+	      %li= warning
+
+      - fs_warnings[1..-1].each do |warning|
+	%li= warning
+	      
+- model.general_warnings.each do 
+  %div.warning
+    = warning
