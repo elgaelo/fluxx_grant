@@ -151,7 +151,7 @@ module FluxxGrantUser
         limit ?
         ", request_ids, granted_param, self.id, granted_param, limit_amount]
     end
-
+    
     def is_grantee?
       self.user_profile == UserProfile.where(:name => 'Grantee').first
     end
