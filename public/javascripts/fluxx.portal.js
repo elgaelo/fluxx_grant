@@ -123,6 +123,8 @@
                 type: 'PUT',
                 data: {},
 		            success: function(data, status, xhr){
+                  if ($elem.attr('data-success-message'))
+                    alert($elem.attr('data-success-message'));
 				          $.fn.loadTable($area, 0);
                 }
               });
