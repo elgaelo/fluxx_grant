@@ -3,7 +3,11 @@ class FundingAllocationsByTimeReport < ActionController::ReportBase
   set_type_as_show
 
   def report_label
-    "Budget Overview by Date Range"
+    "Budget Overview Chart (Monthly Tracker)"
+  end
+
+  def report_description
+    "Data visualization to track monthly budgeting and grant throughput. (Bar Chart)"
   end
 
   def compute_show_plot_data controller, index_object, params

@@ -14,7 +14,7 @@ class PipelineReport < ActionController::ReportBase
   end
 
   def report_description
-    'Pipeline report'
+    'Grant listing of pipeline requests, by Program/Initiative. (Excel Table)'
   end
   
   def compute_show_document_headers controller, show_object, params

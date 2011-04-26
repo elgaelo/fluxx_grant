@@ -3,7 +3,11 @@ class FundingAllocationsByProgramReport < ActionController::ReportBase
   set_type_as_show
 
   def report_label
-    "Budget Overview by #{I18n.t(:program_name)}"
+    "Budget Overview Chart (Annual Tracker)"
+  end
+
+  def report_description
+    "Data visualization to track Program's annual budgeting and grant throughput. (Bar Chart)"
   end
 
   def compute_show_plot_data controller, index_object, params

@@ -7,11 +7,11 @@ class GrantsByFundingSourceReport < ActionController::ReportBase
   end
 
   def report_label
-    'Grants by Funding Source'
+    'Funder Detail Report'
   end
 
   def report_description
-    'Grants by Funding Source'
+    'Grant listing of funds committed, by Funder (Excel Table)'
   end
 
   def compute_show_document_headers controller, show_object, params

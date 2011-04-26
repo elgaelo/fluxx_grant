@@ -10,11 +10,11 @@ class ProgramInitiativeBudgetReport < ActionController::ReportBase
   end
   
   def report_label
-    'Program Initiative Budget'
+    'Financial Details by Initiative'
   end
 
   def report_description
-    'Program Initiative Budget'
+    'Detailed grant listing of Program/Initiative spending - by Budget, Pipeline, Commit, and Paid.  (Excel Report)'
   end
   
   def compute_show_document_headers controller, show_object, params

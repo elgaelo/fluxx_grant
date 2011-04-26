@@ -7,11 +7,11 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
   end
 
   def report_label
-    'Grant and FIPs Paid'
+    'Payment Transaction Report'
   end
 
   def report_description
-    'Grant and FIPs Paid'
+    'Detailed report on transactions recorded as paid.  (Excel Report)'
   end
 
   def compute_show_document_headers controller, show_object, params
@@ -166,7 +166,7 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
 
      # Add page summary
      # worksheet.write(0, 0, 'The Energy Foundation', non_wrap_bold_format)
-     worksheet.write(1, 0, 'Grants Fips Paid', non_wrap_bold_format)
+     worksheet.write(1, 0, 'Payment Transaction Report', non_wrap_bold_format)
      worksheet.write(2, 0, 'Start Date: ' + start_date.mdy)
      worksheet.write(3, 0, 'End Date: ' + end_date.mdy)
      worksheet.write(4, 0, "Report Date: " + Time.now.mdy)
