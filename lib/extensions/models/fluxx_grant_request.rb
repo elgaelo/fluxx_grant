@@ -140,7 +140,7 @@ module FluxxGrantRequest
     end
 
     def relates_to_user? user
-      (user.primary_organization.id == self.program_organization_id) || (user.primary_organization.id == self.fiscal_organization_id)
+       (user.id == self.created_by_id) || (user.primary_organization.id == self.program_organization_id) || (user.primary_organization.id == self.fiscal_organization_id)
     end
   end
 end

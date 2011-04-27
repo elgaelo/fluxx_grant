@@ -18,7 +18,6 @@ module FluxxPortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          org_ids = current_user.primary_organization.id
           request_ids = @model.id
           @reports = RequestReport.where(:request_id => request_ids).order("created_at desc")
           @transactions = RequestTransaction.where(:request_id => request_ids).order("created_at desc")
@@ -80,6 +79,7 @@ module FluxxPortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
+          @model.update_attribute('state', 'draft')
           grant_request_update_format_html controller_dsl, outcome, default_block
         end
       end

@@ -823,8 +823,9 @@ module FluxxRequest
 
     def generate_request_id
       current_time = Time.now
-      self.update_attributes :request_received_at => current_time, 
+      self.update_attributes :request_received_at => current_time,
         :base_request_id => (current_time.strftime("%y%m-") + id.to_s.rjust(5, '0'))  # Generate the request ID
+      self.save false
     end
 
     def request_id
@@ -985,7 +986,7 @@ module FluxxRequest
     def state_after_pre_recommended_chain
       state && !(in_draft_state? || in_new_state? || in_reject_state?)
     end
-    
+
     def signatory_contact
       fiscal_signatory  || fiscal_org_owner || grantee_signatory ||  grantee_org_owner || User.new
     end
