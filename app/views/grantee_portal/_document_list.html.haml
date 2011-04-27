@@ -1,4 +1,7 @@
-- @data = Dir.glob("#{Rails.root}/public/documents/*.pdf").map{|filename| filename.gsub("#{Rails.root}/public/documents/", '')}.sort.paginate
+- if FileTest.exists? "#{Rails.root}/public/documents/documents.yaml"
+  - @data = YAML::load(File.open( "#{Rails.root}/public/documents/documents.yaml" ))
+- else
+  - @data = Dir.glob("#{Rails.root}/public/documents/*.pdf").map{|filename| filename.gsub("#{Rails.root}/public/documents/", '')}.sort.paginate
 
 .titlebar
   %h4
@@ -13,9 +16,10 @@
         %th
           Additional Forms
     %tbody
-    -@data.each do |filename|
+    -@data.each do |file|
       %tr
         %td
-          - name = filename.humanize.gsub('.pdf', '')
+          - filename = file["filename"] ? file["filename"] : file
+          - name = file["name"] ? file["name"] : filename.humanize.gsub('.pdf', '')
           = link_to name, "/documents/#{filename}", :target => "_blank", :class => "file-type file-type-pdf"
   = render :partial => "grantee_portal/paging_actions"
