@@ -1059,13 +1059,11 @@ module FluxxRequest
       unless @funding_warnings
         @funding_warnings = [[]]
 
-        #if funding_sources_expires_before_close_date?
-          @funding_warnings.first << 'No c3 status' if program_organization.c3_status_approved? 
-          @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
-          @funding_warnings << 'Funding source expires before estimated grant close date'
-        #end
+        @funding_warnings.first << 'No c3 status' if program_organization.c3_status_approved?
+        @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
+        @funding_warnings << 'Funding source expires before estimated grant close date' if funding_sources_expires_before_close_date?
 
-        # just sugar to avoid using #first in views. 
+        # just sugar to avoid using #first in views.
         class << @funding_warnings
           def empty?
             first.empty? and size == 1
@@ -1073,7 +1071,7 @@ module FluxxRequest
         end
       end
 
-      @fundingwarnings
+      @funding_warnings
     end
 
     def general_warnings
