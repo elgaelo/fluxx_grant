@@ -87,7 +87,7 @@ module ApplicationGrantHelper
   end
   
   def build_request_quicklinks
-    p "ESH: in build_request_quicklinks of application grant helper"
+    #p "ESH: in build_request_quicklinks of application grant helper"
     request_links = []
     request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
     request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]

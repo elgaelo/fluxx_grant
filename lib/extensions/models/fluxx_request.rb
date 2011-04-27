@@ -825,7 +825,7 @@ module FluxxRequest
       current_time = Time.now
       self.update_attributes :request_received_at => current_time,
         :base_request_id => (current_time.strftime("%y%m-") + id.to_s.rjust(5, '0'))  # Generate the request ID
-      self.save false
+      self.save(:validate => false)
     end
 
     def request_id
@@ -1045,6 +1045,45 @@ module FluxxRequest
         true # Do not try to fire the regular event
       end
     end
-    
+
+    def funding_sources_expires_before_close_date?
+      # TODO: ask how to count it...
+      false
+    end
+
+    def duration_over_12_months?
+      duration_in_months > 12
+    end
+
+    def funding_warnings
+      unless @funding_warnings
+        @funding_warnings = [[]]
+
+        @funding_warnings.first << 'No c3 status' if program_organization.c3_status_approved?
+        @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
+        @funding_warnings << 'Funding source expires before estimated grant close date' if funding_sources_expires_before_close_date?
+
+        # just sugar to avoid using #first in views.
+        class << @funding_warnings
+          def empty?
+            first.empty? and size == 1
+          end
+        end
+      end
+
+      @funding_warnings
+    end
+
+    def general_warnings
+      unless @warnings
+        @general_warnings = []
+        @general_warnings << 'This grant is funding general operating support.' if funding_general_operating_support 
+        @general_warnings << 'This grant requires direct board authority.' if board_authorization_required 
+        @general_warnings << 'This grant is a renewal.' if renewal_grant
+        @general_warnings
+      end
+      @general_warnings
+    end
+
   end
 end
