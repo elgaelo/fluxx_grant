@@ -825,7 +825,7 @@ module FluxxRequest
       current_time = Time.now
       self.update_attributes :request_received_at => current_time,
         :base_request_id => (current_time.strftime("%y%m-") + id.to_s.rjust(5, '0'))  # Generate the request ID
-      self.save false
+      self.save(:validate => false)
     end
 
     def request_id
