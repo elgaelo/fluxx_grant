@@ -2,7 +2,6 @@
 - unless project
   - if params[:project_id]
     - project = Project.find(grab_param(:project_request, :project_id)) rescue nil
-  - if project
 %ul
   - models.each do |model|
     %li.relationship{:class=>"action-item"}

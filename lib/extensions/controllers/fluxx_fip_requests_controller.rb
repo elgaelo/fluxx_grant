@@ -36,6 +36,7 @@ module FluxxFipRequestsController
     base.insta_new FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
     end
     base.insta_edit FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'

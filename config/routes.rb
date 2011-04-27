@@ -41,4 +41,6 @@ Rails.application.routes.draw do
   resources :grantee_portal
   resources :portal_grant_requests
 
+  match 'login' => 'user_sessions#new', :as => :login
+  match 'logout' => 'user_sessions#destroy', :as => :logout
 end

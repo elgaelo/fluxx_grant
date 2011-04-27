@@ -40,7 +40,7 @@ module FluxxFundingSourceAllocationsController
         format.autocomplete do |triple|
           controller_dsl, outcome, default_block = triple
           funding_amount_string = params[:funding_amount]
-          funding_amount_string = funding_amount_string.gsub(/[^\d.]+/, '') if funding_amount_string
+          funding_amount_string = funding_amount_string.to_s.gsub(/[^\d.]+/, '') if funding_amount_string
           request_amount = if funding_amount_string && funding_amount_string.to_i > 0
             funding_amount_string.to_i
           end

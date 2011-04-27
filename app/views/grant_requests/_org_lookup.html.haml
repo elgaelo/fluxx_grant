@@ -8,7 +8,7 @@
   - labels ||= {}
   - hidden_attribute_class = "#{org_name}_hidden_value"
   - if current_user.is_portal_user?
-    - current_location = Organization.find(current_user.primary_organization.id)
+    - current_location = Organization.find(current_user.primary_organization.id) if current_user.primary_organization
   - else
     - current_location = form.object.send(org_name)
   - current_org = current_location

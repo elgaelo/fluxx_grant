@@ -35,6 +35,7 @@ module FluxxPortalGrantRequestsController
       insta.skip_card_footer = true
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
     end
     base.insta_edit GrantRequest do |insta|
       insta.template = 'grant_request_form'
