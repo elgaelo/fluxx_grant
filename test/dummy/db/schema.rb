@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110417175227) do
+ActiveRecord::Schema.define(:version => 20110428184723) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -671,13 +671,11 @@ ActiveRecord::Schema.define(:version => 20110417175227) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.integer  "rating"
-    t.string   "review_type"
+    t.string   "review_type",   :default => "RequestReport", :null => false
     t.text     "comment"
     t.text     "benefits"
     t.text     "outcomes"
     t.text     "merits"
-    t.text     "recommendation"
-    t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
   end
@@ -797,6 +795,7 @@ ActiveRecord::Schema.define(:version => 20110417175227) do
     t.integer  "sub_initiative_id"
     t.string   "po_number"
     t.boolean  "extension_flag"
+    t.boolean  "display_warnings",                  :default => true
   end
 
   add_index "requests", ["fiscal_org_owner_id"], :name => "index_requests_on_fiscal_org_owner_id"

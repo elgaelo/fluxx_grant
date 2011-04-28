@@ -497,7 +497,15 @@ class GrantRequestsControllerTest < ActionController::TestCase
     check_models_are_updated{put :update, :id => @request1.to_param, :event_action => 'cancel_grant'}
     assert_equal 'canceled', @request1.reload().state
     assert flash[:info]
-  end 
-  
+  end
+
+  test "show warnings related to funding sources" do
+    login_as_user_with_role Program.program_associate_role_name
+    @request1.update_attributes :display_warnings => true
+    put :hide_funding_warnings, :id => @request1.to_param
+    assert_equal false, @request1.reload().display_warnings?
+    assert_redirected_to grant_request_path(assigns(:model))
+  end
+
   # TODO ESH: need to test the calculate_button_names method to make sure we show the edit/delete/reject/un-reject/send-back buttons at the right times with the right names
 end
