@@ -6,7 +6,7 @@
     %p.caption
       No requests
   - else
-    %table.tabular{:cellspacing => 0}
+    %table{:cellspacing => 0}
       %thead
         %tr
           %th
@@ -44,5 +44,4 @@
               = state
             %td
               = mdy_date_format(model.request_reviews.where(:created_by_id => current_user.id).first.created_at) rescue ""
-    %p
     = render :partial => "paging_actions"
