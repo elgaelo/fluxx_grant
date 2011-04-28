@@ -41,6 +41,7 @@ module FluxxFipRequestsController
     base.insta_edit FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
@@ -51,11 +52,13 @@ module FluxxFipRequestsController
     base.insta_post FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
     end
     base.insta_put FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
+      insta.pre_create_model = true
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple

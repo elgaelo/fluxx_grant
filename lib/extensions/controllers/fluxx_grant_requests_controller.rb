@@ -46,6 +46,7 @@ module FluxxGrantRequestsController
     base.insta_edit GrantRequest do |insta|
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
@@ -57,11 +58,13 @@ module FluxxGrantRequestsController
     base.insta_post GrantRequest do |insta|
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
     end
     base.insta_put GrantRequest do |insta|
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
+      insta.pre_create_model = true
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
