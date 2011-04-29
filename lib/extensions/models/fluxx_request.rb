@@ -1085,5 +1085,25 @@ module FluxxRequest
       @general_warnings
     end
 
+    # validate both GrantRequest and Organization docs
+    def validate_required_docs
+      req_docs = required_request_docs
+      org_docs = required_organization_docs
+      missing  = req_docs.find_all {|d| !model_documents.collect(&:model_document_type_id).include? d.id }
+      missing += org_docs.find_all {|d| !program_organization.model_documents.collect(&:model_document_type_id).include? d.id } if program_organization
+      errors[:missing_documents] << missing.map(&:name).join(', ') unless missing.empty?
+    end
+
+    # this method is used both above and in the view to show required docs
+    def required_request_docs
+      ModelDocumentType.where(:model_type => model_type, :required => true).where(['if(program_id is not null, program_id = ?, true) AND 
+        if(sub_program_id is not null, program_id = ?, true) AND 
+          if(initiative_id is not null, initiative_id = ?, true) AND 
+            if(sub_initiative_id is not null, initiative_id = ?, true)',self.program_id, self.sub_program_id, self.initiative_id, self.sub_initiative_id]).all
+    end
+
+    def required_organization_docs
+      ModelDocumentType.where(:model_type => Organization.name, :required => true).all
+    end
   end
 end
