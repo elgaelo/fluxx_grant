@@ -260,7 +260,7 @@ class GrantRequestsControllerTest < ActionController::TestCase
     assert @request1.request_reports[1].report_type == RequestReport.interim_narrative_type_name
     assert @request1.request_reports[2].report_type == RequestReport.final_budget_type_name
     assert @request1.request_reports[3].report_type == RequestReport.final_narrative_type_name
-    assert @request1.request_reports.last.report_type == RequestReport.eval_type_name
+    assert @request1.request_reports.last.report_type == RequestReport.final_eval_type_name
 
     assert @request1.grant_id
   end
@@ -283,7 +283,7 @@ class GrantRequestsControllerTest < ActionController::TestCase
     assert @request1.grant_agreement_at
     assert_equal @org, @request1.program_organization
     assert_equal 3, @request1.request_reports.size
-    assert @request1.request_reports[2].report_type == RequestReport.eval_type_name
+    assert @request1.request_reports[2].report_type == RequestReport.final_eval_type_name
     assert_equal 1, @request1.request_transactions.size
     assert_equal @request1.amount_recommended, @request1.request_transactions.first.amount_due
     

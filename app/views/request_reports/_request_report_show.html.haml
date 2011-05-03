@@ -25,7 +25,7 @@
       .key= "Due:"
       .value= model.due_at.mdy if model.due_at
   
-  - if model.is_eval_report_type?
+  - if model.is_final_eval_report_type?
     .pairs
       .keys= "What did the grantee do?"
       .values= model.what_grantee_did
@@ -36,7 +36,7 @@
       .keys= "Evaluation Rating:"
       .values= model.evaluation_rating
 
-- unless model.is_eval_report_type?
+- unless model.is_final_eval_report_type?
   = render :partial => "model_documents/list_model_documents", :locals => { :model => model }
         
 = render :partial => "notes/list_notes", :locals => { :model => model, :class_type => RequestReport.name}

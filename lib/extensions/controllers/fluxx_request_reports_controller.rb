@@ -15,7 +15,7 @@ module FluxxRequestReportsController
       insta.post do |triple|
         controller_dsl, model, outcome = triple
         request_report = model
-        unless request_report && request_report.is_eval_report_type?
+        unless request_report && (request_report.is_final_eval_report_type? || request_report.is_interim_eval_report_type?)
           @edit_enabled = false
         end
       end

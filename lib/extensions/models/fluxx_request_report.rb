@@ -148,7 +148,7 @@ module FluxxRequestReport
     end
     
     # types:
-    # RequestReport.eval_type_name => 'Eval',
+    # RequestReport.final_eval_type_name => 'Eval',
     # RequestReport.final_budget_type_name => 'Final Financial',
     # RequestReport.final_narrative_type_name => 'Final Narrative',
     # RequestReport.interim_budget_type_name => 'Interim Financial',
@@ -246,9 +246,17 @@ module FluxxRequestReport
         has FluxxGrantSphinxHelper.allocation_hierarchy, :type => :multi, :as => :allocation_hierarchy
       end
     end
+
+    def final_monitor_type_name
+      'FinalMonitor'
+    end
     
-    def eval_type_name
+    def final_eval_type_name
       'Eval'
+    end
+
+    def interim_eval_type_name
+      'InterimEval'
     end
 
     def final_budget_type_name
@@ -268,12 +276,14 @@ module FluxxRequestReport
     end
 
     def report_doc_types
-      [interim_budget_type_name, interim_narrative_type_name, final_budget_type_name, final_narrative_type_name, eval_type_name]
+      [interim_budget_type_name, interim_narrative_type_name, final_budget_type_name, final_narrative_type_name, final_eval_type_name, interim_eval_type_name, final_monitor_type_name]
     end
     
     def type_to_english_translation report_type
       case report_type
-        when RequestReport.eval_type_name then 'Eval'
+        when RequestReport.final_monitor_type_name then 'Monitor'
+        when RequestReport.final_eval_type_name then 'Final Eval'
+        when RequestReport.interim_eval_type_name then 'Interim Eval'
         when RequestReport.final_budget_type_name then 'Final Financial'
         when RequestReport.final_narrative_type_name then 'Final Narrative'
         when RequestReport.interim_budget_type_name then 'Interim Financial'
@@ -346,10 +356,17 @@ module FluxxRequestReport
     def title
       "#{type_to_english} #{request ? request.grant_id : ''}"
     end
+    
+    def is_final_monitor_report_type?
+      report_type == RequestReport.final_monitor_type_name
+    end
 
-
-    def is_eval_report_type?
-      report_type == RequestReport.eval_type_name
+    def is_final_eval_report_type?
+      report_type == RequestReport.final_eval_type_name
+    end
+    
+    def is_interim_eval_report_type?
+      report_type == RequestReport.interim_eval_type_name
     end
     
     def is_final_type?
