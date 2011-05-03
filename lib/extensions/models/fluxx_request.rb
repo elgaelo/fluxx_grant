@@ -1052,14 +1052,14 @@ module FluxxRequest
     end
 
     def duration_over_12_months?
-      duration_in_months > 12
+      duration_in_months > 12 if duration_in_months
     end
 
     def funding_warnings
       unless @funding_warnings
         @funding_warnings = [[]]
 
-        @funding_warnings.first << 'No c3 status' if program_organization.c3_status_approved?
+        @funding_warnings.first << 'No c3 status' if program_organization && program_organization.c3_status_approved?
         @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
         @funding_warnings << 'Funding source expires before estimated grant close date' if funding_sources_expires_before_close_date?
 

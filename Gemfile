@@ -28,7 +28,7 @@ gem "aasm", '2.2.0'
 gem 'acts_as_audited_rails3', '>=1.1.2'
 gem 'paperclip'
 gem 'mysql'
-gem 'compass'
+#gem 'compass'
 gem 'liquid'
 gem "delocalize"
 gem 'pdfkit'
