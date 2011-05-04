@@ -67,6 +67,7 @@ module ApplicationGrantHelper
     links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_requests]
     links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_tasks]
     links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_transactions]
+    links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_loi]
     links.join ",\n"
   end
 

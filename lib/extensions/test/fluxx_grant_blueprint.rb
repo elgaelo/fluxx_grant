@@ -128,6 +128,12 @@ module FluxxGrantBlueprint
       name Sham.words
     end
 
+    Loi.blueprint do
+      organization Sham.words
+      email Sham.words
+      applicant Sham.words
+    end
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

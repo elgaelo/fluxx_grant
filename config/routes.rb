@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :lois
+
   resources :budget_requests
 
   resources :request_reviews

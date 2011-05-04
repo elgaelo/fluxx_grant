@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110502172257) do
+ActiveRecord::Schema.define(:version => 20110503230255) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -277,6 +277,27 @@ ActiveRecord::Schema.define(:version => 20110502172257) do
   add_index "initiatives", ["created_by_id"], :name => "sub_programs_created_by_id"
   add_index "initiatives", ["sub_program_id"], :name => "index_sub_programs_on_initiative_id"
   add_index "initiatives", ["updated_by_id"], :name => "sub_programs_updated_by_id"
+
+  create_table "lois", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.string   "applicant"
+    t.string   "organization"
+    t.string   "project_title"
+    t.string   "email"
+    t.string   "phone"
+    t.text     "project_summary"
+    t.string   "address"
+    t.integer  "program_id"
+    t.integer  "locked_by_id"
+    t.datetime "locked_until"
+    t.datetime "deleted_at"
+  end
+
+  add_index "lois", ["created_by_id"], :name => "lois_created_by_id"
+  add_index "lois", ["updated_by_id"], :name => "lois_updated_by_id"
 
   create_table "model_document_templates", :force => true do |t|
     t.datetime "created_at"

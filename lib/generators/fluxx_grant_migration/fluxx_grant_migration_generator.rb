@@ -2,6 +2,7 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
+
   def add_display_warnings_flag_to_grant_request
     handle_migration 'add_display_warnings_flag_to_grant_request.rb', 'db/migrate/fluxx_grant_add_display_warnings_flag_to_grant_request.rb'
     sleep 1
@@ -78,6 +79,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_model_type_hierarchy_to_model_document_types.rb', 'db/migrate/fluxx_grant_add_model_type_hierarchy_to_model_document_types.rb'
     handle_migration 'use_class_names_for_modal_reports.rb', 'db/migrate/fluxx_grant_use_class_names_for_modal_reports.rb'
     handle_migration 'add_budget_request_profile_rules.rb', 'db/migrate/fluxx_grant_add_budget_request_profile_rules.rb'
+    handle_migration 'create_loi.rb', 'db/migrate/fluxx_grant_create_loi.rb'
   end
   
   private
