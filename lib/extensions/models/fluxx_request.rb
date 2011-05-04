@@ -1084,6 +1084,18 @@ module FluxxRequest
       end
       @general_warnings
     end
+    
+    def promotion_warnings
+      unless @promotion_warnings 
+        @promotion_warnings = []
+        request_funding_sources.each do |rfs|
+          if rfs.funding_source_allocation && rfs.funding_amount && !(rfs.funding_amount <= rfs.funding_source_allocation.amount_remaining)
+            @promotion_warnings << I18n.t(:insufficient_funds_in_allocation, :allocation_name => (rfs.funding_source_allocation.funding_source ? rfs.funding_source_allocation.funding_source.name : 'Unnamed Funding Source')) 
+          end
+        end
+      end
+      @promotion_warnings
+    end
 
     # validate both GrantRequest and Organization docs
     def validate_required_docs
