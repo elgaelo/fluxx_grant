@@ -4,7 +4,7 @@
 - sub_program_id ||= grab_param(:funding_source_allocation, :sub_program_id)
 - initiative_id ||= grab_param(:funding_source_allocation, :initiative_id)
 - sub_initiative_id ||= grab_param(:funding_source_allocation, :sub_initiative_id)
-%h3 
+%h3
   Funding Source Allocations
   - if !do_suppress_add
     %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_funding_source_allocation_authority_path(:program_id => program_id, :sub_program_id => sub_program_id, :initiative_id => initiative_id, :sub_initiative_id => sub_initiative_id), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Funding Source Allocation"
@@ -15,7 +15,7 @@
   - models.each do |funding_source_allocation_model|
     %dl.inline
       - if show_initiative_display
-        %dt= "Initiatives:" 
+        %dt= "Initiatives:"
         %dd
           -  program_names = []
           -  program_names << funding_source_allocation_model.program_display_name if funding_source_allocation_model && funding_source_allocation_model.program_display_name
@@ -31,7 +31,7 @@
       %dd= link_to (funding_source_allocation_model.amount_granted ? funding_source_allocation_model.amount_granted.to_currency : 'NONE'), granted_requests_path, 'data-filter' => "&request[funding_source_allocation_id][]=#{funding_source_allocation_model.id}", :class => 'new-listing', 'data-insert' => 'after', :title => 'Grants'
       %dt= 'Paid:'
       %dd= link_to (funding_source_allocation_model.amount_paid ? funding_source_allocation_model.amount_paid.to_currency : 'NONE'), request_transactions_path, 'data-filter' => "&request_transaction[filter_state][]=paid&request_transaction[funding_source_allocation_id][]=#{funding_source_allocation_model.id}", :class => 'new-listing', 'data-insert' => 'after', :title => 'Transactions'
-    
+
     - funding_source_allocation_model.funding_source_allocation_authorities.each do |model|
       - total_funding += (model.amount || 0)
       - funding_source_name = funding_source_allocation_model.funding_source.name if funding_source_allocation_model.funding_source
