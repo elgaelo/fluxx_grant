@@ -1,6 +1,6 @@
 module FluxxRequestReport
-  SEARCH_ATTRIBUTES = [:grant_program_ids, :grant_sub_program_ids, :due_at, :report_type, :state, :updated_at, :grant_state, :favorite_user_ids, :request_hierarchy, :allocation_hierarchy] 
-  LIQUID_METHODS = [:type_to_english, :due_at]
+  SEARCH_ATTRIBUTES = [:grant_program_ids, :grant_sub_program_ids, :due_at, :approved_at, :report_type, :state, :updated_at, :grant_state, :favorite_user_ids, :request_hierarchy, :allocation_hierarchy] 
+  LIQUID_METHODS = [:type_to_english, :due_at, :approved_at]
   FAR_IN_THE_FUTURE = Time.now + 1000.year
 
   def self.included(base)
@@ -200,7 +200,7 @@ module FluxxRequestReport
         indexes "if(requests.type = 'FipRequest', concat('FG-',requests.base_request_id), concat('G-',requests.base_request_id))", :as => :request_grant_id, :sortable => true
 
         # attributes
-        has created_at, updated_at, deleted_at, due_at 
+        has created_at, updated_at, deleted_at, due_at, approved_at
         set_property :delta => :delayed
         has grant(:id), :as => :grant_ids
         has grant.program(:id), :as => :grant_program_ids
@@ -227,7 +227,7 @@ module FluxxRequestReport
         indexes 'null', :type => :string, :as => :request_grant_id, :sortable => true
 
         # attributes
-        has created_at, updated_at, deleted_at, due_at
+        has created_at, updated_at, deleted_at, due_at, approved_at
         set_property :delta => :delayed
         has 'null', :type => :multi, :as => :grant_ids
         has 'null', :type => :multi, :as => :grant_program_ids
