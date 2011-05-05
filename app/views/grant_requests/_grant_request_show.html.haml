@@ -5,7 +5,7 @@
 - unless model.project_summary.blank?
   %p= simple_format(model.project_summary)
 
-= render :partial => "grant_requests/grant_request_show_warnings", :locals => { :model => model }
+= render :partial => "grant_requests/grant_request_show_warnings", :locals => { :model => model } unless model.granted?
   
 %div.partial
   - if model.is_a? FipRequest

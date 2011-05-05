@@ -1,18 +1,22 @@
-- unless model.funding_warnings.empty?
-  %div.funding_warnings_title
-    Warning - there may be problems with this Request.
+- if model.display_warnings?
+  - unless model.funding_warnings.empty?
+    %div.funding_warnings_title
+      %div.hide_warnings
+        = link_to "Hide", grant_request_path(:id => model.id, :grant_request => {:display_warnings => '0'}), {:class => 'as-put', 'data-on-success' => 'refreshCaller'}
 
-    %ol.funding_warnings
-      - unless model.funding_warnings.first.empty?
-        %li
-    This grant may require a second payment:
-    %ul
-      - model.funding_warnings.first.each do |warning|
-        %li= warning
+      %h3 Warning - there may be problems with this Request.
 
-      - model.funding_warnings[1..-1].each do |warning|
-        %li= warning
+      %ul.funding_warnings
+        - unless model.funding_warnings.first.empty?
+          %li
+            This grant may require a second payment:
+            %ol
+              - model.funding_warnings.first.each do |warning|
+                %li= warning
 
-- model.general_warnings.each do
+        - model.funding_warnings[1..-1].each do |warning|
+          %li= warning
+
+- model.general_warnings.each do |warning|
   %div.warning
     = warning
