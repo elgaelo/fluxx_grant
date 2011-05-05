@@ -162,6 +162,33 @@ module FluxxGrantOrganization
     def sorted_tax_classes
       MultiElementGroup.find_values Organization, 'tax_classes'
     end
+    
+    def non_profit_tax_statuses
+      ['509a1', '509a2', '509a3', '501c3']
+    end
+    
+    def charity_check_api service, ein
+      # Authenticate and retrieve the cookie
+      response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{CHARITY_CHECK_USERNAME}&password=#{CHARITY_CHECK_PASSWORD}"
+      cookie = response.headers["Set-Cookie"]
+
+      # Call the GetCCPDF webservice
+      request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
+      request.body =  "ein=#{ein}"
+      request.headers["Cookie"] = cookie
+      HTTPI.post request
+    end
+
+    def charity_check_enabled
+      defined?(CHARITY_CHECK_USERNAME) && defined?(CHARITY_CHECK_PASSWORD)
+    end
+    
+    # Return an array of grants related to an organization
+    def foundation_center_api ein, pagenum=nil
+      ein = '' unless ein
+      response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.strip.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
+      Crack::JSON.parse(response.body)
+    end
   end
 
   module ModelInstanceMethods
@@ -237,85 +264,53 @@ module FluxxGrantOrganization
     def is_trusted?
       !grants.empty?
     end
-
+    
     def is_er?
       tax_class_value = self.hq_tax_class ? self.hq_tax_class.value : ''
-      case tax_class_value
-      when '509a1' then false
-      when '509a2' then false
-      when '509a3' then false
-      when 'Private Foundation' then true
-      when '501c4' then true
-      when '501c5' then true
-      when '501c6' then true
-      when 'non-US' then true
-      when 'Non-Exempt' then true
-      else
-        raise "Invalid tax_class: '#{tax_class_value}'"
+      !(tax_class_value && Organization.non_profit_tax_statuses.include?(tax_class_value))
+    end
+    
+    def charity_check_applicable?
+       Organization.charity_check_enabled && self.tax_id && !self.tax_id.empty?
+    end
+    
+    # Update information about an organization using the Charity Check service
+    def update_charity_check
+      if charity_check_applicable?
+        response = Organization.charity_check_api("GetCCInfo", self.tax_id);
+        if response.code == 200
+          # Charity Check seems to incorrectly return the XML encoding as utf-16
+          xml = Crack::XML.parse(response.body)["string"].sub('<?xml version="1.0" encoding="utf-16"?>', '<?xml version="1.0" encoding="utf-8"?>')
+          hash = Crack::XML.parse(xml)
+          type = hash["GuideStarCharityCheckWebService"]["IRSBMFDetails"]["IRSBMFSubsection"] rescue nil
+          self.update_attributes(
+            :c3_serialized_response => xml,
+            :c3_status_approved => type && (Organization.non_profit_tax_statuses.any?{|status|(type.gsub('(', '').gsub(')', '').strip =~ /#{status}/)}))
+        end
+      end
+      hash
+    end
+
+    # Return the charity check pdf
+    def charity_check_pdf
+      if charity_check_applicable?
+        response = Organization.charity_check_api("GetCCPDF", self.tax_id);
+        if response.code == 200
+          return Base64.decode64(Crack::XML.parse(response.body)["base64Binary"]) rescue nil
+        end
       end
     end
 
-  end
-
-  def self.charity_check_api service, ein
-    # Authenticate and retrieve the cookie
-    response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{CHARITY_CHECK_USERNAME}&password=#{CHARITY_CHECK_PASSWORD}"
-    cookie = response.headers["Set-Cookie"]
-
-    # Call the GetCCPDF webservice
-    request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
-    request.body =  "ein=#{ein}"
-    request.headers["Cookie"] = cookie
-    HTTPI.post request
-  end
-
-  def charity_check_enabled
-    defined?(CHARITY_CHECK_USERNAME) && defined?(CHARITY_CHECK_PASSWORD) && self.tax_id && !self.tax_id.empty?
-  end
-
-  # Update information about an organization using the Charity Check service
-  def update_charity_check
-    if (charity_check_enabled)
-      response = FluxxGrantOrganization.charity_check_api("GetCCInfo", self.tax_id);
-      if response.code == 200
-        # Charity Check seems to incorrectly return the XML encoding as utf-16
-        xml = Crack::XML.parse(response.body)["string"].sub('<?xml version="1.0" encoding="utf-16"?>', '<?xml version="1.0" encoding="utf-8"?>')
-        hash = Crack::XML.parse(xml)
-        type = hash["GuideStarCharityCheckWebService"]["IRSBMFDetails"]["IRSBMFSubsection"] rescue nil
-        self.update_attributes(
-          :c3_serialized_response => xml,
-          :c3_status_approved => type =~ /501\(c\)\(3\)/ ? true : false)
-      end
+    # Return values from the charity check response using XPath
+    def charity_check key
+      xmldoc = Document.new(self.c3_serialized_response)
+      XPath.first(xmldoc, "//#{key}/text()") rescue nil
     end
-    hash
-  end
 
-  # Return the charity check pdf
-  def charity_check_pdf
-    if (charity_check_enabled)
-      response = FluxxGrantOrganization.charity_check_api("GetCCPDF", self.tax_id);
-      if response.code == 200
-        return Base64.decode64(Crack::XML.parse(response.body)["base64Binary"]) rescue nil
+    def outside_grants pagenum
+      if (self.tax_id && !self.tax_id.empty?)
+        Organization.foundation_center_api self.tax_id, pagenum
       end
-    end
-  end
-
-  # Return values from the charity check response using XPath
-  def charity_check key
-    xmldoc = Document.new(self.c3_serialized_response)
-    XPath.first(xmldoc, "//#{key}/text()") rescue nill
-  end
-
-  # Return an array of grants related to an organization
-  def self.foundation_center_api ein, pagenum=nil
-    ein = '' unless ein
-    response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.strip.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
-    Crack::JSON.parse(response.body)
-  end
-
-  def outside_grants pagenum
-    if (self.tax_id && !self.tax_id.empty?)
-      FluxxGrantOrganization.foundation_center_api self.tax_id, pagenum
     end
   end
 end

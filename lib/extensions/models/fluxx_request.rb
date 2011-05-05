@@ -1059,7 +1059,7 @@ module FluxxRequest
       unless @funding_warnings
         @funding_warnings = [[]]
 
-        @funding_warnings.first << 'No c3 status' if program_organization && program_organization.c3_status_approved?
+        @funding_warnings.first << 'No c3 status' if Organization.charity_check_enabled && program_organization && !program_organization.c3_status_approved?
         @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
         @funding_warnings << 'Funding source expires before estimated grant close date' if funding_sources_expires_before_close_date?
 
