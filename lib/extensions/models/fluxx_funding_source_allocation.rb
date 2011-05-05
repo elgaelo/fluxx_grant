@@ -69,7 +69,7 @@ module FluxxFundingSourceAllocation
   
   module ModelInstanceMethods
     def amount_granted
-      request_funding_sources.select{|rfs| rfs.request.granted}.inject(0){|acc, rfs| acc + (rfs.funding_amount || 0)}
+      request_funding_sources.select{|rfs| !rfs.request.nil? && rfs.request.granted}.inject(0){|acc, rfs| acc + (rfs.funding_amount || 0)}
     end
     
     def amount_remaining
@@ -78,7 +78,7 @@ module FluxxFundingSourceAllocation
 
     # Pipeline
     def amount_granted_in_queue
-      request_funding_sources.reject{|rfs| rfs.request.granted}.inject(0){|acc, rfs| acc + (rfs.funding_amount || 0)}
+      request_funding_sources.reject{|rfs| rfs.request.nil? || rfs.request.granted}.inject(0){|acc, rfs| acc + (rfs.funding_amount || 0)}
     end
     
     # Look at each funding source transaction associated with each funding source associated with this allocation and sum up the amount paid
