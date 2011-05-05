@@ -41,15 +41,13 @@
     - else
       = form.input :amount_paid, :as => :hidden
 
-    = form.input :payment_type, {:label => 'Payment Type:', :as => :select, :collection => ['Check', 'Wire']}
-    = form.input :paid_at, :label => 'Date Paid'
-    = form.input :payment_confirmation_number, :label => 'Check/Confirmation Number:'
-    = form.input :comment, :label => 'Comment:', :as => :text
 %div.partial
   %h3 Payment Details
   - bank_accounts = (model.request.tax_class_org.bank_accounts if model && model.request && model.request.tax_class_org) || []
   = form.input :bank_account, :as => :select, :collection => bank_accounts.map {|account| [account.autocomplete_to_s, account.id]}
-
+  = form.input :payment_type, {:label => 'Payment Type:', :as => :select, :collection => ['Check', 'Wire']}
+  = form.input :paid_at, :label => 'Date Paid'
+  = form.input :payment_confirmation_number, :label => 'Check/Confirmation Number:'
+  = form.input :comment, :label => 'Comment:', :as => :text
   = form.input :condition, :label => "Please note any conditions or milestones associated to this payment", :input_html => { :rows => 5 }
-
 = form.commit_button
