@@ -187,5 +187,9 @@ module FluxxGrantUser
     def organization_id
      user_organizations.map{|uo| uo.organization.id if uo.organization}.flatten.compact
     end
+    def program_ids_by_role role
+      program_ids = role_users.joins(:role).where(:roles => {:roleable_type => "Program", :name => role}).all.map {|ru| ru.roleable_id }
+      Program.find(:all, :conditions => ['id in (?) OR parent_id in (?)', program_ids, program_ids]).map{|program| program.id}.compact
+    end
   end
 end
