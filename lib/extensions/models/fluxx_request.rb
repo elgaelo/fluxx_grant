@@ -296,7 +296,7 @@ module FluxxRequest
       insta.add_state_to_english :pending_po_approval, 'Pending PO Approval', 'approval'
       insta.add_state_to_english :pending_president_approval, 'Pending President Approval', 'approval'
       insta.add_state_to_english :rejected, 'Rejected', 'rejected'
-      insta.add_state_to_english :funding_recommended, 'Funding Recommended', ['approval', 'edit_on_transition']
+      insta.add_state_to_english :funding_recommended, 'Funding Recommended', ['edit_on_transition']
       insta.add_state_to_english :pending_grant_promotion, "Pending Grant/FIP Promotion", ['approval', 'pending_grant_promotion']
       insta.add_state_to_english :sent_back_to_pa, 'Sent back to PA', 'sent_back'
       insta.add_state_to_english :sent_back_to_po, 'Sent back to PO', 'sent_back'
@@ -1053,6 +1053,10 @@ module FluxxRequest
 
     def duration_over_12_months?
       duration_in_months > 12 if duration_in_months
+    end
+    
+    def is_marked_complete?
+      Request.all_states_with_category('approval').include?(state.to_sym) || granted
     end
 
     def funding_warnings
