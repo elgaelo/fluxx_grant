@@ -1,4 +1,4 @@
-- if model.display_warnings?
+- if model.is_marked_complete? && model.display_warnings?
   - unless model.funding_warnings.empty?
     %div.funding_warnings_title
       %div.hide_warnings
