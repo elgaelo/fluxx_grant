@@ -1,0 +1,22 @@
+%h1= model.applicant
+%h4= model.project_title
+%p= model.project_summary
+.pairs
+  .key= "Organization"
+  .value= model.organization
+
+.pairs
+  .key= "Contact Address"
+  .value= model.email
+
+.pairs
+  .key= "Contact Phone"
+  .value= model.phone
+
+.pairs
+  .key= "Mailing Address"
+  .value= model.address
+
+.pairs
+  .key= "Program"
+  .value= #model.program.name if model.program

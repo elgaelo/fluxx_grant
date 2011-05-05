@@ -1,0 +1,13 @@
+= javascript_include_tag '/javascripts/fluxx_grant/jquery.validate.pack.js'
+= javascript_include_tag '/javascripts/fluxx_grant/fluxx.simple-validation.js'
+%fieldset.inputs
+  %ol
+    = semantic_form_for Loi.new(), :html => {:class => ''} do |form|
+      = form.input :applicant
+      = form.input :organization
+      = form.input :email
+      = form.input :phone
+      = form.input :address, :label => 'Mailing Address'
+      = form.input :project_title
+      = form.input :project_summary
+      = form.submit :value => 'Send Request'
