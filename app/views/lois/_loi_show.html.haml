@@ -4,6 +4,8 @@
 .pairs
   .key= "Organization"
   .value= model.organization
+  %span.actions
+    = link_to 'Connect', edit_loi_path(model, :connect_organization => 1), :class => 'to-modal', 'data-on-success' => 'close,populateField', :target => '.user_payee_lookup_select'
 
 .pairs
   .key= "Contact Address"

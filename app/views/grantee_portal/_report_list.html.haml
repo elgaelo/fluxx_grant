@@ -41,9 +41,8 @@
           %td= mdy_date_format(model.due_at)
           %td
             = state
-            - if state == 'Due' && current_user.has_role?(Program.grantee_role_name, model.request.program)
-              %span
-                = '- '
-                = link_to "Submit Now", request_report_path(model.id, "event_action".to_sym => "receive_report", "request_report[workflow_note]".to_sym => "Received from Grantee Portal"), :class => "submit-workflow"
+            - model.actions.each do |button_clause|
+              - event_name, english_event_name = button_clause
+              %span= link_to english_event_name, grant_request_path(@model.id, {:event_action => event_name}, "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => 'submit-workflow', 'data-confirm'.to_sym => 'Are you sure you want to submit this request?', 'data-success-message'.to_sym => "Your grant request #{model.grant_or_request_id} has been submitted."
 
   = render :partial => "grantee_portal/paging_actions"
