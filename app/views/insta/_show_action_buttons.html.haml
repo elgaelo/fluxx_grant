@@ -1,5 +1,7 @@
-- reject_buttons = buttons.select {|button| event_name, english_event_name = button; english_event_name =~ /reject/i}
-- send_back_buttons = buttons.select {|button| event_name, english_event_name = button; english_event_name =~ /send back/i}
+- reject_event_names = model.class.all_rejected_events
+- sentback_event_names = model.class.all_sent_back_events
+- reject_buttons = buttons.select {|button| event_name, english_event_name = button; reject_event_names.include?(event_name)}
+- send_back_buttons = buttons.select {|button| event_name, english_event_name = button; sentback_event_names.include?(event_name)}
 - other_buttons = (buttons - reject_buttons) - send_back_buttons
 - reordered_buttons =  reject_buttons + send_back_buttons + other_buttons
 - reordered_buttons.each do |button_clause|
