@@ -13,7 +13,6 @@ module FluxxLoisController
       insta.template = 'loi_show'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
-      insta.extra_buttons = [{:name => 'Create New Org', :path => "/organizations/new", :class => "new-detail"}, {:name => 'Create New User', :path => "/users/new", :class => "new-detail"}]
       insta.post do |triple|
         controller_dsl, model, outcome = triple
         instance_variable_set '@edit_enabled', false
@@ -22,6 +21,15 @@ module FluxxLoisController
     base.insta_edit Loi do |insta|
       insta.template = 'loi_form'
       insta.icon_style = ICON_STYLE
+        insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if params[:connect_organization]
+            insta.template = "connect_organization"
+          end
+          default_block.call
+        end
+      end
     end
     base.insta_post Loi do |insta|
       insta.template = 'loi_form'
