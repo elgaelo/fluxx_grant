@@ -52,12 +52,13 @@ module FluxxRequestTransaction
     base.insta_favorite
     base.insta_export do |insta|
       insta.filename = 'request_transaction'
-      insta.headers = [['Date Created', :date], ['Date Updated', :date], 'request_id', ['Amount Paid', :currency], ['Amount Due', :currency], ['Date Due', :date], ['Date Paid', :date], 'payment_type', 'payment_confirmation', 'Comment', 
+      insta.headers = [['Date Created', :date], ['Date Updated', :date], 'request_id', ['Amount Paid', :currency], ['Amount Due', :currency], ['Date Due', :date], ['Date Paid', :date], 'payment_type', 'payment_confirmation', 'Comment', 'Status',
         'Grantee', 'Grantee Street Address', 'Grantee Street Address2', 'Grantee City', 'Grantee State', 'Grantee Country', 'Grantee Postal Code', 'Grantee URL',
         'Fiscal Org', 'Fiscal Street Address', 'Fiscal Street Address2', 'Fiscal City', 'Fiscal State', 'Fiscal Country', 'Fiscal Postal Code', 'Fiscal URL']
       insta.sql_query = "select rt.created_at, rt.updated_at, requests.base_request_id request_id, amount_paid, amount_due, due_at, paid_at, payment_type, payment_confirmation_number,
                 rt.comment,
-                program_organization.name, 
+                rt.state, 
+                program_organization.name,
                 program_organization.street_address program_org_street_address, program_organization.street_address2 program_org_street_address2, program_organization.city program_org_city,
                 program_org_country_states.name program_org_state_name, program_org_countries.name program_org_country_name, program_organization.postal_code program_org_postal_code,
                 program_organization.url program_org_url,
