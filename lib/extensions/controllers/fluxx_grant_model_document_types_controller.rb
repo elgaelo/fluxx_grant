@@ -9,7 +9,7 @@ module FluxxGrantModelDocumentTypesController
             self.pre_models = ModelDocumentType.where(:model_type => klass.name).where(['if(program_id is not null, program_id = ?, true) AND 
               if(sub_program_id is not null, program_id = ?, true) AND 
                 if(initiative_id is not null, initiative_id = ?, true) AND 
-                  if(sub_initiative_id is not null, initiative_id = ?, true)',request_model.program_id, request_model.sub_program_id, request_model.initiative_id, request_model.sub_initiative_id]).all
+                  if(sub_initiative_id is not null, initiative_id = ?, true)',request_model.program_id, request_model.sub_program_id, request_model.initiative_id, request_model.sub_initiative_id]).order('name asc').all
           end
         end
           
