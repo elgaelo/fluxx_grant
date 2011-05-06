@@ -125,4 +125,17 @@ module ApplicationGrantHelper
     }" unless FLUXX_CONFIGURATION[:hide_projects]
     links.join ",\n"
   end
+  
+  EVAL_RATING_MAP = {1 => "1: grant failed", 2 => "2: performed below expectations", 3 => "3: met expectations", 4 => "4: exceeded expectations", 5 => "5: far exceeded expectations"}
+  
+  def eval_ratings_for_input
+    EVAL_RATING_MAP.keys.sort.map do |key|
+      [EVAL_RATING_MAP[key], key]
+    end
+  end
+  
+  def eval_rating_to_text rating
+    EVAL_RATING_MAP[rating]
+  end
+  
 end
