@@ -11,7 +11,7 @@
 - display_achieved ||= nil
 - unless display_achieved
   - display_achieved = params[:display_achieved]
-%table{:cellspacing => 0}
+%table.eval_metrics{:cellspacing => 0}
   %thead
     %tr
       %th
@@ -21,6 +21,6 @@
   %tbody
     - if !models || models.empty?
       %tr
-        %td{:colspan => 4}  No Metrics
+        %td{:colspan => 4}  <span style="padding-left:10px;">No Metrics</span>
     - else
       = render :partial => "request_evaluation_metrics/request_evaluation_metrics_show", :collection => models, :as => :model, :locals => {:display_achieved => display_achieved, :invoked_from_template => invoked_from_template}
