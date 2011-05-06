@@ -43,6 +43,6 @@
             = state
             - model.actions.each do |button_clause|
               - event_name, english_event_name = button_clause
-              %span= link_to english_event_name, grant_request_path(@model.id, {:event_action => event_name}, "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => 'submit-workflow', 'data-confirm'.to_sym => 'Are you sure you want to submit this request?', 'data-success-message'.to_sym => "Your grant request #{model.grant_or_request_id} has been submitted."
+              %span= link_to english_event_name, grant_request_path(model.id, :event_action => event_name, "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => 'submit-workflow', 'data-confirm'.to_sym => 'Are you sure you want to submit this request?', 'data-success-message'.to_sym => "Your grant request #{model.grant_or_request_id} has been submitted."
 
   = render :partial => "grantee_portal/paging_actions"

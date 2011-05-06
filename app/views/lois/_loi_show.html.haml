@@ -1,11 +1,15 @@
-%h1= model.applicant
 %h4= model.project_title
 %p= model.project_summary
+.pairs
+  .key= "Main Contact"
+  .value= model.applicant
+  %span.actions
+    = link_to 'Connect', edit_loi_path(model, :connect_user => 1), :class => 'to-modal', 'data-on-success' => 'close,populateField'
 .pairs
   .key= "Organization"
   .value= model.organization
   %span.actions
-    = link_to 'Connect', edit_loi_path(model, :connect_organization => 1), :class => 'to-modal', 'data-on-success' => 'close,populateField', :target => '.user_payee_lookup_select'
+    = link_to 'Connect', edit_loi_path(model, :connect_organization => 1), :class => 'to-modal', 'data-on-success' => 'close,populateField'
 
 .pairs
   .key= "Contact Address"
