@@ -1,0 +1,14 @@
+%h3 Matches
+-if model.user_matches(params[:loi]).count > 1
+  -model.user_matches(params[:loi]).each do |user|
+    %ul.buttons.float_right
+      %li= link_to "Connect", "#", :class => 'btn toggle-visibility', 'data-target'.to_sym => ".matches"
+    %h2
+    = user.first_name
+    = user.last_name
+    %h4
+      = user.primary_user_organization.title if user.primary_user_organization
+    %p
+      = user.primary_user_organization.organization_name if user.primary_user_organization
+-else
+  %h4 no matches

@@ -13,23 +13,12 @@ module FluxxLoisController
       insta.template = 'loi_show'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
-      insta.post do |triple|
-        controller_dsl, model, outcome = triple
-        instance_variable_set '@edit_enabled', false
-      end
+      insta.template_map = {:matching_users => "matching_users_list"}
     end
     base.insta_edit Loi do |insta|
-      insta.template = 'loi_form'
       insta.icon_style = ICON_STYLE
-        insta.format do |format|
-        format.html do |triple|
-          controller_dsl, outcome, default_block = triple
-          if params[:connect_organization]
-            insta.template = "connect_organization"
-          end
-          default_block.call
-        end
-      end
+      insta.template = 'loi_form'
+      insta.template_map = {:connect_organization =>  "connect_organization", :connect_user => "connect_user"}
     end
     base.insta_post Loi do |insta|
       insta.template = 'loi_form'

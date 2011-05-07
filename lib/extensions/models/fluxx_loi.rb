@@ -74,5 +74,19 @@ module FluxxLoi
   end
   
   module ModelInstanceMethods
+    def first_name
+      applicant.gsub(/\s+/, ' ').split(' ').first
+    end
+
+    def last_name
+      applicant.gsub(/\s+/, ' ').split(' ').last
+    end
+
+    def user_matches params = {}
+      first = params && params[:first_name] ? params[:first_name] : first_name
+      last = params && params[:last_name] ? params[:last_name] : last_name
+      p params && params[:first_name]
+      User.find(:all, :conditions => ["(first_name like ? and last_name like ?) and deleted_at is null", "%#{first}%", "%#{last}%"])
+    end
   end
 end
