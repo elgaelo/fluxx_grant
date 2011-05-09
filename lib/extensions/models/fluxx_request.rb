@@ -1054,8 +1054,11 @@ module FluxxRequest
     end
 
     def funding_sources_expires_before_close_date?
-      # TODO: ask how to count it...
-      false
+      if (end_date = grant_closed_at || grant_ends_at)
+        request_funding_sources.any? do |rfs|
+          rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source.end_at && rfs.funding_source_allocation.funding_source.end_at < end_date
+        end
+      end
     end
 
     def duration_over_12_months?
