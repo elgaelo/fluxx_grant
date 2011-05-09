@@ -24,9 +24,49 @@ module FluxxGrantRequest
     base.class_eval do
       include ModelInstanceMethods
     end
+    
+    base.add_grant_request_install_role
   end
 
   module ModelClassMethods
+    def add_grant_request_install_role 
+      insta_role do |insta|
+        # Define who is allowd to perform which events
+        insta.add_event_roles 'submit_draft', Program, Program.grantee_roles
+        insta.add_event_roles 'reject', Program, Program.request_roles
+        insta.add_event_roles 'un_reject', Program, Program.request_roles
+        insta.add_event_roles 'recommend_funding', Program, Program.request_roles
+        insta.add_event_roles 'complete_ierf', Program, Program.request_roles
+        insta.add_event_roles 'grant_team_approve', Program, Program.grant_roles
+        insta.add_event_roles 'grant_team_send_back', Program, Program.grant_roles
+        insta.add_event_roles 'po_approve', Program, Program.program_officer_role_name
+        insta.add_event_roles 'po_send_back', Program, Program.program_officer_role_name
+        insta.add_event_roles 'pd_approve', Program, Program.program_director_role_name
+        insta.add_event_roles 'secondary_pd_approve', Program, Program.program_director_role_name
+        insta.add_event_roles 'pd_send_back', Program, Program.program_director_role_name
+        insta.add_event_roles 'cr_approve', Program, Program.cr_role_name
+        insta.add_event_roles 'cr_send_back', Program, Program.cr_role_name
+        insta.add_event_roles 'deputy_director_approve', Program, Program.deputy_director_role_name
+        insta.add_event_roles 'deputy_director_send_back', Program, Program.deputy_director_role_name
+        insta.add_event_roles 'svp_approve', Program, Program.svp_role_name
+        insta.add_event_roles 'svp_send_back', Program, Program.svp_role_name
+        insta.add_event_roles 'president_approve', Program, Program.president_role_name
+        insta.add_event_roles 'president_send_back', Program, Program.president_role_name
+        insta.add_event_roles 'become_grant', Program, Program.grant_roles
+        insta.add_event_roles 'close_grant', Program, Program.grant_roles
+        insta.add_event_roles 'fip_close_grant', Program, Program.finance_roles
+        insta.add_event_roles 'cancel_grant', Program, Program.grant_roles
+
+        insta.extract_related_object do |model|
+          result = if model.in_state_with_category? 'pending_secondary_pd_approval'
+              model.request_programs.reject{|rp| rp.is_approved?}.map{|rp| rp.program}.compact
+          else
+            model.program
+          end
+          result
+        end
+      end
+    end
   end
 
   module ModelInstanceMethods

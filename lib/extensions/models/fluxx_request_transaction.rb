@@ -147,6 +147,15 @@ module FluxxRequestTransaction
       insta.time_attributes = [:due_at, :paid_at, :transaction_at] 
     end
     
+    base.insta_role do |insta|
+      # Define who is allowed to perform which events
+      insta.add_event_roles 'mark_paid', Program, Program.grant_roles + Program.finance_roles
+
+      insta.extract_related_object do |model|
+        model.request.program if model.request
+      end
+    end
+
     base.insta_workflow do |insta|
       insta.add_state_to_english :new, 'New', 'new'
       insta.add_state_to_english :tentatively_due, 'Tentatively Due', 'due'

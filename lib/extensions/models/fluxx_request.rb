@@ -50,6 +50,7 @@ module FluxxRequest
   LIQUID_METHODS = [:grant_id, :project_summary, :grant_agreement_at, :grant_begins_at, :grant_ends_at, :request_received_at, :fip_projected_end_at, :amount_requested, :amount_recommended, :duration_in_months, :program_lead, :signatory_contact, :signatory_user_org, :signatory_user_org_title, :address_org, :program, :initiative, :sub_program, :request_transactions, :request_reports, :letter_request_reports, :request_evaluation_metrics, :letter_project_summary_without_leading_to, :ierf_proposed_end_at, :ierf_budget_end_at, :program_organization, :fiscal_organization, :grantee_org_owner_with_specific, :letter_project_summary, :signatory_contact_title]  
 
   def self.included(base)
+    base.send :include, AASM
     base.belongs_to :program_organization, :class_name => 'Organization', :foreign_key => :program_organization_id
     base.send :attr_accessor, :program_organization_lookup
     base.belongs_to :fiscal_organization, :class_name => 'Organization', :foreign_key => :fiscal_organization_id
@@ -331,7 +332,6 @@ module FluxxRequest
       include ModelInstanceMethods
     end
 
-    base.send :include, AASM
     base.add_aasm
     base.alias_method_chain :grantee_org_owner, :specific
     base.alias_method_chain :grantee_signatory, :specific

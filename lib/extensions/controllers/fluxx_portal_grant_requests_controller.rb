@@ -29,7 +29,6 @@ module FluxxPortalGrantRequestsController
         set_enabled_variables controller_dsl
       end
     end
-    base.add_grant_request_install_role GrantRequest
     base.insta_new GrantRequest do |insta|
       insta.layout = 'grantee_portal'
       insta.skip_card_footer = true

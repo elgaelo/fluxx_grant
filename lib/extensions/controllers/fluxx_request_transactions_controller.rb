@@ -53,15 +53,6 @@ module FluxxRequestTransactionsController
       insta.icon_style = ICON_STYLE
     end
 
-    base.insta_role RequestReport do |insta|
-      # Define who is allowd to perform which events
-      insta.add_event_roles RequestTransaction.mark_paid, Program, Program.grant_roles + Program.finance_roles
-
-      insta.extract_related_object do |model|
-        model.request.program if model.request
-      end
-    end
-
     base.insta_related RequestTransaction do |insta|
       insta.add_related do |related|
         related.display_name = 'People'

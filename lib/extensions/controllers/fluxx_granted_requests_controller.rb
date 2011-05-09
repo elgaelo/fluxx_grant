@@ -58,7 +58,6 @@ module FluxxGrantedRequestsController
         set_enabled_variables controller_dsl
       end
     end
-    base.add_grant_request_install_role GrantRequest
     base.insta_delete Request do |insta|
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
