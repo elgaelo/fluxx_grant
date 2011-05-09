@@ -351,6 +351,13 @@ module FluxxRequest
       ['Request', 'GrantRequest', 'FipRequest']
     end
     
+    def form_types
+      type_list = []
+      type_list << ['Grants', GrantRequest.name]
+      type_list << [I18n.t(:fip_name).pluralize, FipRequest.name] unless FLUXX_CONFIGURATION[:hide_fips]
+      type_list
+    end
+    
     # Translate the old state to the next state that will be completed
     # Useful for the funnel
     def old_state_complete_english_translation state_name
