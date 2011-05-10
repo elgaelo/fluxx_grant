@@ -153,11 +153,11 @@ module FluxxGrantUser
     end
     
     def is_grantee?
-      self.user_profile == UserProfile.where(:name => 'Grantee').first
+      has_named_user_profile? 'Grantee'
     end
 
     def is_reviewer?
-      self.user_profile == UserProfile.where(:name => 'Reviewer').first
+      has_named_user_profile? 'Reviewer'
     end
 
     def is_portal_user?
