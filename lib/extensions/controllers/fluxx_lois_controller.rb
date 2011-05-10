@@ -35,14 +35,12 @@ module FluxxLoisController
           params[:connect_user] = true
           @user = User.new(params[:user])
           @user.save
-          #Todo Somehow we need to kick a validation error and show the errors on the form
         end
         if params[:organization]
           params.delete(:loi)
           params[:connect_organization] = true
-          @organization = Organizatio.new(params[:organization])
+          @organization = Organization.new(params[:organization])
           @organization.save
-          #Todo Somehow we need to kick a validation error and show the errors on the form
         end
       end
       insta.post do |triple|
@@ -62,6 +60,20 @@ module FluxxLoisController
           model.update_attribute "organization_id", nil
         end
       end
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if (params[:user] && !@user.errors.empty?) || (params[:organization] && !@organization.errors.empty?)
+            response.headers['fluxx_result_failure'] = 'update'
+            flash[:error] = t(:errors_were_found) unless flash[:error]
+            flash[:info] = nil
+            send :fluxx_edit_card, controller_dsl
+          else
+            default_block.call
+          end
+        end
+      end
+
     end
     base.insta_delete Loi do |insta|
       insta.template = 'loi_form'
