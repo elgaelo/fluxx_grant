@@ -15,6 +15,7 @@ module FluxxProgramsController
     end
     base.insta_show Program do |insta|
       insta.template = 'program_show'
+      insta.footer_template = 'admin_cards/admin_footer'
       insta.icon_style = ICON_STYLE
     end
     base.insta_new Program do |insta|

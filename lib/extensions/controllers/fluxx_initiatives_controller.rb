@@ -16,6 +16,7 @@ module FluxxInitiativesController
     end
     base.insta_show Initiative do |insta|
       insta.template = 'initiative_show'
+      insta.footer_template = 'admin_cards/admin_footer'
       insta.icon_style = ICON_STYLE
     end
     base.insta_new Initiative do |insta|

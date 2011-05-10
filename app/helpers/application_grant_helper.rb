@@ -68,6 +68,7 @@ module ApplicationGrantHelper
     links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_tasks]
     links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_transactions]
     links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_loi]
+    links << "  '#{link_to 'Budgeting', admin_card_path(:id => 1), :class => 'new-detail'}'" unless FLUXX_CONFIGURATION[:hide_admin_cards]
     links.join ",\n"
   end
 

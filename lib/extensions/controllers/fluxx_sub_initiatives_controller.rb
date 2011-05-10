@@ -16,6 +16,7 @@ module FluxxSubInitiativesController
     end
     base.insta_show SubInitiative do |insta|
       insta.template = 'sub_initiative_show'
+      insta.footer_template = 'admin_cards/admin_footer'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
     end
