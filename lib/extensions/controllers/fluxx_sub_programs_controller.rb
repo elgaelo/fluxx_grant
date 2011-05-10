@@ -15,6 +15,7 @@ module FluxxSubProgramsController
     end
     base.insta_show SubProgram do |insta|
       insta.template = 'sub_program_show'
+      insta.footer_template = 'admin_cards/admin_footer'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
     end

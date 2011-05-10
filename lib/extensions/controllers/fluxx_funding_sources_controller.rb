@@ -15,6 +15,7 @@ module FluxxFundingSourcesController
     end
     base.insta_show FundingSource do |insta|
       insta.template = 'funding_source_show'
+      insta.footer_template = 'admin_cards/admin_footer'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
     end

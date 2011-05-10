@@ -351,6 +351,13 @@ module FluxxRequest
       ['Request', 'GrantRequest', 'FipRequest']
     end
     
+    def form_types
+      type_list = []
+      type_list << ['Grants', GrantRequest.name]
+      type_list << [I18n.t(:fip_name).pluralize, FipRequest.name] unless FLUXX_CONFIGURATION[:hide_fips]
+      type_list
+    end
+    
     # Translate the old state to the next state that will be completed
     # Useful for the funnel
     def old_state_complete_english_translation state_name
@@ -1047,8 +1054,11 @@ module FluxxRequest
     end
 
     def funding_sources_expires_before_close_date?
-      # TODO: ask how to count it...
-      false
+      if (end_date = grant_closed_at || grant_ends_at)
+        request_funding_sources.any? do |rfs|
+          rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source.end_at && rfs.funding_source_allocation.funding_source.end_at < end_date
+        end
+      end
     end
 
     def duration_over_12_months?

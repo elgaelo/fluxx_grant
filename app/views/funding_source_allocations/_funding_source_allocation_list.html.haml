@@ -16,7 +16,7 @@
       - total_funding += (model.amount || 0)
 %h3
   %strong= "#{total_funding.to_currency(:precision => 0)} Current Year Funding"
-  - if !do_suppress_add
+  - if current_user.is_admin? && !do_suppress_add
     %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_funding_source_allocation_authority_path(:program_id => program_id, :sub_program_id => sub_program_id, :initiative_id => initiative_id, :sub_initiative_id => sub_initiative_id), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Funding Source Allocation"
 
 - if !models || models.empty?
@@ -45,9 +45,9 @@
                 %ul
                   - funding_source_allocation_model.funding_source_allocation_authorities.each do |model|
                     %li
-                      - if current_user.has_delete_for_model? model
+                      - if current_user.is_admin? && current_user.has_delete_for_model?(model)
                         %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), funding_source_allocation_authority_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-                      = raw "#{model.authority} - #{link_to((model.amount || 0).to_currency(:precision => 0), edit_funding_source_allocation_authority_path(model), :class => 'to-modal', :title => 'Update Funding Source Allocation', 'data-on-success' => 'refreshCaller,close')}"
+                        = raw "#{model.authority} - #{link_to((model.amount || 0).to_currency(:precision => 0), edit_funding_source_allocation_authority_path(model), :class => 'to-modal', :title => 'Update Funding Source Allocation', 'data-on-success' => 'refreshCaller,close')}"
               - allocated = (funding_source_allocation_model.amount || 0)
               - totals[0] += allocated
               %td= allocated.to_currency(:precision => 0)
