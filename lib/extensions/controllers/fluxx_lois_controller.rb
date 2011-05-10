@@ -47,16 +47,14 @@ module FluxxLoisController
       end
       insta.post do |triple|
         controller_dsl, model, outcome = triple
-        if params[:link_user] || params[:link_organization]
-          if (params[:link_user].to_i > 0)
-            @user = User.find(params[:link_user].to_i)
-          end
-          if (params[:link_organization].to_i > 0)
-            @organization = Organization.find(params[:link_organization].to_i)
-          end
-          model.link_user @user if @user
-          model.link_organization @organization if @organization
+        if (params[:link_user].to_i > 0)
+          @user = User.find(params[:link_user].to_i)
         end
+        if (params[:link_organization].to_i > 0)
+          @organization = Organization.find(params[:link_organization].to_i)
+        end
+        model.link_user @user if @user
+        model.link_organization @organization if @organization
         if params[:disconnect_user]
           model.update_attribute "user_id", nil
         end
