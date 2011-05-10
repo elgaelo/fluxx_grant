@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110503230255) do
+ActiveRecord::Schema.define(:version => 20110510091830) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -284,7 +284,7 @@ ActiveRecord::Schema.define(:version => 20110503230255) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "applicant"
-    t.string   "organization"
+    t.string   "organization_name"
     t.string   "project_title"
     t.string   "email"
     t.string   "phone"
@@ -294,6 +294,9 @@ ActiveRecord::Schema.define(:version => 20110503230255) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
+    t.integer  "request_id"
+    t.integer  "user_id"
+    t.integer  "organization_id"
   end
 
   add_index "lois", ["created_by_id"], :name => "lois_created_by_id"

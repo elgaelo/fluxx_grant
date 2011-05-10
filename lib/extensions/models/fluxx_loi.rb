@@ -1,11 +1,14 @@
 module FluxxLoi
-  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :applicant, :organization, :email, :phone, :project_title]
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :applicant, :organization_name, :email, :phone, :project_title]
   
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
+    base.belongs_to :request
+    base.belongs_to :user
+    base.belongs_to :organization
     base.validates_presence_of   :applicant
-    base.validates_presence_of   :organization
+    base.validates_presence_of   :organization_name
     base.validates_presence_of   :email
 
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
@@ -85,8 +88,47 @@ module FluxxLoi
     def user_matches params = {}
       first = params && params[:first_name] ? params[:first_name] : first_name
       last = params && params[:last_name] ? params[:last_name] : last_name
-      p params && params[:first_name]
-      User.find(:all, :conditions => ["(first_name like ? and last_name like ?) and deleted_at is null", "%#{first}%", "%#{last}%"])
+      User.find(:all, :conditions => ["(first_name like ? and last_name like ?) and deleted_at is null", "%#{first}%", "%#{last}%"], :order => "first_name, last_name asc", :limit => 20)
+    end
+
+    def organization_matches params = {}
+      org = params && params[:organization_name] ? params[:organization_name] : organization_name
+      Organization.find(:all, :conditions => ["(name like ?) and deleted_at is null", "%#{org}%"], :order => "name asc", :limit => 20)
+    end
+
+    def link_user user
+      if user.id
+        update_attribute("user_id", user.id)
+        if !user.user_profile
+          p "Add grantee role"
+          user.update_attribute "user_profile_id", UserProfile.where(:name => 'Grantee').first.id
+          user.save
+        end
+        # Only add the grantee roles if the user's profile is Grantee
+        if user.user_profile.name == "Grantee"
+          Program.where(:retired => 0).each do |program|
+            user.has_role! "Grantee", program
+          end
+        end
+        set_loi_user_primary_org
+        #todo email login information
+      end
+    end
+
+    def link_organization org
+      update_attribute("organization_id", org.id)
+      set_loi_user_primary_org
+    end
+
+    def set_loi_user_primary_org
+      if user && organization && !user.primary_organization
+        user_org = UserOrganization.where(:user_id => user.id, :organization_id => organization.id).first
+        unless user_org
+          user_org = UserOrganization.new({:user_id => user.id, :organization_id => organization.id})
+          user_org.save
+        end
+        user.update_attribute "primary_user_organization_id", user_org.id
+      end
     end
   end
 end

@@ -13,7 +13,7 @@ module FluxxLoisController
       insta.template = 'loi_show'
       insta.icon_style = ICON_STYLE
       insta.add_workflow
-      insta.template_map = {:matching_users => "matching_users_list"}
+      insta.template_map = {:matching_users => "matching_users_list", :matching_organizations => "matching_organizations_list"}
     end
     base.insta_edit Loi do |insta|
       insta.icon_style = ICON_STYLE
@@ -26,8 +26,44 @@ module FluxxLoisController
     end
     base.insta_put Loi do |insta|
       insta.template = 'loi_form'
+      insta.template_map = {:connect_organization =>  "connect_organization", :connect_user => "connect_user"}
       insta.icon_style = ICON_STYLE
       insta.add_workflow
+      insta.pre do |triple|
+        if params[:user]
+          params.delete(:loi)
+          params[:connect_user] = true
+          @user = User.new(params[:user])
+          @user.save
+          #Todo Somehow we need to kick a validation error and show the errors on the form
+        end
+        if params[:organization]
+          params.delete(:loi)
+          params[:connect_organization] = true
+          @organization = Organizatio.new(params[:organization])
+          @organization.save
+          #Todo Somehow we need to kick a validation error and show the errors on the form
+        end
+      end
+      insta.post do |triple|
+        controller_dsl, model, outcome = triple
+        if params[:link_user] || params[:link_organization]
+          if (params[:link_user].to_i > 0)
+            @user = User.find(params[:link_user].to_i)
+          end
+          if (params[:link_organization].to_i > 0)
+            @organization = Organization.find(params[:link_organization].to_i)
+          end
+          model.link_user @user if @user
+          model.link_organization @organization if @organization
+        end
+        if params[:disconnect_user]
+          model.update_attribute "user_id", nil
+        end
+        if params[:disconnect_organization]
+          model.update_attribute "organization_id", nil
+        end
+      end
     end
     base.insta_delete Loi do |insta|
       insta.template = 'loi_form'
