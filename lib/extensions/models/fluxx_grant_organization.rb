@@ -1,5 +1,6 @@
 module FluxxGrantOrganization
   require 'rexml/document'
+  require 'rexml/xpath'
   require 'net/https'
   include REXML
 
@@ -303,8 +304,8 @@ module FluxxGrantOrganization
 
     # Return values from the charity check response using XPath
     def charity_check key
-      xmldoc = Document.new(self.c3_serialized_response)
-      XPath.first(xmldoc, "//#{key}/text()") rescue nil
+      xmldoc = REXML::Document.new(c3_serialized_response)
+      REXML::XPath.first(xmldoc, "//#{key}/text()") rescue nil
     end
 
     def outside_grants pagenum
