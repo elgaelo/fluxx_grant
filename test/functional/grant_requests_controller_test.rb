@@ -449,8 +449,8 @@ class GrantRequestsControllerTest < ActionController::TestCase
 
   test "try to show a granted request" do
     @request1.update_attributes :state => "granted"
-    get :show, :id => @request1.to_param
-    assert_redirected_to granted_request_path(assigns(:model))
+    get :show, :id => @request1.to_param, :finance_tracker => 1
+    assert_redirected_to granted_request_path(assigns(:model), :finance_tracker => 1)
   end
 
   test "should get edit" do
