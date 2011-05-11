@@ -13,4 +13,4 @@
   - elsif RequestTransaction.all_events_with_category('mark_paid').include?(event_name)
     %li= link_to english_event_name, current_edit_path(@model.id, {:hidden_event_action => event_name}), :class => 'to-self'
   - else
-    %li= link_to english_event_name, current_put_path(@model.id, {:event_action => event_name}), :class => 'as-put with-note', 'data-note-param'.to_sym => "#{@model_name}[workflow_note]"
+    %li= link_to english_event_name, self.send("#{@model_name}_path", {:event_action => event_name}), :class => 'as-put with-note', 'data-note-param'.to_sym => "#{@model_name}[workflow_note]"
