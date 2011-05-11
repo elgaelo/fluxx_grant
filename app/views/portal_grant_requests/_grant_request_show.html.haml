@@ -3,7 +3,7 @@
     %h4
       = raw render_grant_or_request_id model
       %input{:type => 'submit', :name => 'cancel', :class => 'button create open-link float_right', :value => 'Back', 'data-href'.to_sym => grantee_portal_index_path}
-      - if current_user.has_create_for_model?(RequestReview)
+      - if current_user.is_reviewer? && current_user.has_create_for_model?(RequestReview)
         %input{:type => 'submit', :name => 'review', :class => 'button create open-link float_right', :value => 'Review', 'data-href'.to_sym => new_request_review_path(:request_review => {:request_id => model.id})}
   .content
     = render :partial => "grant_requests/grant_request_show", :locals => {:model => model}
