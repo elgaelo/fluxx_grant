@@ -71,6 +71,7 @@ module FluxxRequest
     base.belongs_to :sub_program
     base.belongs_to :initiative
     base.belongs_to :sub_initiative
+    base.before_update :update_warnings_note
     base.after_create :generate_request_id
     base.after_save :process_before_save_blocks
     base.after_save :handle_cascading_deletes
@@ -1055,9 +1056,11 @@ module FluxxRequest
 
     def funding_sources_expires_before_close_date?
       if (end_date = grant_closed_at || grant_ends_at)
-        request_funding_sources.any? do |rfs|
-          rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source.end_at && rfs.funding_source_allocation.funding_source.end_at < end_date
-        end
+        expiring_fund_sources = request_funding_sources.map do |rfs|
+          rfs.funding_source_allocation.funding_source.name if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source.end_at && rfs.funding_source_allocation.funding_source.end_at < end_date
+        end.compact
+        
+        expiring_fund_sources.empty? ? nil : expiring_fund_sources.join(', ')
       end
     end
 
@@ -1075,7 +1078,8 @@ module FluxxRequest
 
         @funding_warnings.first << 'No c3 status' if Organization.charity_check_enabled && program_organization && !program_organization.c3_status_approved?
         @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
-        @funding_warnings << 'Funding source expires before estimated grant close date' if funding_sources_expires_before_close_date?
+        funding_sources = funding_sources_expires_before_close_date?
+        @funding_warnings << "Funding source(s) #{funding_sources} expire before the estimated grant close date" if funding_sources
 
         # just sugar to avoid using #first in views.
         class << @funding_warnings
@@ -1130,6 +1134,12 @@ module FluxxRequest
 
     def required_organization_docs
       ModelDocumentType.where(:model_type => Organization.name, :required => true).all
+    end
+    
+    def update_warnings_note
+      if changed_attributes.include?('display_warnings') && !self.display_warnings
+        note = Note.create(:created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :note => "Turned off the following warnings: '#{self.funding_warnings}'", :notable_id => self.id, :notable_type => self.class.name) 
+      end
     end
   end
 end
