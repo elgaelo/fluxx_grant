@@ -49,6 +49,7 @@ module FluxxGrantOrganizationsController
     base.insta_related Organization do |insta|
       insta.add_related do |related|
         related.display_name = 'Requests'
+        related.model_class = Request
         related.for_search do |model|
           model.related_requests
         end
@@ -59,6 +60,7 @@ module FluxxGrantOrganizationsController
       end
       insta.add_related do |related|
         related.display_name = 'Grants'
+        related.model_class = Request
         related.for_search do |model|
           model.related_grants
         end
@@ -72,6 +74,7 @@ module FluxxGrantOrganizationsController
       end
       insta.add_related do |related|        
         related.display_name = 'People'
+        related.model_class = User
         related.for_search do |model|
           model.related_users 1000
         end
@@ -81,6 +84,7 @@ module FluxxGrantOrganizationsController
       end
       insta.add_related do |related|
         related.display_name = 'Trans'
+        related.model_class = RequestTransaction
         related.for_search do |model|
           model.related_transactions
         end
@@ -91,6 +95,7 @@ module FluxxGrantOrganizationsController
       end
       insta.add_related do |related|
         related.display_name = 'Reports'
+        related.model_class = RequestReport
         related.for_search do |model|
           model.related_reports
         end
