@@ -7,6 +7,11 @@ module FluxxRequestReportsController
       insta.filter_template = 'request_reports/request_report_filter'
       insta.order_clause = 'due_at desc'
       insta.icon_style = ICON_STYLE
+      insta.search_conditions = (lambda do |params, controller_dsl, controller|
+        if controller.current_user.is_board_member?
+          {:state => "approved"}
+        end
+      end)
     end
     base.insta_show RequestReport do |insta|
       insta.template = 'request_report_show'
