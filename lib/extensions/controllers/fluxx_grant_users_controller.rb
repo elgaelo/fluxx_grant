@@ -37,7 +37,10 @@ module FluxxGrantUsersController
     base.insta_related User do |insta|
       insta.add_related do |related|
         related.display_name = 'Requests'
-        related.model_class = Request
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model?(Request) && !controller.current_user.is_board_member?
+        end
         related.for_search do |model|
           model.related_requests
         end
@@ -48,7 +51,10 @@ module FluxxGrantUsersController
       end
       insta.add_related do |related|
         related.display_name = 'Grants'
-        related.model_class = Request
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Request
+        end
         related.for_search do |model|
           model.related_grants
         end
@@ -62,7 +68,10 @@ module FluxxGrantUsersController
       end
       insta.add_related do |related|
         related.display_name = 'Orgs'
-        related.model_class = Organization
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Organization
+        end
         related.for_search do |model|
           model.related_organizations 1000
         end

@@ -56,6 +56,10 @@ module FluxxRequestReportsController
     base.insta_related RequestReport do |insta|
       insta.add_related do |related|
         related.display_name = 'People'
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? User
+        end
         related.for_search do |model|
           model.related_users
         end
@@ -66,6 +70,10 @@ module FluxxRequestReportsController
       end
       insta.add_related do |related|
         related.display_name = 'Orgs'
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Organization
+        end
         related.for_search do |model|
           model.related_organizations
         end
@@ -76,6 +84,10 @@ module FluxxRequestReportsController
       end
       insta.add_related do |related|
         related.display_name = 'Grants'
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Request
+        end
         related.for_search do |model|
           model.related_grants
         end
@@ -89,6 +101,10 @@ module FluxxRequestReportsController
       end
       insta.add_related do |related|
         related.display_name = 'Reports'
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? RequestReport
+        end
         related.for_search do |model|
           model.related_reports
         end

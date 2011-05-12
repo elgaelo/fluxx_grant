@@ -66,7 +66,10 @@ module FluxxGrantedRequestsController
     base.insta_related Request do |insta|
       insta.add_related do |related|
         related.display_name = 'People'
-        related.model_class = User
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? User
+        end
         related.add_title_block do |model|
           model.full_name if model
         end
@@ -77,7 +80,10 @@ module FluxxGrantedRequestsController
       end
       insta.add_related do |related|
         related.display_name = 'Orgs'
-        related.model_class = Organization
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Organization
+        end
         related.add_title_block do |model|
           model.name if model
         end
@@ -88,7 +94,10 @@ module FluxxGrantedRequestsController
       end
       insta.add_related do |related|
         related.display_name = 'Trans'
-        related.model_class = RequestTransaction
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? RequestTransaction
+        end
         related.add_title_block do |model|
           model.title if model
         end
@@ -99,7 +108,10 @@ module FluxxGrantedRequestsController
       end
       insta.add_related do |related|
         related.display_name = 'Reports'
-        related.model_class = RequestReport
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? RequestReport
+        end
         related.add_title_block do |model|
           model.title if model
         end
@@ -110,7 +122,10 @@ module FluxxGrantedRequestsController
       end
       insta.add_related do |related|
         related.display_name = 'Projects'
-        related.model_class = Project
+        related.show_tab? do |args|
+          controller, model = args
+          controller.current_user.has_view_for_model? Project
+        end
         related.add_title_block do |model|
           model.title if model
         end

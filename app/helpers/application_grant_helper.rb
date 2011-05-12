@@ -64,7 +64,7 @@ module ApplicationGrantHelper
     links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_organizations] || !current_user.has_listview_for_model?(Organization)
     links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_people] || !current_user.has_listview_for_model?(User)
     links << "  '#{link_to 'Projects', projects_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_projects] || !current_user.has_listview_for_model?(Project)
-    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_requests] || !current_user.has_listview_for_model?(Request)
+    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_requests] || !current_user.has_listview_for_model?(Request) || current_user.is_board_member?
     links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_tasks] || !current_user.has_listview_for_model?(WorkTask)
     links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_transactions] || !current_user.has_listview_for_model?(RequestTransaction)
     links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_loi] || !current_user.has_listview_for_model?(Loi)
