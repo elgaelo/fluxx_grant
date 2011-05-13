@@ -40,7 +40,7 @@ class LoisControllerTest < ActionController::TestCase
   end
 
   test "should show loi with documents" do
-    login_as_loi_admin, 
+    login_as_loi_admin
     model_doc1 = ModelDocument.make(:documentable => @loi)
     model_doc2 = ModelDocument.make(:documentable => @loi)
     get :show, :id => @loi.to_param
