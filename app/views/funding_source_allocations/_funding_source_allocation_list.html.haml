@@ -46,7 +46,7 @@
                   - funding_source_allocation_model.funding_source_allocation_authorities.each do |model|
                     %li
                       - if current_user.is_admin? && current_user.has_delete_for_model?(model)
-                        %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), funding_source_allocation_authority_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+                        %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), funding_source_allocation_authority_path(model), {:class => "as-delete #{model.can_delete? ? '' : 'disabled'}", 'data-on-success' => 'refreshCaller'}
                         = raw "#{model.authority} - #{link_to((model.amount || 0).to_currency(:precision => 0), edit_funding_source_allocation_authority_path(model), :class => 'to-modal', :title => 'Update Funding Source Allocation', 'data-on-success' => 'refreshCaller,close')}"
               - allocated = (funding_source_allocation_model.amount || 0)
               - totals[0] += allocated

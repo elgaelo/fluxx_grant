@@ -2,6 +2,6 @@
   - if @model
     - if current_user.is_admin?
       %li= link_to 'Edit', current_edit_path(@model.id), :class => 'to-self', :link_class => 'btn'
-      %li= link_to 'Delete', current_delete_path(@model.id), :class => 'as-delete', 'data-on-success' => 'refreshCaller', :link_class => 'btn'
+      %li= link_to 'Delete', current_delete_path(@model.id), :class => 'as-delete', 'data-on-success' => 'refreshCaller', :link_class => 'btn' if (!@model.respond_to?(:can_delete?) || @model.can_delete?)
     %li= link_to 'Printable', '#', :target => "_blank", :class => 'btn area-url' if FLUXX_CONFIGURATION[:show_printable_button]
     %li= link_to('PDF', '#', :target => "_blank", :class => 'btn area-url pdf') if FLUXX_CONFIGURATION[:show_pdf_button]
