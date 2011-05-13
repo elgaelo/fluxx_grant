@@ -53,7 +53,7 @@ module FluxxGrantUser
                       'personal_street_address', 'personal_street_address2', 'personal_city', 'state_name', 'country_name', 'personal_postal_code', 'work_street_address', 'work_street_address2', 
                       'work_city', 'work_state', 'work_country', 'work_postal_code', 'work_phone', 'work_fax', 'other_contact',
                       'assistant_name', 'assistant_email', 'blog_url', 'twitter_url', ['Birthday', :date], 'primary_title', 'primary_organization', 'time_zone']
-      insta.sql_query = "select users.created_at, users.updated_at, salutation, first_name, last_name, users.email, personal_email, prefix, middle_initial, personal_phone, personal_mobile, personal_fax,
+      insta.sql_query = "users.created_at, users.updated_at, salutation, first_name, last_name, users.email, personal_email, prefix, middle_initial, personal_phone, personal_mobile, personal_fax,
                       personal_street_address, personal_street_address2, personal_city, geo_states.name state_name,  geo_countries.name country_name, personal_postal_code, 
                       organizations.street_address work_street_address, organizations.street_address2 work_street_address2, organizations.city work_city,
                       work_geo_states.name work_state_name, work_countries.name work_country_name, organizations.postal_code work_postal_code,

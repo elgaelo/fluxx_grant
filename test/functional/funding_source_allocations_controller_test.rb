@@ -73,8 +73,7 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
     lookup_funding_source_allocation_authority = FundingSourceAllocationAuthority.make :funding_source_allocation => lookup_funding_source_allocation, :amount => 150000
     get :index, :format => :autocomplete, :funding_amount => 250000, :program_id => program.id, :spending_year => 2011
     assert_response :success
-    p "ESH: have body=#{@response.body}"
-    assert @response.body.index("Less than #{250000.to_currency}")
+    assert_equal '[]', @response.body
   end
   
   test "should show funding_source_allocation with audits" do

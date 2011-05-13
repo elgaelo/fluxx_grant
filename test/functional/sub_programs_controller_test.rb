@@ -18,8 +18,7 @@ class SubProgramsControllerTest < ActionController::TestCase
     lookup_instance = SubProgram.make
     get :index, :name => lookup_instance.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
-    p "ESH: looking for #{lookup_instance.id} a=#{a.inspect}"
-    assert_equal lookup_instance.id, a.last['value']
+    assert a.map{|elem| elem['value']}.include?(lookup_instance.id)
   end
 
   test "should confirm that name_exists" do

@@ -1,4 +1,4 @@
-%h1= "#{model.program.name} / #{model.name}"
+%h1= "#{model.program.name if model.program} / #{model.name}"
 
 - current_year = Time.now.year
 - year_range = ((current_year-25)..(current_year + 2))

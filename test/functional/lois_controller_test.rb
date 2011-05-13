@@ -28,7 +28,7 @@ class LoisControllerTest < ActionController::TestCase
 
   test "should create loi" do
     assert_difference('Loi.count') do
-      post :create, :loi => { :email => 'test@test.com', :applicant => 'Applicant', :organization => "Organization", :project_title => 'some random name for you' }
+      post :create, :loi => { :email => 'test@test.com', :applicant => 'Applicant', :organization_name => "Organization", :project_title => 'some random name for you' }
     end
 
     assert 200, @response.status

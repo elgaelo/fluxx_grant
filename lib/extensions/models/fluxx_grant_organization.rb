@@ -20,7 +20,7 @@ module FluxxGrantOrganization
       insta.filename = 'organization'
       insta.headers = [['Date Created', :date], ['Date Updated', :date], 'name', 'street_address', 'street_address2', 'city', 'state_name',
                   'country_name', 'postal_code', 'phone', 'other_contact', 'fax', 'email', 'url', 'blog_url', 'twitter_url', 'acronym', 'tax_class']
-      insta.sql_query = "select organizations.created_at, organizations.updated_at, organizations.name, street_address, street_address2, city, geo_states.name state_name,
+      insta.sql_query = "organizations.created_at, organizations.updated_at, organizations.name, street_address, street_address2, city, geo_states.name state_name,
                   geo_countries.name country_name,
                   postal_code, phone, other_contact, fax, email, url, blog_url, twitter_url, acronym, mev_tax_class.value tax_class_value
                   from organizations

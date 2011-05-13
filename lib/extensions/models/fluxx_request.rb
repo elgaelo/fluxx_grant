@@ -122,7 +122,7 @@ module FluxxRequest
           end
         end)
       insta.sql_query =   (lambda do |with_clause|
-          block1 = "  select 
+          block1 = "  
           requests.base_request_id, requests.type, requests.state,
                          requests.amount_requested,
                          requests.amount_recommended,"
@@ -170,7 +170,7 @@ module FluxxRequest
           requests.created_at, requests.updated_at, 
           owner_users.first_name, owner_users.last_name, owner_users.email,
           lead_users.first_name, lead_users.last_name, lead_users.email,
-          signatory_users.first_name, signatory_users.last_name, signatory_users.email, requests.fip_title
+          signatory_users.first_name, signatory_users.last_name, signatory_users.email, requests.fip_title,
           project_summary
                          FROM requests
                          LEFT OUTER JOIN programs program ON program.id = requests.program_id

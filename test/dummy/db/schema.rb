@@ -294,8 +294,8 @@ ActiveRecord::Schema.define(:version => 20110512073734) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
-    t.integer  "request_id"
     t.integer  "user_id"
+    t.integer  "request_id"
     t.integer  "organization_id"
   end
 

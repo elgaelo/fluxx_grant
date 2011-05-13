@@ -12,7 +12,7 @@ module FluxxSubInitiative
     base.insta_export do |insta|
       insta.filename = 'sub_initiative'
       insta.headers = [['Date Created', :date], ['Date Updated', :date], 'Name', 'Spending Year', ['Amount Funded', :currency]]
-      insta.sql_query = "            select sub_initiatives.created_at, sub_initiatives.updated_at, sub_initiatives.name, if(spending_year is null, 'none', spending_year), sum(amount)
+      insta.sql_query = "            sub_initiatives.created_at, sub_initiatives.updated_at, sub_initiatives.name, if(spending_year is null, 'none', spending_year), sum(amount)
                    from sub_initiatives
                    left outer join funding_source_allocations fsa on true
                     where

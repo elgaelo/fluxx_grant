@@ -24,15 +24,15 @@ module FluxxRequestReport
       insta.filename = 'report'
       insta.headers = [['Date Created', :date], ['Date Updated', :date], 'Request ID', 'state', 'Report Type', ['Date Due', :date], ['Date Approved', :date], 'Org Name', 
             ['Amount Recommended', :currency], 'Lead PO', 'Project Summary']
-      insta.sql_query = "select rd.created_at, rd.updated_at, requests.base_request_id request_id, rd.state, rd.report_type, rd.due_at, rd.approved_at, organizations.name program_org_name,
+      insta.sql_query = "request_reports.created_at, request_reports.updated_at, requests.base_request_id request_id, request_reports.state, request_reports.report_type, request_reports.due_at, request_reports.approved_at, organizations.name program_org_name,
               requests.amount_recommended, 
               (select concat(users.first_name, (concat(' ', users.last_name))) full_name from
                 users where id = program_lead_id) lead_po,
               requests.project_summary
-              from request_reports rd
-              left outer join requests on rd.request_id = requests.id
+              from request_reports
+              left outer join requests on request_reports.request_id = requests.id
               left outer join organizations on requests.program_organization_id = organizations.id
-              where rd.id IN (?)"
+              where request_reports.id IN (?)"
     end
     
     base.insta_favorite

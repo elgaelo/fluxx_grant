@@ -23,7 +23,7 @@ module FluxxRequestReview
     base.insta_export do |insta|
       insta.filename = 'request_review'
       insta.headers = [['Date Created', :date], ['Date Updated', :date]]
-      insta.sql_query = "select created_at, updated_at
+      insta.sql_query = "created_at, updated_at
                 from request_reviews
                 where id IN (?)"
     end

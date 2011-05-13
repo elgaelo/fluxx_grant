@@ -26,7 +26,7 @@ module FluxxLoi
     base.insta_export do |insta|
       insta.filename = 'loi'
       insta.headers = [['Date Created', :date], ['Date Updated', :date]]
-      insta.sql_query = "select created_at, updated_at
+      insta.sql_query = "created_at, updated_at
                 from lois
                 where id IN (?)"
     end

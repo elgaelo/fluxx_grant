@@ -9,31 +9,31 @@ module FluxxGrantBlueprint
     base.send :include, ::FluxxCrmBlueprint
   
     Program.blueprint do
-      name Sham.words
+      name random_words
     end
 
     SubProgram.blueprint do
-      name Sham.word
+      name random_word
       program_id 1
     end
 
     Initiative.blueprint do
-      name Sham.words
+      name random_words
       sub_program_id 1
     end
 
     SubInitiative.blueprint do
-      name Sham.word
+      name random_word
       initiative_id 1
     end
 
     FundingSource.blueprint do
-      name Sham.words
+      name random_words
     end
 
     GrantRequest.blueprint do
       project_summary do
-        Sham.sentence
+        random_sentence
       end
       base_request_id nil
       amount_requested 45000
@@ -44,13 +44,13 @@ module FluxxGrantBlueprint
     end
 
     FipRequest.blueprint do
-      fip_title Sham.sentence
+      fip_title random_sentence
       fip_type do
         bp_attrs[:fip_type_contract]
       end
       fip_projected_end_at (-10).days.ago.to_s(:db)
       project_summary do
-        Sham.sentence
+        random_sentence
       end
       amount_requested 45000
       amount_recommended 45001
@@ -59,10 +59,10 @@ module FluxxGrantBlueprint
     end
 
     Organization.blueprint do
-      name Sham.company_name
-      city Sham.words
-      street_address Sham.words
-      street_address2 Sham.words
+      name random_words
+      city random_words
+      street_address random_words
+      street_address2 random_words
       url Sham.url
       tax_class do
         bp_attrs[:non_er_tax_status]
@@ -76,14 +76,14 @@ module FluxxGrantBlueprint
 
     RequestFundingSource.blueprint do
       funding_amount 5000
-      funding_source_allocation {FundingSourceAllocation.make}
+      funding_source_allocation {FundingSourceAllocation.make :amount => 50000}
       request {GrantRequest.make}
     end
 
     RequestEvaluationMetric.blueprint do
       request {GrantRequest.make}
-      description Sham.words
-      comment Sham.words
+      description random_words
+      comment random_words
       achieved false
     end
 
@@ -96,7 +96,7 @@ module FluxxGrantBlueprint
 
     RequestOrganization.blueprint do
       request {GrantRequest.make}
-      organization
+      organization {Organization.make}
     end
 
     RequestUser.blueprint do
@@ -105,6 +105,8 @@ module FluxxGrantBlueprint
     end
 
     ProjectRequest.blueprint do
+      request {GrantRequest.make}
+      project {Project.make}
     end
 
     FundingSourceAllocation.blueprint do
@@ -118,6 +120,8 @@ module FluxxGrantBlueprint
     end
   
     RequestProgram.blueprint do
+      request {GrantRequest.make}
+      program {Program.make}
     end
     
     RequestTransactionFundingSource.blueprint do
@@ -125,13 +129,14 @@ module FluxxGrantBlueprint
 
     BudgetRequest.blueprint do
       request {GrantRequest.make}
-      name Sham.words
+      name random_words
     end
 
     Loi.blueprint do
-      organization Sham.words
-      email Sham.words
-      applicant Sham.words
+      organization {Organization.make}
+      organization_name random_words
+      email random_email
+      applicant random_words
     end
 
     base.extend(ModelClassMethods)

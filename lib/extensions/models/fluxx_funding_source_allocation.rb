@@ -25,7 +25,7 @@ module FluxxFundingSourceAllocation
     base.insta_export do |insta|
       insta.filename = 'funding_source_allocation'
       insta.headers = [['Date Created', :date], ['Date Updated', :date]]
-      insta.sql_query = "select created_at, updated_at
+      insta.sql_query = "created_at, updated_at
                 from funding_source_allocations
                 where id IN (?)"
     end

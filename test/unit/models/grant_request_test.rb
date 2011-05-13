@@ -29,9 +29,10 @@ class GrantRequestTest < ActiveSupport::TestCase
   end
 
   test "create a request and try to reject" do
+    user = User.make
     Request.all_workflow_states.each do |cur_state|
       @req.state = cur_state
-      @req.insta_fire_event :reject, User.make
+      @req.insta_fire_event :reject, user
       assert_equal 'rejected', @req.state
     end
   end
