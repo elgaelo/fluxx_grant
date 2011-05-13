@@ -44,10 +44,18 @@ module FluxxRequestProgram
     end
     
     base.insta_workflow do |insta|
-      insta.add_state_to_english :new, 'New Request'
+      insta.add_state_to_english :new, 'New Secondary Program'
       insta.add_state_to_english :approved, 'Approved', 'approved'
       
       insta.add_event_to_english :approve, 'Approve'
+      
+      insta.alternate_note_model_block = (lambda do |model|
+        if model && model.request
+          model.request 
+        else
+          model
+        end
+      end)
     end
     
     base.extend(ModelClassMethods)

@@ -24,9 +24,14 @@
                 = model.note
             - else
               %strong
-                = model.workflowable.class.state_to_english_translation model.old_state
-                &#8594;
-                = model.workflowable.class.state_to_english_translation model.new_state
+                - if model.related_workflowable
+                  = model.related_workflowable.class.state_to_english_translation model.old_state
+                  &#8594;
+                  = model.related_workflowable.class.state_to_english_translation model.new_state
+                - else
+                  = model.workflowable.class.state_to_english_translation model.old_state
+                  &#8594;
+                  = model.workflowable.class.state_to_english_translation model.new_state
               - unless model.comment.blank?
                 <br/>
                 = model.comment

@@ -1044,6 +1044,8 @@ module FluxxRequest
           # TODO ESH: consider adding categories to roles to be able to identify the program directory role; otherwise we rely on naming conventions for the roles.  Programme director would screw everything up for example
           if !rp.is_approved? && user.has_role?(Program.program_director_role_name, rp.program)
             rp.request = self # Make sure that this request_program doesn't load up a different request since we might be changing its state (don't want to change it in two places since the save will happen on this instance of request)
+            rp.updated_by = user
+            rp.workflow_note = "#{rp.program.name} program is approved.  #{self.workflow_note}"
             rp.approve
             rp.save
           end

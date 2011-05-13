@@ -10,7 +10,41 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512073734) do
+ActiveRecord::Schema.define(:version => 20110513231752) do
+
+  create_table "alert_email_templates", :force => true do |t|
+    t.string "name"
+    t.text   "subject"
+    t.text   "body"
+  end
+
+  create_table "alert_emails", :force => true do |t|
+    t.string   "mailer_method"
+    t.integer  "attempts",           :default => 0
+    t.datetime "last_attempt_at"
+    t.boolean  "delivered",          :default => false
+    t.integer  "alert_id"
+    t.integer  "realtime_update_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "alert_recipients", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "alert_id"
+    t.text     "rtu_model_user_method"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "alerts", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "last_realtime_update_id"
+    t.integer  "alert_email_template_id"
+    t.string   "model_type"
+    t.text     "filter"
+  end
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -1090,6 +1124,8 @@ ActiveRecord::Schema.define(:version => 20110512073734) do
     t.string   "old_state"
     t.string   "new_state"
     t.text     "comment"
+    t.string   "related_workflowable_type"
+    t.integer  "related_workflowable_id"
   end
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
