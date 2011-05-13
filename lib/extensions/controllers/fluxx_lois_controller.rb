@@ -2,6 +2,8 @@ module FluxxLoisController
   ICON_STYLE = 'style-lois'
 
   def self.included(base)
+    base.skip_before_filter :require_user, :only => [:new, :create]
+    
     base.insta_index Loi do |insta|
       insta.template = 'loi_list'
       insta.filter_title = "Lois Filter"
@@ -79,6 +81,33 @@ module FluxxLoisController
       insta.template = 'loi_form'
       insta.icon_style = ICON_STYLE
     end
+    
+    base.insta_new Loi do |insta|
+      insta.view = 'lois/new'
+      insta.icon_style = ICON_STYLE
+      insta.pre_create_model = false
+      insta.skip_permission_check = true
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          response.headers['fluxx_template'] = 'loi'
+        end
+      end
+    end
+
+    base.insta_post GrantRequest do |insta|
+      insta.view = 'lois/new'
+      insta.icon_style = ICON_STYLE
+      insta.pre_create_model = true
+      insta.skip_permission_check = true
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          response.headers['fluxx_template'] = 'loi'
+        end
+      end
+    end
+    
     base.insta_related Loi do |insta|
       insta.add_related do |related|
       end
