@@ -259,7 +259,7 @@ module FluxxGrantOrganization
 
     def related_reports limit_amount=20
       grants = related_grants limit_amount
-      RequestReport.where(:deleted_at => nil).where(:request_id => grants.map(&:id)).order('due_at asc').limit(limit_amount)
+      (current_user.is_board_member? ? RequestReport.where(:state => "approved") : RequestReport).where(:deleted_at => nil).where(:request_id => grants.map(&:id)).order('due_at asc').limit(limit_amount)
     end
 
     def is_trusted?

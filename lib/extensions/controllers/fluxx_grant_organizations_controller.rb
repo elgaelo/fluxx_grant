@@ -84,9 +84,6 @@ module FluxxGrantOrganizationsController
           controller, model = args
           controller.current_user.has_view_for_model? User
         end
-        related.show_tab do |model|
-          true
-        end
         related.for_search do |model|
           model.related_users 1000
         end
@@ -99,10 +96,6 @@ module FluxxGrantOrganizationsController
         related.show_tab? do |args|
           controller, model = args
           controller.current_user.has_view_for_model? RequestTransaction
-        end
-
-        related.show_tab do |model|
-          true
         end
         related.for_search do |model|
           model.related_transactions
@@ -117,9 +110,6 @@ module FluxxGrantOrganizationsController
         related.show_tab? do |args|
           controller, model = args
           controller.current_user.has_view_for_model? RequestReport
-        end
-        related.show_tab do |model|
-          true
         end
         related.for_search do |model|
           model.related_reports
