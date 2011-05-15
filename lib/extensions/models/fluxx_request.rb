@@ -935,7 +935,8 @@ module FluxxRequest
     end
 
     def related_request_reports limit_amount=20
-      (current_user.is_board_member? ? request_reports.where(:state => "approved") : request_reports).where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
+      # (current_user.is_board_member? ? request_reports.where(:state => "approved") : request_reports).where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
+      (request_reports).where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
     end
     
     def letter_project_summary
