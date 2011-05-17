@@ -2,7 +2,7 @@ class GemHandler
   def self.dependent_gems_block
     (lambda do |params|
       dev_local, cur_dir, gem_versions = params
-      gem 'thinking-sphinx', '>=2.0.1', :require => 'thinking_sphinx'
+      gem 'thinking-sphinx', '=2.0.3', :require => 'thinking_sphinx'
       gem 'writeexcel', '>=0.6.1'
       gem "delocalize"
       gem "authlogic"
