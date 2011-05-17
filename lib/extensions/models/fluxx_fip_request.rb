@@ -8,7 +8,6 @@ module FluxxFipRequest
     base.validates_presence_of     :program
     base.validates_presence_of     :project_summary
     base.validates_presence_of     :amount_requested
-    base.validates_presence_of     :amount_recommended, :if => :state_after_pre_recommended_chain
     base.validates_associated      :program
     base.has_many :workflow_events, :foreign_key => :workflowable_id, :conditions => {:workflowable_type => base.name}
     base.has_many :favorites, :foreign_key => :favorable_id, :conditions => {:favorable_type => base.name}
