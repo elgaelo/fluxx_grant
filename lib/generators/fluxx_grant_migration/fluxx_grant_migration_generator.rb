@@ -83,6 +83,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_link_fields_to_loi.rb', 'db/migrate/fluxx_grant_add_link_fields_to_loi.rb'
     handle_migration 'rename_loi_organization_name.rb', 'db/migrate/fluxx_grant_rename_loi_organization_name.rb'
     handle_migration 'create_board_user_profile_rules.rb', 'db/migrate/fluxx_grant_create_board_user_profile_rules.rb'
+    handle_migration 'add_grantee_roles_for_budget_requests.rb', 'db/migrate/fluxx_grant_add_grantee_roles_for_budget_requests.rb'
   end
   
   private
