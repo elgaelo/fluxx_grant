@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110513231752) do
+ActiveRecord::Schema.define(:version => 20110518014522) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -328,8 +328,8 @@ ActiveRecord::Schema.define(:version => 20110513231752) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
-    t.integer  "user_id"
     t.integer  "request_id"
+    t.integer  "user_id"
     t.integer  "organization_id"
   end
 
