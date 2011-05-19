@@ -1,5 +1,6 @@
 module FluxxFundingSourceAllocation
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :program_id, :sub_program_id, :initiative_id, :sub_initiative_id, :spending_year]
+  LIQUID_METHODS = [:spending_year, :funding_source ]  
   
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
@@ -34,6 +35,7 @@ module FluxxFundingSourceAllocation
     base.insta_utc do |insta|
       insta.time_attributes = [] 
     end
+    base.liquid_methods *( LIQUID_METHODS )    
     
     base.extend(ModelClassMethods)
     base.class_eval do

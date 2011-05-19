@@ -1,5 +1,6 @@
 module FluxxRequestFundingSource
   SEARCH_ATTRIBUTES = [:request_id]
+  LIQUID_METHODS = [:funding_amount, :funding_source_allocation]
 
   def self.included(base)
     base.belongs_to :request
@@ -23,6 +24,7 @@ module FluxxRequestFundingSource
     base.insta_multi
     base.insta_lock
     base.insta_realtime
+    base.liquid_methods *( LIQUID_METHODS )    
 
     base.extend(ModelClassMethods)
     base.class_eval do

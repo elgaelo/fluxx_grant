@@ -1,4 +1,6 @@
 module FluxxFundingSource
+  LIQUID_METHODS = [ :name ]  
+
   def self.included(base)
     base.has_many :request_funding_sources
     base.has_many :funding_source_allocations, :conditions => {:deleted_at => nil}
@@ -9,6 +11,7 @@ module FluxxFundingSource
     base.insta_search
     base.insta_export
     base.insta_realtime
+    base.liquid_methods *( LIQUID_METHODS )    
     
     base.extend(ModelClassMethods)
     base.class_eval do
