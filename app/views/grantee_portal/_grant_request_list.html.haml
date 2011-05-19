@@ -1,6 +1,8 @@
--.titlebar
+.titlebar
   %h4
     = @title
+    - if @title == 'Requests'
+      %input{:type => 'button', :name => 'new-request', :class => 'open-link float_right', :value => 'Create a Request', 'data-href'.to_sym => new_portal_grant_request_path}
 .content
   - if @data.count == 0
     %p.caption
