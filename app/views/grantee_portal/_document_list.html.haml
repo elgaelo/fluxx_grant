@@ -15,11 +15,13 @@
       %tr
         %th
           Additional Forms
-    %tbody
-    -@data.each do |file|
-      %tr
-        %td
-          - filename = file["filename"] ? file["filename"] : file
-          - name = file["name"] ? file["name"] : filename.humanize.gsub('.pdf', '')
-          = link_to name, "/documents/#{filename}", :target => "_blank", :class => "file-type file-type-pdf"
+  .documents
+    %table{:cellspacing => 0}
+      %tbody
+        -@data.each do |file|
+          %tr
+            %td
+              - filename = file["filename"] ? file["filename"] : file
+              - name = file["name"] ? file["name"] : filename.humanize.gsub('.pdf', '')
+              = link_to name, "/documents/#{filename}", :target => "_blank", :class => "file-type file-type-pdf"
   = render :partial => "grantee_portal/paging_actions"
