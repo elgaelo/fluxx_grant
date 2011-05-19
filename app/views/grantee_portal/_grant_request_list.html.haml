@@ -1,4 +1,4 @@
-.titlebar
+-.titlebar
   %h4
     = @title
 .content
@@ -21,6 +21,7 @@
             Status
       %tbody
         -@data.each do |model|
+          - actions = model.actions(current_user)
           - if model.is_grant?
             - state = "Closed"
             - state = "Active" if model.in_state_with_category?("become_grant")
@@ -33,7 +34,7 @@
           %tr{"data-url".to_sym => edit_portal_grant_request_path(:id => model.id)}
             %td
               = model.grant_or_request_id.nil? ? '' : link_to(model.grant_or_request_id, portal_grant_request_path(:id => model.id))
-              - if state == 'Draft' && current_user.has_role?(Program.grantee_role_name, model.program)
+              - if actions && actions.length > 0
                 %span.actions
                   = link_to image_tag("/images/fluxx_engine/theme/default/icons/pencil.png", :class => 'edit-button'), edit_portal_grant_request_path(:id => model.id)
                   = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), grant_request_path(model), :class => "as-delete"
@@ -44,7 +45,7 @@
             %td= (model.program ? model.program.name : '')
             %td
               = state
-              - model.actions(current_user).each do |button_clause|
+              - actions.each do |button_clause|
                 - event_name, english_event_name = button_clause
                 %span= link_to english_event_name, grant_request_path(model.id, :event_action => event_name, "grant_request[workflow_note]".to_sym => "Submitted from Grantee Portal"), :class => 'submit-workflow', 'data-confirm'.to_sym => 'Are you sure you want to submit this request?', 'data-success-message'.to_sym => "Your grant request #{model.grant_or_request_id} has been submitted."
     = render :partial => "paging_actions"
