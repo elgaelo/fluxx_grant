@@ -42,18 +42,6 @@ module FluxxPortalGrantRequestsController
       insta.skip_card_footer = true
       insta.icon_style = ICON_STYLE
       insta.pre_create_model = true
-      # TODO lamda stuff
-      insta.format do |format|
-        format.html do |triple|
-          if @model.in_state_with_category?("draft")
-            controller_dsl, outcome, default_block = triple
-            grant_request_edit_format_html controller_dsl, outcome, default_block
-          else
-            redirect_to portal_grant_request_path(@model)
-          end
-        end
-      end
-      
     end
     base.insta_post GrantRequest do |insta|
       insta.template = 'grant_request_form'
@@ -82,7 +70,6 @@ module FluxxPortalGrantRequestsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          @model.update_attribute('state', 'draft')
           grant_request_update_format_html controller_dsl, outcome, default_block
         end
       end
