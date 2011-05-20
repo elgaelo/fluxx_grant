@@ -1,3 +1,8 @@
+- request ||= nil
+- unless request
+  - if params[:request_id]
+    - request = Request.find params[:request_id] rescue nil
+
 %table.tabular{:cellspacing => 0}
   %thead
     %tr
