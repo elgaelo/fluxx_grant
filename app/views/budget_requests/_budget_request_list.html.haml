@@ -40,9 +40,10 @@
                   -requested_total += model.amount_requested.to_f if model.amount_requested
                   -recommended_total += model.amount_recommended.to_f if model.amount_recommended
                   %td= "#{((request.amount_recommended || 0) > 0 ? ((model.amount_recommended || 0) * 100) / request.amount_recommended : 0).to_int}%"
+              = render :partial => "budget_requests/extra_budget_request_list", :locals => {:models => models, :request => request}
               %tr
                 %td{:colspan => 2}
-                  Total:
+                  Total Grant:
                 %td= number_to_currency(requested_total, :precision => 0)
                 %td= number_to_currency(recommended_total, :precision => 0)
                 %td= "#{((request.amount_recommended || 0) > 0 ? ((recommended_total || 0) * 100) / request.amount_recommended : 0).to_int}%"
