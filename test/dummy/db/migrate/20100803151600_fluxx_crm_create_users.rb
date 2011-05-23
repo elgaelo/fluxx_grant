@@ -3,7 +3,6 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
     create_table "users", :force => true do |t|
       t.timestamps
       t.integer :created_by_id, :updated_by_id, :null => true, :limit => 12
-      t.text   :roles_text
       t.string :login,                       :limit => 40, :null => true
       t.string :first_name,                  :limit => 400, :null => true, :default => ''
       t.string :last_name,                   :limit => 400, :null => true, :default => ''
@@ -40,8 +39,8 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.datetime :locked_until,              :null => true
       t.integer :locked_by_id,               :null => true
     end
-    add_index :users, :login, :unique => true
-    add_index :users, :email, :unique => true
+    add_index :users, :login, :unique => true, :name => :index_users_on_login
+    add_index :users, :email, :unique => true, :name => :index_users_on_email
     
     add_constraint 'users', 'users_personal_country_id', 'personal_geo_country_id', 'geo_countries', 'id'
     add_constraint 'users', 'users_personal_geo_state_id', 'personal_geo_state_id', 'geo_states', 'id'
@@ -53,6 +52,9 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
 
     add_constraint 'organizations', 'organizations_created_by_id', 'created_by_id', 'users', 'id'
     add_constraint 'organizations', 'organizations_updated_by_id', 'updated_by_id', 'users', 'id'
+
+    # add_constraint 'documents', 'documents_created_by_id', 'created_by_id', 'users', 'id'
+    # add_constraint 'documents', 'documents_updated_by_id', 'updated_by_id', 'users', 'id'
   end
 
   def self.down
