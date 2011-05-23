@@ -12,7 +12,8 @@
   %tbody
     - if !defined?(models) || models.empty?
       %tr
-        %td= "Click the green '+' sign in order to create your itemized grant budget request."
+        %td
+          %p.caption= "Click the green '+' sign in order to create your itemized grant budget request."
     - else
       %tr
         %td
