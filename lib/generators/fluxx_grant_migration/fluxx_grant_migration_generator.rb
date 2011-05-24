@@ -2,6 +2,11 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
+  def create_request_amendment
+    handle_migration 'create_request_amendment.rb', 'db/migrate/fluxx_grant_create_request_amendment.rb'
+    sleep 1
+  end
+
 
   def add_display_warnings_flag_to_grant_request
     handle_migration 'add_display_warnings_flag_to_grant_request.rb', 'db/migrate/fluxx_grant_add_display_warnings_flag_to_grant_request.rb'
