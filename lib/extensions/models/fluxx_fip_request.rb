@@ -102,7 +102,7 @@ module FluxxFipRequest
         a[:amount_recommended] = amount_recommended if amount_recommended_changed?
         a[:original] = original
 
-        append_amendment_note
+        append_amendment_note unless original
       end
 
       true # stop touching meee!
