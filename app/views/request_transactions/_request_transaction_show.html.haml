@@ -25,6 +25,7 @@
     - model.request.request_funding_sources.each do |rfs|
       - if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source
         %h4= "#{rfs.funding_source_allocation.funding_source.name}"
+        %p= render :partial => "request_funding_sources/request_funding_source_initiatives", :locals => { :funding_source => rfs }
         %dl.inline
           %dt= "Allocated:"
           %dd= "#{(rfs.funding_amount || 0).to_currency}"
