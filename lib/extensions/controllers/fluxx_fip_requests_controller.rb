@@ -39,6 +39,7 @@ module FluxxFipRequestsController
     end
     base.insta_edit FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
+      insta.template_map = { :amend => "fip_requests/fip_request_amend_form" }
       insta.icon_style = ICON_STYLE
       insta.pre_create_model = true
       insta.format do |format|
@@ -55,6 +56,7 @@ module FluxxFipRequestsController
     end
     base.insta_put FipRequest do |insta|
       insta.template = 'fip_requests/fip_request_form'
+      insta.template_map = { :amend => "fip_requests/fip_request_amend_form" }
       insta.icon_style = ICON_STYLE
       insta.add_workflow
       insta.pre_create_model = true
