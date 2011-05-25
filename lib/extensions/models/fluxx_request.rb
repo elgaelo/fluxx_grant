@@ -543,7 +543,7 @@ module FluxxRequest
         has request_programs(:id), :type => :multi, :as => :request_program_ids
         has "CONCAT(requests.program_id, CONCAT(',', GROUP_CONCAT(DISTINCT IFNULL(`request_programs`.`program_id`, '0') SEPARATOR ',')))", :type => :multi, :as => :all_request_program_ids
         has "CONCAT(program_organization_id, ',', fiscal_organization_id)", :type => :multi, :as => :program_or_fiscal_org_ids
-        has multi_element_choices.multi_element_value_id, :type => :multi, :as => :multi_element_value_ids
+        has multi_element_choices.multi_element_value(:id), :type => :multi, :as => :multi_element_value_ids
         has "null", :type => :multi, :as => :funding_source_allocation_program_id
         has "null", :type => :multi, :as => :funding_source_allocation_sub_program_id
       	has "null", :type => :multi, :as => :funding_source_allocation_initiative_id

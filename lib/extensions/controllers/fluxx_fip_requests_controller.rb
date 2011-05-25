@@ -23,8 +23,13 @@ module FluxxFipRequestsController
       insta.add_workflow
       insta.format do |format|
         format.html do |triple|
-          controller_dsl, outcome, default_block = triple
-          grant_request_show_format_html controller_dsl, outcome, default_block
+          if @model and @model.granted?
+            redirect_params = params.delete_if{|k,v| %w[controller action].include?(k) }
+            head 201, :location => (granted_request_path(redirect_params))
+          else
+            controller_dsl, outcome, default_block = triple
+            grant_request_show_format_html controller_dsl, outcome, default_block
+          end
         end
       end
       insta.post do |triple|

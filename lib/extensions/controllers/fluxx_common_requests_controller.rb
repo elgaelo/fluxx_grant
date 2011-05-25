@@ -108,7 +108,7 @@ module FluxxCommonRequestsController
       else
         if actual_local_model.granted
           if outcome == :success
-            redirect_to send("granted_request_path", actual_local_model)
+            head 201, :location => (send("granted_request_path", actual_local_model))
           else
             default_block.call
           end
