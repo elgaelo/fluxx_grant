@@ -59,7 +59,12 @@ module ApplicationGrantHelper
 
   def build_add_card_links
     links = []
-    links << "  '#{link_to "Grants / #{I18n.t(:fip_name).pluralize}", granted_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_grants] || !current_user.has_listview_for_model?(Request)
+    grant_fip_name = if FLUXX_CONFIGURATION[:hide_fips]
+      "Grants"
+    else
+      "Grants / #{I18n.t(:fip_name).pluralize}"
+    end
+    links << "  '#{link_to grant_fip_name, granted_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_grants] || !current_user.has_listview_for_model?(Request)
     links << "  '#{link_to 'Grantee Reports', request_reports_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_grantee_reports] || !current_user.has_listview_for_model?(RequestReport)
     links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_organizations] || !current_user.has_listview_for_model?(Organization)
     links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_people] || !current_user.has_listview_for_model?(User)
