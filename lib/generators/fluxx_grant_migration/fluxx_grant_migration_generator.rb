@@ -13,11 +13,6 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
   end
 
 
-  def add_display_warnings_flag_to_grant_request
-    handle_migration 'add_display_warnings_flag_to_grant_request.rb', 'db/migrate/fluxx_grant_add_display_warnings_flag_to_grant_request.rb'
-    sleep 1
-  end
-
   include Rails::Generators::Migration
 
   def self.source_root
@@ -94,6 +89,8 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'rename_loi_organization_name.rb', 'db/migrate/fluxx_grant_rename_loi_organization_name.rb'
     handle_migration 'create_board_user_profile_rules.rb', 'db/migrate/fluxx_grant_create_board_user_profile_rules.rb'
     handle_migration 'add_grantee_roles_for_budget_requests.rb', 'db/migrate/fluxx_grant_add_grantee_roles_for_budget_requests.rb'
+    handle_migration 'add_display_warnings_flag_to_grant_request.rb', 'db/migrate/fluxx_grant_add_display_warnings_flag_to_grant_request.rb'
+    handle_migration 'add_request_grant_cycle.rb', 'db/migrate/fluxx_grant_add_request_grant_cycle.rb'
   end
   
   private
