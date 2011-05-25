@@ -2,6 +2,16 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
+  def populate_original_request_amendments
+    handle_migration 'populate_original_request_amendments.rb', 'db/migrate/fluxx_grant_populate_original_request_amendments.rb'
+    sleep 1
+  end
+
+  def create_request_amendment
+    handle_migration 'create_request_amendment.rb', 'db/migrate/fluxx_grant_create_request_amendment.rb'
+    sleep 1
+  end
+
 
   include Rails::Generators::Migration
 

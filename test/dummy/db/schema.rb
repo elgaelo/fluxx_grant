@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110518014522) do
+ActiveRecord::Schema.define(:version => 20110524232632) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -621,6 +621,18 @@ ActiveRecord::Schema.define(:version => 20110518014522) do
     t.string   "type_name",        :null => false
     t.string   "model_class",      :null => false
     t.text     "delta_attributes", :null => false
+  end
+
+  create_table "request_amendments", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "duration"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "amount_recommended"
+    t.boolean  "original",           :default => false
+    t.integer  "request_id"
+    t.string   "request_type"
   end
 
   create_table "request_evaluation_metrics", :force => true do |t|
