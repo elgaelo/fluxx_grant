@@ -54,7 +54,8 @@ module FluxxPortalGrantRequestsController
           if (outcome == :error)
             grant_request_edit_format_html controller_dsl, outcome, default_block
           else
-            @model.update_attribute('state', 'draft')
+            draft_state = Request.all_states_with_category("draft").first
+            @model.update_attribute('state', draft_state) if draft_state
             redirect_to grantee_portal_index_path
           end
         end
