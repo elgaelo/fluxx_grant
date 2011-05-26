@@ -10,13 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524232632) do
-
-  create_table "alert_email_templates", :force => true do |t|
-    t.string "name"
-    t.text   "subject"
-    t.text   "body"
-  end
+ActiveRecord::Schema.define(:version => 20110525194105) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -41,9 +35,11 @@ ActiveRecord::Schema.define(:version => 20110524232632) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "last_realtime_update_id"
-    t.integer  "alert_email_template_id"
-    t.string   "model_type"
+    t.string   "type"
     t.text     "filter"
+    t.string   "name"
+    t.string   "subject"
+    t.text     "body"
   end
 
   create_table "audits", :force => true do |t|
@@ -869,6 +865,7 @@ ActiveRecord::Schema.define(:version => 20110524232632) do
     t.string   "po_number"
     t.boolean  "extension_flag"
     t.boolean  "display_warnings",                  :default => true
+    t.integer  "grant_cycle_id"
   end
 
   add_index "requests", ["fiscal_org_owner_id"], :name => "index_requests_on_fiscal_org_owner_id"

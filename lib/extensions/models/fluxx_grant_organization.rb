@@ -88,7 +88,7 @@ module FluxxGrantOrganization
         has 'null', :type => :multi, :as => :group_ids
         has satellite_orgs(:id), :as => :satellite_org_ids
         has "CONCAT(organizations.id, ',', IFNULL(organizations.parent_org_id, '0'))", :as => :related_org_ids, :type => :multi
-        has multi_element_choices.multi_element_value_id, :type => :multi, :as => :multi_element_value_ids
+        has multi_element_choices.multi_element_value(:id), :type => :multi, :as => :multi_element_value_ids
 
         set_property :delta => :delayed
       end

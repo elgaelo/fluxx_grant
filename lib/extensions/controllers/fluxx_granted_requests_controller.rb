@@ -27,11 +27,13 @@ module FluxxGrantedRequestsController
       insta.force_redirect do |conf|
         # Load the model; we may have either a FIP or a Grant, handle both cases
         model = conf.load_existing_model params
-        redirect_to send("edit_#{model.class.name.tableize.singularize}_path", model.id)
+        redirect_params = params.delete_if{|k,v| %w[controller action].include?(k) }
+        head 201, :location => (send("edit_#{model.class.name.tableize.singularize}_path", model.id, redirect_params))
       end
     end
     base.insta_put Request do |insta|
       insta.template = 'grant_request_form'
+      insta.template_map = { :amend => "grant_request_amend_form" }
       insta.icon_style = ICON_STYLE
       insta.add_workflow
       insta.pre_create_model = true
