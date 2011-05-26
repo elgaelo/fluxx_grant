@@ -5,10 +5,10 @@ module FluxxGrantUser
     base.has_many :request_users
     base.has_many :users, :through => :request_users
     base.has_many :program_lead_requests, :class_name => 'Request', :foreign_key => :program_lead_id
-    base.has_many :grantee_org_owner_requests, :class_name => 'Request', :foreign_key => :grantee_org_owner_id
-    base.has_many :grantee_signatory_requests, :class_name => 'Request', :foreign_key => :grantee_signatory_id
-    base.has_many :fiscal_org_owner_requests, :class_name => 'Request', :foreign_key => :fiscal_org_owner_id
-    base.has_many :fiscal_signatory_requests, :class_name => 'Request', :foreign_key => :fiscal_signatory_id
+    base.has_many :grantee_org_owner_grants, :class_name => 'Request', :foreign_key => :grantee_org_owner_id, :conditions => {:granted => 1, :deleted_at => nil}
+    base.has_many :grantee_signatory_grants, :class_name => 'Request', :foreign_key => :grantee_signatory_id, :conditions => {:granted => 1, :deleted_at => nil}
+    base.has_many :fiscal_org_owner_grants, :class_name => 'Request', :foreign_key => :fiscal_org_owner_id, :conditions => {:granted => 1, :deleted_at => nil}
+    base.has_many :fiscal_signatory_grants, :class_name => 'Request', :foreign_key => :fiscal_signatory_id, :conditions => {:granted => 1, :deleted_at => nil}
     base.has_many :role_users_programs, :class_name => 'RoleUser', :foreign_key => 'user_id', :conditions => {:role_id => Role.where(:roleable_type => 'Program')}
     base.has_many :role_programs, :class_name => 'Program', :through => :role_users_programs, :source => :user
     
@@ -21,7 +21,7 @@ module FluxxGrantUser
     base.send :include, ::FluxxUser
     
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids]
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :was_grantee_org_owner]
       insta.derived_filters = {
         :grant_program_ids => (lambda do |search_with_attributes, request_params, name, val|
           program_id_strings = val
@@ -99,6 +99,8 @@ module FluxxGrantUser
         has 'null', :type => :multi, :as => :first_name_ord
         has request_users.request(:id), :type => :multi, :as => :user_request_ids
         has 'null', :type => :multi, :as => :group_ids
+        has grantee_org_owner_grants(:id), :type => :multi, :as => :org_owner_grant_ids
+        has 'count(grantee_org_owner_grants_users.id) > 1', :type => :boolean, :as => :was_grantee_org_owner
         set_property :delta => :delayed
       end
 
@@ -123,6 +125,8 @@ module FluxxGrantUser
         (ORD(LOWER(SUBSTRING(users.first_name,3,1))) * 256) + (ORD(LOWER(SUBSTRING(users.first_name,4,1)))))', :type => :multi, :as => :first_name_ord
         has 'null', :type => :multi, :as => :user_request_ids
         has group_members.group(:id), :type => :multi, :as => :group_ids
+        has grantee_org_owner_grants(:id), :type => :multi, :as => :org_owner_grant_ids
+        has 'count(requests.id) > 1', :type => :boolean, :as => :was_grantee_org_owner
         set_property :delta => :delayed
       end
     end
