@@ -121,10 +121,5 @@ module FluxxGrantRequestsController
   end
 
   module ModelInstanceMethods
-    def hide_funding_warnings
-      @model = Request.find(params[:id])
-      @model.update_attributes(:display_warnings => false)
-      redirect_to grant_request_path(@model)
-    end
   end
 end
