@@ -7,14 +7,7 @@
       %h3 Warning - there may be problems with this Request.
 
       %ul.funding_warnings
-        - unless model.funding_warnings.first.empty?
-          %li
-            This grant may require a second payment:
-            %ol
-              - model.funding_warnings.first.each do |warning|
-                %li= warning
-
-        - model.funding_warnings[1..-1].each do |warning|
+        - model.funding_warnings.each do |warning|
           %li= warning
 
 - model.general_warnings.each do |warning|
