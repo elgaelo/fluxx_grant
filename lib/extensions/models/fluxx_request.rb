@@ -1060,7 +1060,7 @@ module FluxxRequest
       end
     end
 
-    def funding_sources_expires_before_close_date?
+    def funding_sources_expired_before_close_date
       if (end_date = grant_closed_at || grant_ends_at)
         expiring_fund_sources = request_funding_sources.map do |rfs|
           rfs.funding_source_allocation.funding_source.name if rfs.funding_source_allocation && rfs.funding_source_allocation.funding_source.end_at && rfs.funding_source_allocation.funding_source.end_at < end_date
@@ -1080,17 +1080,15 @@ module FluxxRequest
 
     def funding_warnings
       unless @funding_warnings
-        @funding_warnings = [[]]
+        @funding_warnings = []
 
-        @funding_warnings.first << 'No c3 status' if Organization.charity_check_enabled && tax_class_org && !tax_class_org.c3_status_approved?
-        @funding_warnings.first << 'Duration is over 12 months' if duration_over_12_months?
-        funding_sources = funding_sources_expires_before_close_date?
-        @funding_warnings << "Funding source(s) #{funding_sources} expire before the estimated grant close date" if funding_sources
+        if Organization.charity_check_enabled && tax_class_org && !tax_class_org.c3_status_approved?
+          @funding_warnings << 'No c3 status'
+        elsif duration_over_12_months?
+          @funding_warnings << 'Duration is over 12 months' 
 
-        # just sugar to avoid using #first in views.
-        class << @funding_warnings
-          def empty?
-            first.empty? and size == 1
+          if fs = funding_sources_expired_before_close_date
+            @funding_warnings << "Funding source(s) #{fs} expire before the estimated grant close date" 
           end
         end
       end
