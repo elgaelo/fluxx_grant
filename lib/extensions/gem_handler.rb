@@ -7,6 +7,8 @@ class GemHandler
       gem "delocalize"
       gem "authlogic"
       gem 'ruby-net-ldap'
+      gem "hoptoad_notifier", "~> 2.3"
+
       
       # gem "thinking-sphinx", :git => "https://github.com/freelancing-god/thinking-sphinx.git", :branch => "rails3", :require => 'thinking_sphinx'
       if dev_local 
