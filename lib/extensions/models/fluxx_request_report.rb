@@ -37,12 +37,12 @@ module FluxxRequestReport
     
     base.insta_favorite
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :due_in_days, :overdue_by_days, :lead_user_ids, :request_hierarchy, :allocation_hierarchy]
-      insta.derived_filters = {:due_in_days => (lambda do |search_with_attributes, request_params, name, value|
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:group_ids, :due_within_days, :overdue_by_days, :lead_user_ids, :request_hierarchy, :allocation_hierarchy]
+      insta.derived_filters = {:due_within_days => (lambda do |search_with_attributes, request_params, name, value|
           value = value.first if value && value.is_a?(Array)
           if value.to_s.is_numeric?
             due_date_check = Time.now + value.to_i.days
-            search_with_attributes[:due_at] = (due_date_check.to_i..FAR_IN_THE_FUTURE.to_i)
+            search_with_attributes[:due_at] = (Time.now.to_i..due_date_check.to_i)
             search_with_attributes[:has_been_approved] = false
           end || {}
         end),
