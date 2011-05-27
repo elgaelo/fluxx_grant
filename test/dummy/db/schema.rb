@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110525194105) do
+ActiveRecord::Schema.define(:version => 20110526223136) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -324,8 +324,8 @@ ActiveRecord::Schema.define(:version => 20110525194105) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
-    t.integer  "request_id"
     t.integer  "user_id"
+    t.integer  "request_id"
     t.integer  "organization_id"
   end
 

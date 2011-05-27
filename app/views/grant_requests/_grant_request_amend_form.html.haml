@@ -4,7 +4,7 @@
     = hidden_field_tag :as_modal, true
     = form.input :amend, :as => :hidden, :input_html => { :value => true }
 
-    - if FLUXX_CONFIGURATION[:use_duration_in_requests]
+    - unless FLUXX_CONFIGURATION[:dont_use_duration_in_requests]
       = form.input :duration_in_months, :label => "New Duration:", :as => :select, :collection => 1..36
     - else  
       = form.input :grant_begins_at, :label => "New Grant Start Date:"      
