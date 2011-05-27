@@ -304,7 +304,7 @@ module FluxxRequest
       insta.add_state_to_english :sent_back_to_po, 'Sent back to PO', 'sent_back'
       insta.add_state_to_english :granted, 'Granted', ['granted', 'become_grant']
       insta.add_state_to_english :closed, 'Closed', 'granted'
-      insta.add_state_to_english :canceled, 'Canceled', 'granted'
+      insta.add_state_to_english :canceled, 'Canceled', ['granted', 'canceled']
 
       insta.add_event_to_english :submit_draft, 'Submit Draft'
       insta.add_event_to_english :recommend_funding, 'Recommend Funding'
@@ -326,6 +326,10 @@ module FluxxRequest
       insta.add_non_validating_event :po_send_back
       insta.add_non_validating_event :president_send_back
       insta.add_non_validating_event :grant_team_send_back
+
+      insta.on_enter_state_category('rejected', 'canceled') do |req|
+        req.request_funding_sources.each(&:destroy)
+      end
     end
 
     base.extend(ModelClassMethods)

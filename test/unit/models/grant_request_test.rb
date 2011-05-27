@@ -277,4 +277,18 @@ class GrantRequestTest < ActiveSupport::TestCase
     @req.expects(:funding_sources_expired_before_close_date).returns("foo, bar")
     assert_equal 'Funding source(s) foo, bar expire before the estimated grant close date', @req.funding_warnings.last
   end
+
+  test "test request funding sources are deleted after a request is canceled" do
+    @req.request_funding_sources << [RequestFundingSource.make, RequestFundingSource.make]
+    @req.update_attribute(:state, 'canceled')
+
+    assert @req.reload.request_funding_sources.empty?
+  end
+
+  test "test request funding sources are deleted after a request is rejected" do
+    @req.request_funding_sources << [RequestFundingSource.make, RequestFundingSource.make]
+    @req.update_attribute(:state, 'rejected')
+
+    assert @req.reload.request_funding_sources.empty?
+  end
 end
