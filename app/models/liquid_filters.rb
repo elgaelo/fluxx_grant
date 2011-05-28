@@ -56,6 +56,11 @@ module LiquidFilters
   def date_add_months(time, number_months=0)
     time + number_months.to_i.months
   end
+
+  def pct(a, b)
+    return 0 if b.blank? || b < 1
+    "#{(a.to_f / b.to_f * 100).to_i}%"
+  end
   
 end
 
