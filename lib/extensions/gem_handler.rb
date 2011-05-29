@@ -6,7 +6,7 @@ class GemHandler
       gem 'writeexcel', '>=0.6.1'
       gem "delocalize"
       gem "authlogic"
-      gem 'ruby-net-ldap'
+      gem 'net-ldap'
       gem "hoptoad_notifier", "~> 2.3"
 
       
