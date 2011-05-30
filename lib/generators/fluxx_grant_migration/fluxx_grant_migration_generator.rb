@@ -2,11 +2,6 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
-  def convert_amounts_to_money
-    handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
-    sleep 1
-  end
-
   include Rails::Generators::Migration
 
   def self.source_root

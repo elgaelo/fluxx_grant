@@ -2,9 +2,6 @@ module FluxxFundingSource
   LIQUID_METHODS = [ :name ]  
 
   def self.included(base)
-    base.acts_as_money
-    base.money :amount, :cents => :amount, :currency => false, :allow_nil => true
-
     base.has_many :request_funding_sources
     base.has_many :funding_source_allocations, :conditions => {:deleted_at => nil}
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
