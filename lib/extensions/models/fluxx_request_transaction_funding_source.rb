@@ -2,6 +2,9 @@ module FluxxRequestTransactionFundingSource
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id]
   
   def self.included(base)
+    base.acts_as_money
+    base.money :amount, :cents => :amount, :currency => false, :allow_nil => true
+
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :request_transaction
