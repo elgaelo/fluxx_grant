@@ -3,10 +3,6 @@ module FluxxBudgetRequest
   LIQUID_METHODS = [:name, :amount_requested, :amount_recommended ]  
   
   def self.included(base)
-    base.acts_as_money
-    base.money :amount_requested, :cents => :amount_requested, :currency => false, :allow_nil => true
-    base.money :amount_recommended, :cents => :amount_recommended, :currency => false, :allow_nil => true
-
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :request

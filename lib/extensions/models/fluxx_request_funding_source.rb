@@ -3,9 +3,6 @@ module FluxxRequestFundingSource
   LIQUID_METHODS = [:funding_amount, :funding_source_allocation]
 
   def self.included(base)
-    base.acts_as_money
-    base.money :funding_amount, :cents => :funding_amount, :currency => false, :allow_nil => true
-
     base.belongs_to :request
     base.belongs_to :funding_source_allocation
     base.has_many :request_transaction_funding_sources, :dependent => :destroy, :include => :request_transaction, :conditions => "request_transactions.deleted_at is null"

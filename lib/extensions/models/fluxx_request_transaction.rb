@@ -28,9 +28,6 @@ module FluxxRequestTransaction
   LIQUID_METHODS = [:amount_due, :due_at, :condition, :paid_at, :amount_paid]
   
   def self.included(base)
-    base.acts_as_money
-    base.money :amount_paid, :cents => :amount_paid, :currency => false, :allow_nil => true
-
     base.belongs_to :request
     base.belongs_to :grant, :class_name => 'Request', :foreign_key => 'request_id', :conditions => {:granted => 1}
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
