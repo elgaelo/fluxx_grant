@@ -4,8 +4,7 @@ module LiquidFilters
   include ApplicationGrantHelper
   
   def format_date(date, format = 'full')
-    return nil unless date
-    date.send(format)
+    date.present? ? date.send(format) : nil
   end
   
   # ex: {{ request_transaction.amount_due | currency: 'Rs. ' }}
@@ -55,6 +54,11 @@ module LiquidFilters
   
   def date_add_months(time, number_months=0)
     time + number_months.to_i.months
+  end
+
+  def pct(a, b)
+    return 0 if b.blank? || b < 1
+    "#{(a.to_f / b.to_f * 100).to_i}%"
   end
   
 end

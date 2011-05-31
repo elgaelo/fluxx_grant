@@ -250,4 +250,45 @@ class GrantRequestTest < ActiveSupport::TestCase
     assert_equal 1500, amend.amount_recommended
     assert amend.original
   end
+
+  test "test funding source warning about charity check" do
+    Organization.expects(:charity_check_enabled).returns(true)
+    @req.state = 'funding_recommended'
+    @req.insta_fire_event :complete_ierf, User.make
+    @req.program_organization.expects(:c3_status_approved?).returns(false)
+    assert_equal 'No c3 status', @req.funding_warnings.first
+  end
+
+  test "test funding source warning about duration over 12 months" do
+    Organization.expects(:charity_check_enabled).returns(true)
+    @req.state = 'funding_recommended'
+    @req.duration_in_months = 15
+    @req.insta_fire_event :complete_ierf, User.make
+    @req.program_organization.expects(:c3_status_approved?).returns(true)
+    assert_equal 'Duration is over 12 months', @req.funding_warnings.first
+  end
+
+  test "test funding source warning about expiration before estimated grant close date" do
+    Organization.expects(:charity_check_enabled).returns(true)
+    @req.state = 'funding_recommended'
+    @req.duration_in_months = 15
+    @req.insta_fire_event :complete_ierf, User.make
+    @req.program_organization.expects(:c3_status_approved?).returns(true)
+    @req.expects(:funding_sources_expired_before_close_date).returns("foo, bar")
+    assert_equal 'Funding source(s) foo, bar expire before the estimated grant close date', @req.funding_warnings.last
+  end
+
+  test "test request funding sources are deleted after a request is canceled" do
+    @req.request_funding_sources << [RequestFundingSource.make, RequestFundingSource.make]
+    @req.update_attribute(:state, 'canceled')
+
+    assert @req.reload.request_funding_sources.empty?
+  end
+
+  test "test request funding sources are deleted after a request is rejected" do
+    @req.request_funding_sources << [RequestFundingSource.make, RequestFundingSource.make]
+    @req.update_attribute(:state, 'rejected')
+
+    assert @req.reload.request_funding_sources.empty?
+  end
 end

@@ -30,8 +30,8 @@ class RequestReportsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:request_reports)
   end
   
-  test "should get index with due_in_days" do
-    get :index, :due_in_days => 7
+  test "should get index with due_within_days" do
+    get :index, :due_within_days => 7
     assert_response :success
     assert_not_nil assigns(:request_reports)
   end

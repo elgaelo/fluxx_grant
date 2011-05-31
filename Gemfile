@@ -14,6 +14,7 @@ gem "fluxx_crm", '>= 0.0.4', :path => "../fluxx_crm", :require => 'fluxx_crm'
 gem 'jsmin', '>= 1.0.1'
 gem 'thin', '>= 1.2.7'
 gem 'machinist', '>=1.0.6'
+gem 'mocha', ">= 0.9"
 gem 'faker', '>=0.3.1'
 gem 'rcov'
 gem 'thinking-sphinx', '>=2.0.2', :require => 'thinking_sphinx'

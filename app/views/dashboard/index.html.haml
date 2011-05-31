@@ -1,6 +1,7 @@
 %html
   %head
     %title Grants Dashboard
+    = hoptoad_javascript_notifier
     - preload_javascripts = Dir.glob("#{Rails.root}/public/javascripts/fluxx_engine/lib/*.js").map{|filename| filename.gsub("#{Rails.root}/public", '')}.select{|filename| filename =~ /lib\/jquery/}
     - preload_javascripts.sort.each do |filename|
       =javascript_include_tag filename
