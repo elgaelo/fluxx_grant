@@ -1,5 +1,5 @@
 module FluxxGrantUser
-  SEARCH_ATTRIBUTES = [:program_ids, :grant_program_ids, :test_user_flag, :grant_sub_program_ids, :organization_id, :state, :updated_at, :request_ids, :favorite_user_ids]
+  SEARCH_ATTRIBUTES = [:program_ids, :grant_program_ids, :test_user_flag, :grant_sub_program_ids, :organization_id, :state, :updated_at, :request_ids, :favorite_user_ids, :user_profile_id]
   
   def self.included(base)
     base.has_many :request_users
@@ -95,6 +95,7 @@ module FluxxGrantUser
 
         has 'null', :type => :multi, :as => :favorite_user_ids
         has 'null', :type => :multi, :as => :organization_id
+        has 'null', :type => :multi, :as => :user_profile_id
         has 'null', :type => :multi, :as => :last_name_ord
         has 'null', :type => :multi, :as => :first_name_ord
         has request_users.request(:id), :type => :multi, :as => :user_request_ids
@@ -119,6 +120,7 @@ module FluxxGrantUser
 
         has favorites.user(:id), :as => :favorite_user_ids
         has user_organizations.organization(:id), :as => :organization_id
+        has user_profile_id
         has '((ORD(LOWER(SUBSTRING(users.last_name,1,1))) * 16777216) + (ORD(LOWER(SUBSTRING(users.last_name,2,1))) * 65536) +
         (ORD(LOWER(SUBSTRING(users.last_name,3,1))) * 256) + (ORD(LOWER(SUBSTRING(users.last_name,4,1)))))', :type => :multi, :as => :last_name_ord
         has '((ORD(LOWER(SUBSTRING(users.first_name,1,1))) * 16777216) + (ORD(LOWER(SUBSTRING(users.first_name,2,1))) * 65536) +
