@@ -17,11 +17,7 @@
       %tbody
       -@data.each do |model|
         - documentable_id = model.id
-        - state = "Approved"
-        - state = "Due" if model.in_state_with_category?("new")
-        - state = "Submitted" if model.in_state_with_category?("approval")
-        - state = "Sent Back" if model.in_state_with_category?("sent_back")
-        - state = "" if model.state.nil?        
+        - state = model.state.nil? ? "" : model.state
         %tr
           %td{:width => '70%'}
             = "#{model.type_to_english} for #{model.request.grant_id}"
