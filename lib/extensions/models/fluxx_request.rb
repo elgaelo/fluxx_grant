@@ -1000,7 +1000,7 @@ module FluxxRequest
     end
     
     def state_after_pre_recommended_chain
-      state && !(in_draft_state? || in_new_state? || in_reject_state?)
+      state && (amend? || !(in_draft_state? || in_new_state? || in_reject_state? || granted? || closed?))
     end
 
     def signatory_contact
