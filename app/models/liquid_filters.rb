@@ -4,8 +4,7 @@ module LiquidFilters
   include ApplicationGrantHelper
   
   def format_date(date, format = 'full')
-    return nil unless date
-    date.send(format)
+    date.present? ? date.send(format) : nil
   end
   
   # ex: {{ request_transaction.amount_due | currency: 'Rs. ' }}
