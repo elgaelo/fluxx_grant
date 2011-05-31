@@ -21,7 +21,7 @@ class FluxxGrantPopulateOriginalRequestAmendments < ActiveRecord::Migration
 
       request.audits.each { |audit|
         changes = audit.audit_changes
-        changes.each {|x,v| changes[x] = v.last if v }
+        changes.each {|x,v| changes[x] = v.last if v && v.is_a?(Array) }
 
         if original.new_record?
           fill_in_amendment(original, changes)
@@ -32,7 +32,7 @@ class FluxxGrantPopulateOriginalRequestAmendments < ActiveRecord::Migration
         end
       }
 
-      original save if original.new_record?
+      original.save if original.new_record?
     }
   end
 
