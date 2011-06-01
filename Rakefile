@@ -1,10 +1,10 @@
 # -*- ruby -*-
 
 begin
-  require 'isolate/now'
+  require 'bundler/gem_tasks'
 rescue LoadError => e
   STDERR.puts e.message
-  STDERR.puts "Run `gem install isolate` to install 'isolate' gem."
+  STDERR.puts "Run `gem install bunlder` to install 'bundler' gem."
 end
 
 require 'rake/testtask'
