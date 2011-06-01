@@ -6,7 +6,6 @@ require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
 
-$LOAD_PATH.unshift(File.expand_path("../../../../../fluxx_crm/lib", __FILE__))
 require "fluxx_grant"
 
 module Dummy

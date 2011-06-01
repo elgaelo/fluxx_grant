@@ -1,16 +1,9 @@
 # -*- ruby -*-
 
-begin
-  require 'isolate/now'
-rescue LoadError => e
-  STDERR.puts e.message
-  STDERR.puts "Run `gem install isolate` to install 'isolate' gem."
-end
-
 Gem::Specification.new do |s|
   s.rubyforge_project = "fluxx_grant"
   s.name              = "fluxx_grant"
-  s.version           = "0.0.21"
+  s.version           = "0.0.17"
   s.authors           = ["Eric Hansen"]
   s.email             = ["eric@fluxxlabs.com"]
   s.homepage          = "http://fluxxlabs.com"
@@ -23,11 +16,16 @@ Gem::Specification.new do |s|
   s.test_files        = `git ls-files -- {test}/*`.split("\n")
   s.require_paths     = ["lib"]
 
-  Isolate.sandbox.entries.each do |entry|
-    if entry.environments.include?("development")
-      s.add_development_dependency entry.name, *entry.requirement.as_list
-    else
-      s.add_dependency entry.name, *entry.requirement.as_list
-    end
-  end
+  s.add_dependency "delayed_job"
+  s.add_dependency "ts-delayed-delta", ">= 1.1.0"
+  s.add_dependency "devise", ">= 1.1.2"
+  s.add_dependency "httpi"
+  s.add_dependency "crack"
+
+  s.add_development_dependency 'capybara', '0.3.7'
+  s.add_development_dependency 'machinist', '>= 1.0.6'
+  s.add_development_dependency 'faker', '>= 0.3.1'
+  s.add_development_dependency 'mocha', '>= 0.9'
+  s.add_development_dependency 'rcov'
+  s.add_development_dependency "ruby-debug", ">= 0.10.3"
 end

@@ -1,9 +1,0 @@
-# -*- ruby -*-
-
-# You have to manualy add fluxx_engine and fluxx_crm to your app dependencies!
-
-gem "delayed_job"
-gem "ts-delayed-delta", ">= 1.1.0"
-gem "devise", ">= 1.1.2"
-gem "httpi"
-gem "crack"
