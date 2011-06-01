@@ -9,3 +9,4 @@ pkg
 test/dummy/public/system
 .\#*
 \#*
+tmp
