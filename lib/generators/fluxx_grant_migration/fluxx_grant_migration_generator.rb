@@ -2,11 +2,6 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
-  def convert_amounts_to_money
-    handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
-    sleep 1
-  end
-
   include Rails::Generators::Migration
 
   def self.source_root
@@ -85,9 +80,10 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_grantee_roles_for_budget_requests.rb', 'db/migrate/fluxx_grant_add_grantee_roles_for_budget_requests.rb'
     handle_migration 'add_display_warnings_flag_to_grant_request.rb', 'db/migrate/fluxx_grant_add_display_warnings_flag_to_grant_request.rb'
     handle_migration 'add_request_grant_cycle.rb', 'db/migrate/fluxx_grant_add_request_grant_cycle.rb'
-    handle_migration 'populate_original_request_amendments.rb', 'db/migrate/fluxx_grant_populate_original_request_amendments.rb'
     handle_migration 'create_request_amendment.rb', 'db/migrate/fluxx_grant_create_request_amendment.rb'
+    handle_migration 'populate_original_request_amendments.rb', 'db/migrate/fluxx_grant_populate_original_request_amendments.rb'
     handle_migration 'correct_project_request_constraint.rb', 'db/migrate/fluxx_grant_correct_project_request_constraint.rb'
+    handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
   end
   
   private
