@@ -74,10 +74,6 @@ module FluxxGrantRequest
     attr_accessor :amend_note
     alias_method :amend?, :amend
     
-    def name
-      org_name_text
-    end
-
     def generate_grant_transactions
       validate_for_grant
       interim_request_document = request_reports.select{|rep| rep.is_interim_type?}.last

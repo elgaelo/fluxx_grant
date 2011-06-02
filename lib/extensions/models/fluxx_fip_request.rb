@@ -79,10 +79,6 @@ module FluxxFipRequest
     attr_accessor :amend_note
     alias_method :amend?, :amend
 
-    def name
-      fip_title
-    end
-
     def request_prefix
       'FR'
     end
