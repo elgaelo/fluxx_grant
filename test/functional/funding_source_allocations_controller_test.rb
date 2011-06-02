@@ -62,8 +62,6 @@ class FundingSourceAllocationsControllerTest < ActionController::TestCase
     
     get :index, :format => :autocomplete, :funding_amount => 50000, :program_id => program.id, :spending_year => 2011
     assert_response :success
-    p "ESH: have @response.body = #{@response.body}"
-    p "ESH: have lookup_funding_source_allocation.amount_remaining.to_currency = #{lookup_funding_source_allocation.amount_remaining.to_currency}"
     assert @response.body.index("#{lookup_funding_source_allocation.amount_remaining.to_currency}")
   end
   

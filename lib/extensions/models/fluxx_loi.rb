@@ -100,7 +100,6 @@ module FluxxLoi
       if user.id
         update_attribute("user_id", user.id)
         if !user.user_profile
-          p "Add grantee role"
           user.update_attribute "user_profile_id", UserProfile.where(:name => 'Grantee').first.id
           user.save
         end

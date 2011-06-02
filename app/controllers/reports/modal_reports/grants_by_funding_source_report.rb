@@ -64,7 +64,6 @@ class GrantsByFundingSourceReport < ActionController::ReportBase
       User.where(:id => params[:active_record_base][:lead_user_ids]).all rescue nil
     end || []
     lead_users = lead_users.compact
-    p "ESH: have arguments start_date = #{start_date.inspect}, end_date = #{end_date.inspect}, program_ids=#{programs.map(&:id).inspect}"
     
     
     requests = FundingSourceAllocation.build_temp_table do |temp_table_name|
