@@ -8,7 +8,7 @@
   .value= model.end_at.mdy if model.end_at
 .pairs
   .key= 'Amount Allocated:'
-  .value= number_to_currency(model.amount, :precision => 0) if model.amount
+  .value= as_currency(model.amount) if model.amount
 - if model.retired
   Funding Source is Retired
   

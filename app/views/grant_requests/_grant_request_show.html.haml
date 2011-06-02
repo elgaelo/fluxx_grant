@@ -80,10 +80,10 @@
 %div.partial
   .pairs
     .key Amount Requested:
-    .value= number_to_currency(model.amount_requested, :precision => 0) if model.amount_requested
+    .value= as_currency(model.amount_requested) if model.amount_requested
   .pairs
     .key Amount Recommended:
-    .value= number_to_currency(model.amount_recommended, :precision => 0) if model.amount_recommended
+    .value= as_currency(model.amount_recommended) if model.amount_recommended
   - if model.is_grant?
     .pairs
       .key Amount Paid to Date:
@@ -99,7 +99,7 @@
     .key Funds Expended:
     .value
       - if model.funds_expended_amount
-        = number_to_currency(model.funds_expended_amount, :precision => 0)
+        = as_currency(model.funds_expended_amount)
         = " on #{model.funds_expended_at.mdy}" if model.funds_expended_at
   .pairs
     .key= "Initiative #{plural_by_list model.initiative_types, 'Type', 'Types'}:"
