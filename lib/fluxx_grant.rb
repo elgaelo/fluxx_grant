@@ -2,7 +2,6 @@ require "rails"
 require "fluxx_crm"
 
 require "delayed_job"
-require "devise"
 
 # Some classes need to be required before or after; put those in these lists
 GRANT_EXTENSION_CLASSES_TO_PRELOAD = []

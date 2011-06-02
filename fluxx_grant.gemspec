@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "delayed_job"
   s.add_dependency "ts-delayed-delta", ">= 1.1.0"
-  s.add_dependency "devise", ">= 1.1.2"
   s.add_dependency "httpi"
   s.add_dependency "crack"
 
