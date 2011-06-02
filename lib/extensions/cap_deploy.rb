@@ -42,7 +42,7 @@ require 'erb'
 before "deploy:setup", :db
 after "deploy:update_code", "db:symlink" 
 
-before "bundle:install", "fluxx:checkout_gems"
+# before "bundle:install", "fluxx:checkout_gems"
 after "deploy", "thinking_sphinx:index"
 after "deploy:migrations", "thinking_sphinx:index"
 after "deploy", "fluxx:reload_all_templates"
