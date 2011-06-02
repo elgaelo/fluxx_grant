@@ -28,7 +28,7 @@
         %p= render :partial => "request_funding_sources/request_funding_source_initiatives", :locals => { :funding_source => rfs }
         %dl.inline
           %dt= "Allocated:"
-          %dd= "#{(rfs.funding_amount || 0).to_currency}"
+          %dd= as_currency(rfs.funding_amount)
           - rtfs = RequestTransactionFundingSource.where(:request_transaction_id => model.id, :request_funding_source_id => rfs.id).first
           %dt= "Spent:"
           %dd= "#{(rfs.amount_spent || 0).to_currency}"
@@ -39,7 +39,7 @@
     .pairs
       .key Paid:
       .value
-        = number_to_currency model.amount_paid, :precision => 0 if model.amount_paid
+        = as_currency(model.amount_paid) if model.amount_paid
         on
         = model.paid_at.mdy
         by
