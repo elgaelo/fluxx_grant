@@ -31,7 +31,7 @@ module Capistrano
           # Handle the case in which there is an alternate .gitmodules for capistrano
           execute = []
           execute << "cd #{destination}"
-          execute << "if [ -d #{destination}/.gitmodules_capistrano ]; then cp #{destination}/.gitmodules_capistrano #{destination}/.gitmodules ;fi"
+          execute << "if [ -f #{destination}/.gitmodules_capistrano ]; then cp #{destination}/.gitmodules_capistrano #{destination}/.gitmodules ;fi"
           execute << "#{git} submodule #{verbose} init"
           execute << "for mod in `#{git} submodule status | awk '{ print $2 }'`; do #{git} config -f .git/config submodule.${mod}.url `#{git} config -f .gitmodules --get submodule.${mod}.url` && echo Synced $mod; done"
           execute << "#{git} submodule #{verbose} sync"
