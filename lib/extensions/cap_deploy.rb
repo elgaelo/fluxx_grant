@@ -95,7 +95,7 @@ namespace :fluxx do
   end
   desc "reload all letter templates"
   task :reload_all_templates do
-    run "cd #{deploy_to}/current && rake fluxx_crm:reload_doc_templates RAILS_ENV=#{rails_env}"
+    run "cd #{deploy_to}/current && bundle exec rake fluxx_crm:reload_doc_templates RAILS_ENV=#{rails_env}"
   end
   task :delayed_job_restart do
     delayed_job.stop
