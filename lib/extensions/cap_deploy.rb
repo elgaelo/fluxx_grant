@@ -4,6 +4,15 @@ set :stages, %w(standalone staging demo testing production)
 set :default_stage, 'standalone'
 require 'capistrano/ext/multistage'
 require 'delayed/recipes'
+require 'capistrano/recipes/deploy/scm'
+require 'capistrano/recipes/deploy/strategy'
+
+require 'capistrano/recipes/deploy/scm/base'
+require 'capistrano/recipes/deploy/strategy/remote'
+cur_dir = File.dirname(__FILE__)
+require "#{cur_dir}/cap_git_override"
+
+
 
 fluxx_application_name = FLUXX_APPLICATION_NAME
 set :application, fluxx_application_name
@@ -18,7 +27,9 @@ DEPENDENT_REPOS.each do |triplet|
   set branch_symbol, (variables.include?(branch_symbol) ? eval(branch_symbol.to_s) : 'master')
 end
 
-set :deploy_via, :remote_cache
+set :strategy, Capistrano::Deploy::Strategy::FluxxRemoteCache.new(self)
+
+set :deploy_via, :fluxx_remote_cache
 
 set :try_sudo, 'sudo'
 set :use_sudo, false 
@@ -29,8 +40,9 @@ if defined? FLUXX_REPO_SPEC
 else
   set :repository,  "git@github.com:fluxxlabs/fluxx_#{fluxx_application_name}.git"
 end
-set :scm, "git"
-set :git_enable_submodules, 1
+set :source, Capistrano::Deploy::SCM::FluxxGit.new(self)
+# set :scm, "git"
+# set :git_enable_submodules, 1
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -69,8 +81,6 @@ namespace :fluxx do
   desc "checkout fluxx_engine, fluxx_crm, fluxx_grant gems"
   task :checkout_gems do
     
-    require 'capistrano/recipes/deploy/scm'
-    require 'capistrano/recipes/deploy/strategy'
     DEPENDENT_REPOS.each do |gem_triplet|
       gem_name, gem_path, gem_branch_symbol = gem_triplet
       gem_branch = eval(gem_branch_symbol.to_s)
