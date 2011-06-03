@@ -71,7 +71,6 @@ class ProgramInitiativeBudgetReport < ActionController::ReportBase
         end
       end
     end
-    p "ESH: have lookup_table_programs=#{lookup_table_programs.inspect}"
     
     
     # now calculate 

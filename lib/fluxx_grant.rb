@@ -1,11 +1,7 @@
-require "formtastic" 
-require "active_support" 
-require "will_paginate" 
-require "action_controller"
-require "action_view"
-require "fluxx_engine"
+require "rails"
+require "fluxx_crm"
 
-p "ESH: loading fluxx_grant"
+require "delayed_job"
 
 # Some classes need to be required before or after; put those in these lists
 GRANT_EXTENSION_CLASSES_TO_PRELOAD = []

@@ -41,15 +41,19 @@ module ApplicationGrantHelper
     end
   end
 
+  def as_currency(number)
+    number_to_currency(number || 0, :precision => 2)
+  end
+
   def render_grant_amount request, grant_text='Granted'
     if request.is_grant?
-      "#{number_to_currency request.amount_recommended, :precision => 0} #{grant_text}"
+      "#{as_currency(request.amount_recommended)} #{grant_text}"
     end
   end
 
   def render_request_amount request, request_text
     if request.amount_requested && request.amount_requested != 0
-      "#{request_text} <span class='minimize-detail-pull'>#{number_to_currency request.amount_requested, :precision => 0}</span> <br />"
+      "#{request_text} <span class='minimize-detail-pull'>#{as_currency(request.amount_requested)}</span> <br />"
     end
   end
 

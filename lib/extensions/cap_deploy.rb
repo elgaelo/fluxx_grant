@@ -42,7 +42,9 @@ require 'erb'
 before "deploy:setup", :db
 after "deploy:update_code", "db:symlink" 
 
-before "bundle:install", "fluxx:checkout_gems"
+before "bundle:install", "fluxx:submodule_bundle_install"
+
+# before "bundle:install", "fluxx:checkout_gems"
 after "deploy", "thinking_sphinx:index"
 after "deploy:migrations", "thinking_sphinx:index"
 after "deploy", "fluxx:reload_all_templates"
@@ -58,6 +60,11 @@ namespace :uname do
 end
 
 namespace :fluxx do
+  
+  desc "submodule bundle install"
+  task :submodule_bundle_install do
+    run "cd #{current_release} && git submodule foreach 'bundle install'"
+  end
   
   desc "checkout fluxx_engine, fluxx_crm, fluxx_grant gems"
   task :checkout_gems do
@@ -88,7 +95,7 @@ namespace :fluxx do
   end
   desc "reload all letter templates"
   task :reload_all_templates do
-    run "cd #{deploy_to}/current && rake fluxx_crm:reload_doc_templates RAILS_ENV=#{rails_env}"
+    run "cd #{deploy_to}/current && bundle exec rake fluxx_crm:reload_doc_templates RAILS_ENV=#{rails_env}"
   end
   task :delayed_job_restart do
     delayed_job.stop

@@ -51,7 +51,6 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
       Program.where(:id => params[:active_record_base][:program_id]).all rescue nil
     end || []
     programs = programs.compact
-    p "ESH: have arguments start_date = #{start_date.inspect}, end_date = #{end_date.inspect}, program_ids=#{programs.map(&:id).inspect}, query_types=#{query_types.inspect}"
     
     requests = Request.find_by_sql [%{select req.type request_type, req.program_id, (select name from programs where programs.id = req.program_id) program_name,
       rt.payment_type, rt.payment_confirmation_number, payment_confirmed_by.first_name, payment_confirmed_by.last_name, rt.paid_at, 
