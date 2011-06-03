@@ -27,7 +27,7 @@ class ProgramInitiativeBudgetReport < ActionController::ReportBase
     
     # Make a hash of the requests, grab the ids of all and look up the associated org
     # {13014 => {:amount => 100000, :grant_title => 'The Energy Foundation', :type => 'GrantRequest', :entity_name => '0808-13014', :sub_programs => {2 => 25000, 4 => 75000}}}
-    Request.find_by_sql (["select requests.id id, if(type = 'GrantRequest', organizations.name, fip_title) grant_title, requests.type from requests left outer join organizations on requests.program_organization_id = organizations.id where requests.id in (?)", request_data.keys]).each do |req|
+    Request.find_by_sql(["select requests.id id, if(type = 'GrantRequest', organizations.name, fip_title) grant_title, requests.type from requests left outer join organizations on requests.program_organization_id = organizations.id where requests.id in (?)", request_data.keys]).each do |req|
       if request_data[req.id]
         request_data[req.id][:grant_title] = req.grant_title
         translated_type = Request.translate_grant_type(req.type)

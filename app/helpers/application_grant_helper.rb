@@ -79,8 +79,8 @@ module ApplicationGrantHelper
 
   def build_adminlink
     if current_user.is_admin?
-      # "'#{link_to 'Admin', admin_items_path(:id => 'workflows'), :class => 'to-fullscreen-modal', "data-container-id" => "fluxx-admin"}',"
-      "'#{link_to 'Admin', admin_card_path(:id => 1), :class => 'new-detail'}',"
+       "'#{link_to 'Admin', admin_items_path(:id => 'workflows'), :class => 'to-fullscreen-modal', "data-container-id" => "fluxx-admin"}',"
+      #"'#{link_to 'Admin', admin_card_path(:id => 1), :class => 'new-detail'}',"
     else
       ""
     end
