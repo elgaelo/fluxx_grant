@@ -42,6 +42,8 @@ require 'erb'
 before "deploy:setup", :db
 after "deploy:update_code", "db:symlink" 
 
+before "bundle:install", "fluxx:submodule_bundle_install"
+
 # before "bundle:install", "fluxx:checkout_gems"
 after "deploy", "thinking_sphinx:index"
 after "deploy:migrations", "thinking_sphinx:index"
@@ -58,6 +60,11 @@ namespace :uname do
 end
 
 namespace :fluxx do
+  
+  desc "submodule bundle install"
+  task :submodule_bundle_install do
+    run "cd #{current_release} && git submodule foreach 'bundle install'"
+  end
   
   desc "checkout fluxx_engine, fluxx_crm, fluxx_grant gems"
   task :checkout_gems do
