@@ -3,6 +3,8 @@ require "fluxx_crm"
 
 require "delayed_job"
 require "hoptoad_notifier"
+require "httpi"
+require "crack"
 
 # Some classes need to be required before or after; put those in these lists
 GRANT_EXTENSION_CLASSES_TO_PRELOAD = []
