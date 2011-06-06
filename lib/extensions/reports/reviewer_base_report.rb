@@ -27,8 +27,8 @@ module ReviewerBaseReport
 
     reviews = 
       RequestReview.joins(:request).where([%{
-        #{start_date ? " grant_agreement_at >= '#{start_date.sql}' AND " : ''} 
-        #{end_date ? " grant_agreement_at <= '#{end_date.sql}' AND " : ''}
+        #{start_date ? " request_received_at >= '#{start_date.sql}' AND " : ''} 
+        #{end_date ? " request_received_at <= '#{end_date.sql}' AND " : ''}
         requests.deleted_at IS NULL AND 
         granted = 0 AND
         requests.state not in (?) AND
