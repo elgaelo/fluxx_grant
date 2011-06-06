@@ -3,7 +3,7 @@ require 'test_helper'
 class RequestReportAlertTest < ActiveSupport::TestCase
   def alert_is_triggered_for_request_report(request_report_opts)
     request_report = RequestReport.make(request_report_opts)
-    rtu = RealtimeUpdate.make(:type_name => RequestReport, :model_id => request_report.id)
+    rtu = RealtimeUpdate.make(:type_name => RequestReport.name, :model_id => request_report.id)
 
     alert_is_triggered
   end
