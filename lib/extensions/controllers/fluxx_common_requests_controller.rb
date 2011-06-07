@@ -80,7 +80,8 @@ module FluxxCommonRequestsController
           local_model.generate_grant_details
 
           # Trick rails into thinking this is the actual object by setting the ID and setting new_record to false
-          local_model.instance_variable_set '@persisted', true
+          # NOTE ESH: !!!!! highly implementation-specific and subject to change
+          local_model.masquerade_as_persisted
           form_url = send("#{actual_local_model.class.calculate_form_name.to_s}_path", {:id => actual_local_model.id, :event_action => params[:approve_grant_details]})
           send :fluxx_edit_card, controller_dsl, 'grant_requests/approve_grant_details', nil, form_url
         rescue Exception => e
