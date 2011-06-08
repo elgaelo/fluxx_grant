@@ -3,11 +3,12 @@
 %fieldset.inputs
   %ol
     = semantic_form_for Loi.new(), :html => {:class => ''} do |form|
-      = form.input :applicant
-      = form.input :organization_name
+      = form.input :applicant, :label => "Your Name"
+      = form.input :organization_name, :label => "Applicant/Organization Name"
       = form.input :email
       = form.input :phone
       = form.input :address, :label => 'Mailing Address'
       = form.input :project_title
       = form.input :project_summary
+      = link_to "Cancel", login_path
       = form.submit :value => 'Send Request'
