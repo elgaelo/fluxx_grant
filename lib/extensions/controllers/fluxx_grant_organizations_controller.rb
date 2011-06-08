@@ -120,10 +120,13 @@ module FluxxGrantOrganizationsController
         related.display_template = '/request_reports/related_documents'
       end
       insta.add_related do |related|
+        related.show_tab? do |args|
+          Fluxx.config(:enabled, :foundation_center) == "1"
+        end
         related.display_name = 'Outside Grants'
         related.add_lazy_load_url do |model|
           send :outside_grants_path, :id => model.id, :pagenum => 1
-        end        
+        end
       end      
     end
 
