@@ -25,32 +25,32 @@ class RequestReportAlertTest < ActiveSupport::TestCase
   end
 
   test "alert is triggered if the overdue matcher matches the rtu" do
-    create_alert(:state => "approved", :overdue_by => "8")
+    create_alert(:state => "approved", :overdue_by_days => "8")
     assert alert_is_triggered_for_request_report(:state => "approved", :due_at => 10.days.ago)
   end
 
-  test "alert is not triggered if the overdue matcher does not match the rtu" do
-    create_alert(:state => "approved", :overdue_by => "11")
+  test "alert is not triggered if the overdue_by_days matcher does not match the rtu" do
+    create_alert(:state => "approved", :overdue_by_days => "11")
     assert !alert_is_triggered_for_request_report(:state => "approved", :due_at => 10.days.ago)
   end
 
   test "alert is not triggered if the equality matcher does not match the state" do
-    create_alert(:state => "new", :overdue_by => "8")
+    create_alert(:state => "new", :overdue_by_days => "8")
     assert !alert_is_triggered_for_request_report(:state => "approved", :due_at => 10.days.ago)
   end
 
-  test "alert is triggered if the due_in matcher matches the rtu" do
-    create_alert(:state => "approved", :due_in => "8")
+  test "alert is triggered if the due_within_days matcher matches the rtu" do
+    create_alert(:state => "approved", :due_within_days => "8")
     assert alert_is_triggered_for_request_report(:state => "approved", :due_at => 7.days.from_now)
   end
 
-  test "alert is not triggered if the due_in matcher does not match the rtu" do
-    create_alert(:state => "approved", :due_in => "11")
+  test "alert is not triggered if the due_within_days matcher does not match the rtu" do
+    create_alert(:state => "approved", :due_within_days => "11")
     assert !alert_is_triggered_for_request_report(:state => "approved", :due_at => 12.days.from_now)
   end
 
-  test "rtus are not used to match overdue_by matchers" do
-    create_alert(:overdue_by => "8")
+  test "rtus are not used to match overdue_by_days matchers" do
+    create_alert(:overdue_by_days => "8")
     RequestReport.make(:due_at => 10.days.ago)
     RealtimeUpdate.delete_all
 
@@ -58,10 +58,32 @@ class RequestReportAlertTest < ActiveSupport::TestCase
   end
 
   test "rtus are not used to match due_at matchers" do
-    create_alert(:due_in => "8")
+    create_alert(:due_within_days => "8")
     RequestReport.make(:due_at => 7.days.from_now)
     RealtimeUpdate.delete_all
 
     assert alert_is_triggered
+  end
+
+  test "params from the model search filter can be used to create an alert" do
+    params = HashWithIndifferentAccess.new({"type"=>"RequestReportAlert",
+                                            "request_report"=>{"due_within_days"=>"14",
+                                                               "overdue_by_days"=>"15",
+                                                               "sort_order"=>"desc",
+                                                               "report_type"=>["InterimBudget"],
+                                                               "lead_user_ids"=>["383"],
+                                                               "request_hierarchy"=>["3-8--"],
+                                                               "favorite_user_ids"=>"",
+                                                               "sort_attribute"=>"due_at",
+                                                               "state"=>["report_received"],
+                                                               "hierarchies"=>["request_hierarchy"]}})
+
+    alert = Alert.new_from_params(params)
+    assert_equal ["report_received"], alert.state
+    assert_equal ["14"], alert.due_within_days
+    assert_equal ["15"], alert.overdue_by_days
+    assert_equal ["InterimBudget"], alert.report_type
+    assert_equal ["383"], alert.lead_user_ids
+    assert_equal ["3"], alert.program_id
   end
 end
