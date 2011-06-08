@@ -66,17 +66,17 @@ class RequestReportAlertTest < ActiveSupport::TestCase
   end
 
   test "params from the model search filter can be used to create an alert" do
-    params = HashWithIndifferentAccess.new({"type"=>"RequestReportAlert",
-                                            "request_report"=>{"due_within_days"=>"14",
-                                                               "overdue_by_days"=>"15",
-                                                               "sort_order"=>"desc",
-                                                               "report_type"=>["InterimBudget"],
-                                                               "lead_user_ids"=>["383"],
-                                                               "request_hierarchy"=>["3-8--"],
-                                                               "favorite_user_ids"=>"",
-                                                               "sort_attribute"=>"due_at",
-                                                               "state"=>["report_received"],
-                                                               "hierarchies"=>["request_hierarchy"]}})
+    params = HashWithIndifferentAccess.new("type"=>"RequestReportAlert",
+                                           "request_report"=>{"due_within_days"=>"14",
+                                                              "overdue_by_days"=>"15",
+                                                              "sort_order"=>"desc",
+                                                              "report_type"=>["InterimBudget"],
+                                                              "lead_user_ids"=>["383"],
+                                                              "request_hierarchy"=>["3-8--"],
+                                                              "favorite_user_ids"=>"",
+                                                              "sort_attribute"=>"due_at",
+                                                              "state"=>["report_received"],
+                                                              "hierarchies"=>["request_hierarchy"]})
 
     alert = Alert.new_from_params(params)
     assert_equal ["report_received"], alert.state
@@ -85,5 +85,17 @@ class RequestReportAlertTest < ActiveSupport::TestCase
     assert_equal ["InterimBudget"], alert.report_type
     assert_equal ["383"], alert.lead_user_ids
     assert_equal ["3"], alert.program_id
+  end
+
+  test "empty params can create an alert too" do
+    params = HashWithIndifferentAccess.new("type"=>"RequestReportAlert")
+
+    alert = Alert.new_from_params(params)
+    assert_equal nil, alert.state
+    assert_equal nil, alert.due_within_days
+    assert_equal nil, alert.overdue_by_days
+    assert_equal nil, alert.report_type
+    assert_equal nil, alert.lead_user_ids
+    assert_equal nil, alert.program_id
   end
 end
