@@ -1,6 +1,6 @@
-- unless FLUXX_CONFIGURATION[:hide_program]
+- unless Fluxx.config(:hide_program) == "1"
   = form.input :grant_program_ids, :required => false, :label => "#{I18n.t(:program_name)} Grantee Contacts", :as => :select, :collection => Program.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
-- unless FLUXX_CONFIGURATION[:hide_sub_program]
+- unless Fluxx.config(:hide_sub_program) == "1"
   = form.input :grant_sub_program_ids, :label => "#{I18n.t(:sub_program_name)} Grantee Contacts", :as => :select, :required => false, :collection => SubProgram.load_all.sort_by{|prog| prog.name || ''}.map {|prog|[prog.name, prog.id]}, :input_html => {:class => 'add-another'}
 
 = form.input :program_organization_lookup, :label => "Organization", :as => :autocomplete, :autocomplete_url => organizations_path(:format => :autocomplete, :parent_org_id => 0, :name_method => 'to_s'), :related_attribute_name => :name, :input_html => {:class => 'program_organization_lookup_select', 'data-related-child' => ".program-org-sat-select"}

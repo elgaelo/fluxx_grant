@@ -11,11 +11,11 @@ module FluxxFundingSourceAllocationsController
       insta.suppress_model_iteration = true
       
       insta.pre do |controller_dsl|
-        prog_entity = if !params[:sub_initiative_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_initiative]
+        prog_entity = if !params[:sub_initiative_id].blank? && Fluxx.config(:no_funding_source_ripple_sub_initiative) != "1"
           SubInitiative.find params[:sub_initiative_id]
-        elsif !params[:initiative_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_initiative]
+        elsif !params[:initiative_id].blank? && Fluxx.config(:no_funding_source_ripple_initiative) != "1"
           Initiative.find params[:initiative_id]
-        elsif !params[:sub_program_id].blank? && !FLUXX_CONFIGURATION[:no_funding_source_ripple_sub_program]
+        elsif !params[:sub_program_id].blank? && Fluxx.config(:no_funding_source_ripple_sub_program) != "1"
           SubProgram.find params[:sub_program_id]
         elsif !params[:program_id].blank?
           Program.find params[:program_id]

@@ -26,7 +26,7 @@
       $.extend(true, {
         fluxx: {
           config: {
-            date_format: '#{FLUXX_CONFIGURATION[:date_picker_format] ? FLUXX_CONFIGURATION[:date_picker_format] : 'm/d/yy'}',
+            date_format: '#{Fluxx.config(:date_picker_format) ? Fluxx.config(:date_picker_format) : 'm/d/yy'}',
             icon_path: '/fluxx_engine/theme/default/images/icons',
             realtime_updates: {
               enabled: true,

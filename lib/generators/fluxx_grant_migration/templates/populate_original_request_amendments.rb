@@ -2,7 +2,7 @@ class FluxxGrantPopulateOriginalRequestAmendments < ActiveRecord::Migration
   def self.fill_in_amendment(amendment, changes)
     amendment.amount_recommended = changes["amount_recommended"] if changes["amount_recomended"]
           
-    unless (FLUXX_CONFIGURATION[:dont_use_duration_in_requests])
+    unless (Fluxx.config(:dont_use_duration_in_requests) == "1")
       amendment.duration = changes["duration_in_months"] if changes["duration_in_months"]
     else
       amendment.start_at = changes["grant_begins_at"] if changes["grant_begins_at"]

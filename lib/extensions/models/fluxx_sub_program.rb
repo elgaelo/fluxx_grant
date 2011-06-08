@@ -41,7 +41,7 @@ module FluxxSubProgram
   
   module ModelClassMethods
     def is_hidden?
-      FLUXX_CONFIGURATION[:hide_sub_program] && FLUXX_CONFIGURATION[:funding_source_allocation_hide_sub_program]
+      Fluxx.config(:hide_sub_program) == "1" && Fluxx.config(:funding_source_allocation_hide_sub_program) == "1"
     end
 
     def load_all

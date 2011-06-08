@@ -55,11 +55,11 @@
     .key Main Contact:
     .value
       = model.grantee_org_owner.full_name if model.grantee_org_owner
-  - unless FLUXX_CONFIGURATION[:hide_program]
+  - unless Fluxx.config(:hide_program) == "1"
     .pairs
       .key= "#{I18n.t(:program_name)}:"
       .value= model.program.name if model.program
-  - unless FLUXX_CONFIGURATION[:hide_sub_program]
+  - unless Fluxx.config(:hide_sub_program) == "1"
     .pairs
       .key= "#{I18n.t(:sub_program_name)}:"
       .value= model.sub_program.name if model.sub_program

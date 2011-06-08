@@ -359,7 +359,7 @@ module FluxxRequest
     def form_types
       type_list = []
       type_list << ['Grants', GrantRequest.name]
-      type_list << [I18n.t(:fip_name).pluralize, FipRequest.name] unless FLUXX_CONFIGURATION[:hide_fips]
+      type_list << [I18n.t(:fip_name).pluralize, FipRequest.name] unless Fluxx.config(:hide_fips) == "1"
       type_list
     end
     

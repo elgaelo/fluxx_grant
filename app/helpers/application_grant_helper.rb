@@ -63,21 +63,21 @@ module ApplicationGrantHelper
 
   def build_add_card_links
     links = []
-    grant_fip_name = if FLUXX_CONFIGURATION[:hide_fips]
+    grant_fip_name = if Fluxx.config(:hide_fips) == "1"
       "Grants"
     else
       "Grants / #{I18n.t(:fip_name).pluralize}"
     end
-    links << "  '#{link_to grant_fip_name, granted_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_grants] || !current_user.has_listview_for_model?(Request)
-    links << "  '#{link_to 'Grantee Reports', request_reports_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_grantee_reports] || !current_user.has_listview_for_model?(RequestReport)
-    links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_organizations] || !current_user.has_listview_for_model?(Organization)
-    links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_people] || !current_user.has_listview_for_model?(User)
-    links << "  '#{link_to 'Projects', projects_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_projects] || !current_user.has_listview_for_model?(Project)
-    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_requests] || !current_user.has_listview_for_model?(Request) || current_user.is_board_member?
-    links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_tasks] || !current_user.has_listview_for_model?(WorkTask)
-    links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_transactions] || !current_user.has_listview_for_model?(RequestTransaction)
-    links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless FLUXX_CONFIGURATION[:hide_loi] || !current_user.has_listview_for_model?(Loi)
-    links << "  '#{link_to 'Budgeting', admin_card_path(:id => 1), :class => 'new-detail'}'" unless FLUXX_CONFIGURATION[:hide_admin_cards] || !current_user.has_listview_for_model?(Program)
+    links << "  '#{link_to grant_fip_name, granted_requests_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_grants) == "1" || !current_user.has_listview_for_model?(Request)
+    links << "  '#{link_to 'Grantee Reports', request_reports_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_grantee_reports) == "1" || !current_user.has_listview_for_model?(RequestReport)
+    links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_organizations) == "1" || !current_user.has_listview_for_model?(Organization)
+    links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_people) == "1" || !current_user.has_listview_for_model?(User)
+    links << "  '#{link_to 'Projects', projects_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_projects) == "1" || !current_user.has_listview_for_model?(Project)
+    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_requests) == "1" || !current_user.has_listview_for_model?(Request) || current_user.is_board_member?
+    links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_tasks) == "1" || !current_user.has_listview_for_model?(WorkTask)
+    links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_transactions) == "1" || !current_user.has_listview_for_model?(RequestTransaction)
+    links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_lois) == "1" || !current_user.has_listview_for_model?(Loi)
+    links << "  '#{link_to 'Budgeting', admin_card_path(:id => 1), :class => 'new-detail'}'" unless Fluxx.config(:hide_admin_cards) == "1" || !current_user.has_listview_for_model?(Program)
     links.join ",\n"
   end
 
@@ -101,8 +101,8 @@ module ApplicationGrantHelper
   def build_request_quicklinks
     #p "ESH: in build_request_quicklinks of application grant helper"
     request_links = []
-    request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
-    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless FLUXX_CONFIGURATION[:hide_requests]
+    request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless Fluxx.config(:hide_requests) == "1"
+    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless Fluxx.config(:hide_requests) == "1"
     request_links
   end
 
@@ -115,25 +115,25 @@ module ApplicationGrantHelper
       type: 'style-ql-documents small',
       popup: [#{build_request_quicklinks.join ",\n"}
       ]
-    }" unless FLUXX_CONFIGURATION[:hide_requests] && FLUXX_CONFIGURATION[:hide_grants] || !current_user.has_create_for_model?(Request)
+    }" unless Fluxx.config(:hide_requests) == "1" && Fluxx.config(:hide_grants) == "1" || !current_user.has_create_for_model?(Request)
     links << "{
       label: 'New Org',
       url: '#{new_organization_path}',
       className: 'new-detail',
       type: 'style-ql-library small'
-    }" unless FLUXX_CONFIGURATION[:hide_organizations] || !current_user.has_create_for_model?(Organization)
+    }" unless Fluxx.config(:hide_organizations) == "1" || !current_user.has_create_for_model?(Organization)
     links << "{
       label: 'New Person',
       url: '#{new_user_path}',
       className: 'new-detail',
       type: 'style-ql-user small'
-    }" unless FLUXX_CONFIGURATION[:hide_people] || !current_user.has_create_for_model?(User)
+    }" unless Fluxx.config(:hide_people) == "1" || !current_user.has_create_for_model?(User)
     links << "{
       label: 'New Project',
       url: '#{new_project_path}',
       className: 'new-detail',
       type: 'style-ql-project small'
-    }" unless FLUXX_CONFIGURATION[:hide_projects] || !current_user.has_create_for_model?(Project)
+    }" unless Fluxx.config(:hide_projects) == "1" || !current_user.has_create_for_model?(Project)
     links.join ",\n"
   end
   
