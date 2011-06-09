@@ -177,7 +177,7 @@ module FluxxGrantOrganization
       request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
       request.body =  "ein=#{ein}"
       request.headers["Cookie"] = cookie
-      HTTPI.post request
+      HTTPI.post request rescue nil
     end
 
     def charity_check_enabled
@@ -280,7 +280,7 @@ module FluxxGrantOrganization
     def update_charity_check
       if charity_check_applicable?
         response = Organization.charity_check_api("GetCCInfo", self.tax_id);
-        if response.code == 200
+        if response && response.code == 200
           # Charity Check seems to incorrectly return the XML encoding as utf-16
           xml = Crack::XML.parse(response.body)["string"].sub('<?xml version="1.0" encoding="utf-16"?>', '<?xml version="1.0" encoding="utf-8"?>')
           hash = Crack::XML.parse(xml)
@@ -297,7 +297,7 @@ module FluxxGrantOrganization
     def charity_check_pdf
       if charity_check_applicable?
         response = Organization.charity_check_api("GetCCPDF", self.tax_id);
-        if response.code == 200
+        if response && response.code == 200
           return Base64.decode64(Crack::XML.parse(response.body)["base64Binary"]) rescue nil
         end
       end
