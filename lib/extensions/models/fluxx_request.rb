@@ -933,15 +933,15 @@ module FluxxRequest
       (request_organizations.map{|ro| ro.organization} + [program_organization, fiscal_organization]).compact.sort_by{|o| o.name || ''}.reject{|o| o.deleted_at}
     end
     
-    def related_projects limit_amount=20
+    def related_projects limit_amount=50
       projects.limit(limit_amount)
     end
 
-    def related_request_transactions limit_amount=20
+    def related_request_transactions limit_amount=50
       request_transactions.where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
     end
 
-    def related_request_reports limit_amount=20
+    def related_request_reports limit_amount=50
       # (current_user.is_board_member? ? request_reports.where(:state => "approved") : request_reports).where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
       (request_reports).where(:deleted_at => nil).order('due_at asc').limit(limit_amount)
     end
