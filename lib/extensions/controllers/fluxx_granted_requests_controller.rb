@@ -1,5 +1,6 @@
 module FluxxGrantedRequestsController
   ICON_STYLE = 'style-granted-requests'
+  REPORT_ICON_STYLE = 'style-modal-reports'
 
   # Note that the granted requests controller is necessary to show a different look and feel for the index (filtering by granted), and for the show, which should have different related data
   def self.included(base)
@@ -12,6 +13,7 @@ module FluxxGrantedRequestsController
       insta.suppress_model_anchor_tag = true
       insta.order_clause = 'updated_at desc'
       insta.icon_style = ICON_STYLE
+      insta.report_icon_style = REPORT_ICON_STYLE
       insta.delta_type = GrantedRequestsController.translate_delta_type true # Vary the request type based on whether a request has been granted yet or not
       insta.format do |format|
         format.html do |triple|
@@ -35,6 +37,7 @@ module FluxxGrantedRequestsController
       insta.template = 'grant_request_form'
       insta.template_map = { :amend => "grant_request_amend_form" }
       insta.icon_style = ICON_STYLE
+      insta.report_icon_style = REPORT_ICON_STYLE
       insta.add_workflow
       insta.pre_create_model = true
       insta.format do |format|
@@ -63,6 +66,7 @@ module FluxxGrantedRequestsController
     base.insta_delete Request do |insta|
       insta.template = 'grant_request_form'
       insta.icon_style = ICON_STYLE
+      insta.report_icon_style = REPORT_ICON_STYLE
     end
     
     base.insta_related Request do |insta|
