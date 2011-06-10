@@ -12,11 +12,11 @@
 
 %h3
   Due In
-%p= render_alert_field(model.due_in){|di| pluralize(model.due_in, "day") }
+%p= render_alert_field(model.due_within_days){|di| pluralize(model.due_within_days, "day") }
 
 %h3
   Overdue By
-%p= render_alert_field(model.overdue_by){|ob| pluralize(model.overdue_by, "day") }
+%p= render_alert_field(model.overdue_by_days){|ob| pluralize(model.overdue_by_days, "day") }
 
 %h3
   Lead Users
