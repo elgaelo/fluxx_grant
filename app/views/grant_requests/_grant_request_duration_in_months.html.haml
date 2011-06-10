@@ -1,0 +1,8 @@
+- if model.request_amendments.empty?
+  = "#{model.duration_in_months} (Original)"
+- else 
+  - model.request_amendments.reverse.each do |amend|
+    - if amend.duration
+      %div
+        = "#{amend.duration} months"
+        = "(#{amend.original? ? "Original" : "Amended #{amend.created_at.mdy}"})" if amend.created_at 
