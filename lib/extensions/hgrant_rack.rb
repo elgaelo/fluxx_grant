@@ -7,11 +7,11 @@ module Rack
       hgrant_response = if env["PATH_INFO"] =~ /^\/hgrantrss\/(\d*)/
         requests = load_records '', {:sphinx_internal_id => $1}
         if requests && requests.num_rows > 0
-          [200, {"Content-Type" => "text/html"}, ::RenderHgrantsRssResponse.new(requests, true)]
+          [200, {"Content-Type" => "text/html"}, ::RenderHgrantsRssResponse.new(requests, env['rack.url_scheme'] + '://' + Utils.unescape(env['HTTP_HOST']), true)]
         end
       elsif env["PATH_INFO"] =~ /^\/hgrantrss/
         @requests = load_records ''
-        [200, {"Content-Type" => "application/rss+xml"}, ::RenderHgrantsRssResponse.new(@requests)]
+        [200, {"Content-Type" => "application/rss+xml"}, ::RenderHgrantsRssResponse.new(@requests, env['rack.url_scheme'] + '://' + Utils.unescape(env['HTTP_HOST']))]
       end
       
       if hgrant_response
@@ -24,8 +24,15 @@ module Rack
     end
     
     def load_records sphinx_search, sphinx_conditions={}
+      ends_at_sql = if Fluxx.config(:dont_use_duration_in_requests) == "1"
+        'grant_closed_at'
+      else
+        'date_add(date_add(grant_begins_at, interval duration_in_months MONTH), interval -1 DAY)'
+      end
+      
       @request_ids = ::Request.search_for_ids sphinx_search, :with => {:granted => 1, :deleted_at => 0, :filter_type => "GrantRequest".to_crc32}.merge(sphinx_conditions), :limit => 100000, :order => 'id desc'
       @requests = GrantRequest.connection.execute(GrantRequest.send(:sanitize_sql, ["select requests.*, 
+          #{ends_at_sql} grant_ends_at,
           program.name program_name,
           program_organization.name program_org_name, 
           program_organization.street_address program_org_street_address, program_organization.street_address2 program_org_street_address2, program_organization.city program_org_city,
@@ -46,8 +53,9 @@ end
 
 class RenderHgrantsRssResponse
   
-  def initialize rss_response, render_as_html=false
+  def initialize rss_response, hostname, render_as_html=false
     @resp = rss_response
+    @host = hostname
     @as_html = render_as_html
   end
   
@@ -69,6 +77,7 @@ class RenderHgrantsRssResponse
     block.call "    <pubDate>#{Time.now.rfc2822}</pubDate>\n"
     block.call "    <language>en</language>\n"
     while hash = grants.fetch_hash
+      hash['host'] = @host
       render_request_to_xml hash, block
     end
     block.call "  </channel>\n"
@@ -98,7 +107,7 @@ class DisplayRssFeedGrantHTML
     output = StringIO.new
     output.write "    <div class='hgrant'>\n"
     output.write "      <h2 class='title' name='grant-#{hash['id']}'>\n"
-    output.write "        <a class='url' href='/hgrantrss/#{hash['id']}'>\n"
+    output.write "        <a class='url' href='#{hash['host']}/hgrantrss/#{hash['id']}'>\n"
     output.write "          #{hash['program_org_name']} #{hash['granted'] == '1' ? hash['grant_id'] : hash['request_id']} #{((hash['amount_recommended'] || hash['amount_requested']).to_i rescue 0).to_currency(:precision => 0)}\n"
     output.write "        </a>\n"
     output.write "      </h2>\n"
@@ -125,7 +134,7 @@ class DisplayRssFeedGrantHTML
     output.write "        </p>\n"
     output.write "      </div>\n"
     output.write "      <div class='geo-focus vcard'>\n"
-    output.write "        <a class='url' href='/hgrantrss/#{hash['id']}'>permalink</a>\n"
+    output.write "        <a class='url' href='#{hash['host']}/hgrantrss/#{hash['id']}'>permalink</a>\n"
     output.write "      </div>\n"
     output.write "      <div class='grantee vcard'>\n"
     output.write "        <h3>\n"
@@ -144,8 +153,8 @@ class DisplayRssFeedGrantHTML
     output.write "        </h3>\n"
     output.write "      </div>\n"
     output.write "      <p class='amount'>\n"
-    output.write "        <abbr class='currency' title='#{CurrencyHelper.current_short_name}'>#{CurrencyHelper.current_symbol}</abbr>\n"
-    output.write "        <abbr class='amount' title='#{(hash['amount_recommended'].to_i rescue 0).to_currency(:precision => 2, :separator => '.', :delimiter => ',')}'>#{(hash['amount_recommended'] ? (hash['amount_recommended'].to_i rescue 0).to_currency(:precision => 2, :separator => '.', :delimiter => ',', :unit => '') : '')}</abbr>\n"
+    output.write "        <abbr class='currency' title='#{CurrencyHelper.current_short_name.downcase == 'dollar' ? 'USD' : CurrencyHelper.current_short_name}'>#{CurrencyHelper.current_symbol}</abbr>\n"
+    output.write "        <abbr class='amount' title='#{(hash['amount_recommended'].to_i rescue 0)}'>#{(hash['amount_recommended'] ? (hash['amount_recommended'].to_i rescue 0).to_currency(:precision => 2, :separator => '.', :delimiter => ',', :unit => '') : '')}</abbr>\n"
     output.write "      </p>\n"
     output.write "      <p class='period'>\n"
     output.write "        Grant Period:\n"
