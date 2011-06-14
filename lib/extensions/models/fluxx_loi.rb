@@ -14,8 +14,12 @@ module FluxxLoi
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES
-      insta.derived_filters = {}
+      insta.filter_fields = SEARCH_ATTRIBUTES + [:organization_linked]
+      insta.derived_filters = {
+        :organization_linked => (lambda do |search_with_attributes, request_params, name, val|
+          search_with_attributes.delete :organization_linked
+          end)
+      }
     end
 
     base.insta_realtime do |insta|

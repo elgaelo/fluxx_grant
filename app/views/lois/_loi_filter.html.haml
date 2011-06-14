@@ -3,3 +3,5 @@
 = form.input :email
 = form.input :phone
 = form.input :project_title
+= form.input :applicant_linked, :as => :select, :collection => [["Linked", true], ["Not Linked", false]]
+= form.input :organization_linked, :as => :select, :collection => [["Linked", true], ["Not Linked", false]]
