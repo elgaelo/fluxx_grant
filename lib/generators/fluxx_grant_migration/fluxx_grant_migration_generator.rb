@@ -2,6 +2,7 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
+
   include Rails::Generators::Migration
 
   def self.source_root
@@ -84,6 +85,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'populate_original_request_amendments.rb', 'db/migrate/fluxx_grant_populate_original_request_amendments.rb'
     handle_migration 'correct_project_request_constraint.rb', 'db/migrate/fluxx_grant_correct_project_request_constraint.rb'
     handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
+    handle_migration 'add_delta_column_to_loi.rb', 'db/migrate/fluxx_grant_add_delta_column_to_loi.rb'
   end
   
   private
