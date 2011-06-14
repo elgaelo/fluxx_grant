@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110601163747) do
+ActiveRecord::Schema.define(:version => 20110614035516) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -54,9 +54,9 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.string   "username"
     t.string   "action"
     t.text     "audit_changes"
-    t.integer  "version",        :default => 0
+    t.integer  "version",                              :default => 0
     t.string   "comment"
-    t.text     "full_model"
+    t.text     "full_model",     :limit => 2147483647
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
@@ -302,7 +302,7 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.integer  "updated_by_id"
     t.string   "name",                              :null => false
     t.text     "description"
-    t.integer  "sub_program_id",                    :null => false
+    t.integer  "sub_program_id"
     t.boolean  "retired",        :default => false, :null => false
   end
 
@@ -326,9 +326,10 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
-    t.integer  "user_id"
     t.integer  "request_id"
+    t.integer  "user_id"
     t.integer  "organization_id"
+    t.boolean  "delta"
   end
 
   add_index "lois", ["created_by_id"], :name => "lois_created_by_id"
@@ -397,8 +398,7 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.integer  "model_document_template_id"
   end
 
-  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "model_documents_docid_type"
-  add_index "model_documents", ["documentable_type", "documentable_id"], :name => "model_documents_doc_type_id"
+  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "index_model_documents_on_documentable_id_and_documentable_type"
   add_index "model_documents", ["model_document_template_id"], :name => "model_documents_template_id"
   add_index "model_documents", ["model_document_type_id"], :name => "model_documents_model_document_type_id"
 
@@ -641,8 +641,8 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "request_id",    :null => false
-    t.text     "description"
-    t.text     "comment"
+    t.text     "description",   :null => false
+    t.text     "comment",       :null => false
     t.boolean  "achieved"
   end
 
@@ -695,7 +695,7 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
   end
 
   add_index "request_organizations", ["organization_id"], :name => "request_organizations_organization_id"
-  add_index "request_organizations", ["request_id", "organization_id"], :name => "request_organizations_req_org_id", :unique => true
+  add_index "request_organizations", ["request_id", "organization_id"], :name => "index_request_organizations_on_request_id_and_organization_id", :unique => true
 
   create_table "request_programs", :force => true do |t|
     t.datetime "created_at"
@@ -921,7 +921,7 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.integer  "updated_by_id"
     t.string   "name",                             :null => false
     t.text     "description"
-    t.integer  "initiative_id",                    :null => false
+    t.integer  "initiative_id"
     t.boolean  "retired",       :default => false, :null => false
   end
 
@@ -1001,6 +1001,7 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
+    t.text     "roles_text"
     t.string   "login",                        :limit => 40
     t.string   "first_name",                   :limit => 400,  :default => ""
     t.string   "last_name",                    :limit => 400,  :default => ""
@@ -1142,6 +1143,6 @@ ActiveRecord::Schema.define(:version => 20110601163747) do
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
   add_index "workflow_events", ["updated_by_id"], :name => "workflow_events_updated_by_id"
-  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_id_type"
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "index_workflow_events_on_workflowable_id_and_workflowable_type"
 
 end

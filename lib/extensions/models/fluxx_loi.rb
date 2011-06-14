@@ -14,7 +14,7 @@ module FluxxLoi
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.insta_search do |insta|
-      insta.filter_fields = SEARCH_ATTRIBUTES + [:organization_linked]
+      insta.filter_fields = SEARCH_ATTRIBUTES #+ [:organization_linked]
       insta.derived_filters = {
         :organization_linked => (lambda do |search_with_attributes, request_params, name, val|
           search_with_attributes.delete :organization_linked
@@ -68,18 +68,24 @@ module FluxxLoi
       aasm_column :state
       aasm_initial_state :new
     end
-    
+
     def add_sphinx
-#      define_index :loi_first do
-#        # fields
-#
-#
-#        # attributes
-#        has created_at, updated_at
-#      end
+      define_index :loi_first do
+        # fields
+        indexes "lower(lois.applicant)", :as => :applicant, :sortable => true
+        indexes "lower(lois.organization_name)", :as => :organization_name, :sortable => true
+        indexes "lower(lois.project_title)", :as => :project_title, :sortable => true
+
+        # attributes
+        has created_at, updated_at, deleted_at, email, phone
+
+        has favorites.user(:id), :as => :favorite_user_ids
+
+        set_property :delta => :delayed
+      end
     end
   end
-  
+
   module ModelInstanceMethods
     def first_name
       applicant.gsub(/\s+/, ' ').split(' ').first
