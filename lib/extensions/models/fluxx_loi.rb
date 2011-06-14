@@ -15,11 +15,11 @@ module FluxxLoi
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES #+ [:organization_linked]
-      insta.derived_filters = {
-        :organization_linked => (lambda do |search_with_attributes, request_params, name, val|
-          search_with_attributes.delete :organization_linked
-          end)
-      }
+#      insta.derived_filters = {
+#        :organization_linked => (lambda do |search_with_attributes, request_params, name, val|
+#          search_with_attributes.delete :organization_linked
+#          end)
+#      }
     end
 
     base.insta_realtime do |insta|
@@ -73,11 +73,11 @@ module FluxxLoi
       define_index :loi_first do
         # fields
         indexes "lower(lois.applicant)", :as => :applicant, :sortable => true
-        indexes "lower(lois.organization_name)", :as => :organization_name, :sortable => true
-        indexes "lower(lois.project_title)", :as => :project_title, :sortable => true
+#        indexes "lower(lois.organization_name)", :as => :organization_name, :sortable => true
+#        indexes "lower(lois.project_title)", :as => :project_title, :sortable => true
 
         # attributes
-        has created_at, updated_at, deleted_at, email, phone
+        has created_at, updated_at, deleted_at, email, phone, organization_name, project_title
 
         has favorites.user(:id), :as => :favorite_user_ids
 
