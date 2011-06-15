@@ -1,5 +1,5 @@
-- if model.request_amendments.empty?
-  = model.amount_recommended
+- if model.request_amendments.select{|ra| ra.amount_recommended }.empty?
+  = as_currency(model.amount_recommended)
 - else
   - model.request_amendments.reverse.each do |amend|
     - if amend.amount_recommended
