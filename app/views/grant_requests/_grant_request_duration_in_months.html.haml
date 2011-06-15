@@ -1,4 +1,4 @@
-- if model.request_amendments.empty?
+- if model.request_amendments.select{|ra| ra.duration }.empty?
   = "#{model.duration_in_months} (Original)"
 - else 
   - model.request_amendments.reverse.each do |amend|
