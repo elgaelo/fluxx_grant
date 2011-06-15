@@ -21,6 +21,7 @@
   - unless Fluxx.config(:hide_loi) == "1"
     %p &nbsp;
     %p
-      = link_to "New to the  #{Fluxx.config(:grantor_name)}'s Grants Portal?", new_loi_path
-      %br
-      = link_to "Create an account here.", new_loi_path
+      - unless Fluxx.config :hide_lois
+        = link_to "New to the  #{Fluxx.config(:grantor_name)}'s Grants Portal?", new_loi_path
+        %br
+        = link_to "Create an account here.", new_loi_path

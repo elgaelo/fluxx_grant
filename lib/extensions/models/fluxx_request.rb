@@ -288,7 +288,7 @@ module FluxxRequest
       insta.updated_by_field = :updated_by_id
     end
     base.insta_utc do |insta|
-      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_proposed_end_at, :ierf_budget_end_at] 
+      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_proposed_end_at, :ierf_budget_end_at]
     end
     
     base.insta_workflow do |insta|
