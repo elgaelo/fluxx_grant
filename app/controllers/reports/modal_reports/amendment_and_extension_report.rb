@@ -56,8 +56,8 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
       joins('LEFT JOIN requests ON request_id=requests.id').
       where('1=? OR requests.type IN (?)', query_types.empty?, query_types).
       where('1=? OR requests.program_id IN (?)', programs.empty?, programs).
-      where('created_at > ? AND created_at < ?', start_date, end_date).
-      order('requests.id DESC, created_at ASC').
+      where('request_amendments.created_at > ? AND request_amendments.created_at < ?', start_date, end_date).
+      order('requests.id DESC, request_amendments.created_at ASC').
       all
     
     output = StringIO.new
