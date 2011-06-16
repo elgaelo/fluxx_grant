@@ -180,6 +180,7 @@ module FluxxGrantOrganization
         request.headers["Cookie"] = cookie
         HTTPI.post request
       rescue Exception => e
+        nil
       end
     end
     
