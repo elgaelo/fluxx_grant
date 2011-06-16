@@ -208,6 +208,8 @@ module FluxxRequestTransaction
 
         # attributes
         has created_at, updated_at, deleted_at, due_at, paid_at, amount_paid, amount_due
+        has "ROUND(request_transactions.amount_paid)", :as => :amount_paid, :type => :integer
+        has "ROUND(request_transactions.amount_due)", :as => :amount_due, :type => :integer
         set_property :delta => :delayed
         has "request_transactions.#{state_name}", :type => :string, :crc => true, :as => :filter_state
         has "requests.#{state_name}", :type => :string, :crc => true, :as => :grant_state
