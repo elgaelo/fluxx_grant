@@ -170,15 +170,19 @@ module FluxxGrantOrganization
     
     def charity_check_api service, ein
       # Authenticate and retrieve the cookie
-      response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{Fluxx.config :username, :charity_check}&password=#{Fluxx.config :password, :charity_check}"
-      cookie = response.headers["Set-Cookie"]
+      begin
+        response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{Fluxx.config :username, :charity_check}&password=#{Fluxx.config :password, :charity_check}"
+        cookie = response.headers["Set-Cookie"]
 
-      # Call the GetCCPDF webservice
-      request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
-      request.body =  "ein=#{ein}"
-      request.headers["Cookie"] = cookie
-      HTTPI.post request rescue nil
+        # Call the GetCCPDF webservice
+        request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
+        request.body =  "ein=#{ein}"
+        request.headers["Cookie"] = cookie
+        HTTPI.post request
+      rescue Exception => e
+      end
     end
+    
 
     def charity_check_enabled
       Fluxx.config(:enabled, :charity_check) == "1"
