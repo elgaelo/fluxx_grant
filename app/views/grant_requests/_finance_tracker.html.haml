@@ -129,7 +129,7 @@
   .pairs
     .key
       Email:
-    .value= main_contact_user.email
+    .value= email_link(main_contact_user.email)
 
 = render :partial => "request_reports/list_request_reports", :locals => { :models => model.request_reports}
 = render :partial => "request_transactions/list_request_transactions", :locals => { :models => model.request_transactions}

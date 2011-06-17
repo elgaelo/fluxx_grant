@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110614035516) do
+ActiveRecord::Schema.define(:version => 20110531000004) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "model_type"
-    t.datetime "send_at"
   end
 
   create_table "alert_recipients", :force => true do |t|
@@ -54,9 +53,9 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.string   "username"
     t.string   "action"
     t.text     "audit_changes"
-    t.integer  "version",                              :default => 0
+    t.integer  "version",        :default => 0
     t.string   "comment"
-    t.text     "full_model",     :limit => 2147483647
+    t.text     "full_model"
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
@@ -105,9 +104,9 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.integer  "request_id",                                        :null => false
-    t.decimal  "amount_requested",   :precision => 10, :scale => 2
-    t.decimal  "amount_recommended", :precision => 10, :scale => 2
+    t.integer  "request_id",         :null => false
+    t.integer  "amount_requested"
+    t.integer  "amount_recommended"
     t.string   "name"
     t.datetime "deleted_at"
     t.datetime "locked_until"
@@ -161,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.decimal  "amount",                       :precision => 10, :scale => 2
+    t.integer  "amount"
     t.integer  "authority_id"
     t.integer  "funding_source_allocation_id"
   end
@@ -203,10 +202,10 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "name"
-    t.decimal  "amount",        :precision => 10, :scale => 2
+    t.integer  "amount"
     t.datetime "start_at"
     t.datetime "end_at"
-    t.boolean  "retired",                                      :default => false, :null => false
+    t.boolean  "retired",       :default => false, :null => false
   end
 
   create_table "geo_cities", :force => true do |t|
@@ -302,7 +301,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "updated_by_id"
     t.string   "name",                              :null => false
     t.text     "description"
-    t.integer  "sub_program_id"
+    t.integer  "sub_program_id",                    :null => false
     t.boolean  "retired",        :default => false, :null => false
   end
 
@@ -326,10 +325,9 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.datetime "deleted_at"
-    t.integer  "request_id"
     t.integer  "user_id"
+    t.integer  "request_id"
     t.integer  "organization_id"
-    t.boolean  "delta"
   end
 
   add_index "lois", ["created_by_id"], :name => "lois_created_by_id"
@@ -398,7 +396,8 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "model_document_template_id"
   end
 
-  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "index_model_documents_on_documentable_id_and_documentable_type"
+  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "model_documents_docid_type"
+  add_index "model_documents", ["documentable_type", "documentable_id"], :name => "model_documents_doc_type_id"
   add_index "model_documents", ["model_document_template_id"], :name => "model_documents_template_id"
   add_index "model_documents", ["model_document_type_id"], :name => "model_documents_model_document_type_id"
 
@@ -623,26 +622,14 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.text     "delta_attributes", :null => false
   end
 
-  create_table "request_amendments", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "duration"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.decimal  "amount_recommended", :precision => 10, :scale => 2
-    t.boolean  "original",                                          :default => false
-    t.integer  "request_id"
-    t.string   "request_type"
-  end
-
   create_table "request_evaluation_metrics", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "request_id",    :null => false
-    t.text     "description",   :null => false
-    t.text     "comment",       :null => false
+    t.text     "description"
+    t.text     "comment"
     t.boolean  "achieved"
   end
 
@@ -655,7 +642,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.string   "document_file_name"
-    t.decimal  "funding_amount",               :precision => 10, :scale => 2
+    t.integer  "funding_amount"
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.integer  "funding_source_allocation_id"
@@ -695,7 +682,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
   end
 
   add_index "request_organizations", ["organization_id"], :name => "request_organizations_organization_id"
-  add_index "request_organizations", ["request_id", "organization_id"], :name => "index_request_organizations_on_request_id_and_organization_id", :unique => true
+  add_index "request_organizations", ["request_id", "organization_id"], :name => "request_organizations_req_org_id", :unique => true
 
   create_table "request_programs", :force => true do |t|
     t.datetime "created_at"
@@ -763,7 +750,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "updated_by_id"
     t.integer  "request_funding_source_id"
     t.integer  "request_transaction_id"
-    t.decimal  "amount",                    :precision => 10, :scale => 2
+    t.integer  "amount"
   end
 
   add_index "request_transaction_funding_sources", ["created_by_id"], :name => "request_transaction_funding_sources_created_by_id"
@@ -921,7 +908,7 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.integer  "updated_by_id"
     t.string   "name",                             :null => false
     t.text     "description"
-    t.integer  "initiative_id"
+    t.integer  "initiative_id",                    :null => false
     t.boolean  "retired",       :default => false, :null => false
   end
 
@@ -1001,7 +988,6 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.text     "roles_text"
     t.string   "login",                        :limit => 40
     t.string   "first_name",                   :limit => 400,  :default => ""
     t.string   "last_name",                    :limit => 400,  :default => ""
@@ -1143,6 +1129,6 @@ ActiveRecord::Schema.define(:version => 20110614035516) do
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
   add_index "workflow_events", ["updated_by_id"], :name => "workflow_events_updated_by_id"
-  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "index_workflow_events_on_workflowable_id_and_workflowable_type"
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_flowid_type"
 
 end
