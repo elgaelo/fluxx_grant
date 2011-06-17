@@ -54,6 +54,8 @@ class UserSessionsController < ApplicationController
   end
 
   def portal
+    current_user_session.destroy
+    clear_current_user
     response.headers['fluxx_template'] = 'login'
     @user_session = UserSession.new
     respond_to do |format|
