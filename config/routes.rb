@@ -47,4 +47,5 @@ Rails.application.routes.draw do
 
   match 'login' => 'user_sessions#new', :as => :login
   match 'logout' => 'user_sessions#destroy', :as => :logout
+  match 'portal', :controller => :user_sessions
 end

@@ -1,0 +1,14 @@
+%html
+  %head
+    %title Fluxx Grant
+    %meta{:name => "application-name", :content => "Fluxx" }
+    %meta{:name => "description", :content => "Fluxx - The Open Source Grants Management Platform" }
+    %link{:rel => "icon", :href => "/images/fluxx_engine/theme/default/icons/fluxx_128x128.png", :sizes => "128x128" }
+    = stylesheet_link_tag '/stylesheets/compiled/fluxx_engine/theme/default/portal.css'
+    = csrf_meta_tag
+  %body
+    .header
+    .page
+      = yield
+      %p
+      = image_tag("/images/fluxx_engine/theme/_common/powered_by.png", :class => "logo")

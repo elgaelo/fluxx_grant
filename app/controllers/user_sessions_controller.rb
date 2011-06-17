@@ -35,7 +35,11 @@ class UserSessionsController < ApplicationController
                 redirect_back_or_default dashboard_index_path
               end
             else
-              render :action => :new
+              if params["user_session"] && params["user_session"]["portal"]
+                  render :action => :portal, :layout => "portal_login"
+              else
+                render :action => :new
+              end
             end
         end
       end
@@ -47,5 +51,15 @@ class UserSessionsController < ApplicationController
     clear_current_user
     flash[:notice] = "Logout successful!"
     redirect_back_or_default new_user_session_url
+  end
+
+  def portal
+    response.headers['fluxx_template'] = 'login'
+    @user_session = UserSession.new
+    respond_to do |format|
+      format.html do
+        render :action => :portal, :layout => "portal_login"
+      end
+    end
   end
 end
