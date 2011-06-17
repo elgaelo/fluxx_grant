@@ -36,7 +36,7 @@ class UserSessionsController < ApplicationController
               end
             else
               if params["user_session"] && params["user_session"]["portal"]
-                  render :action => :portal, :layout => "portal_login"
+                  render :action => :portal, :layout => "portal"
               else
                 render :action => :new
               end
@@ -62,7 +62,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new
     respond_to do |format|
       format.html do
-        render :action => :portal, :layout => "portal_login"
+        render :action => :portal, :layout => "portal"
       end
     end
   end
