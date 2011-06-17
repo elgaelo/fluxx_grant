@@ -207,7 +207,7 @@ module FluxxRequestTransaction
         indexes "if(requests.type = 'FipRequest', concat('FG-',requests.base_request_id), concat('G-',requests.base_request_id))", :as => :request_grant_id, :sortable => true
 
         # attributes
-        has created_at, updated_at, deleted_at, due_at, paid_at, amount_paid, amount_due
+        has created_at, updated_at, deleted_at, due_at, paid_at
         has "ROUND(request_transactions.amount_paid)", :as => :amount_paid, :type => :integer
         has "ROUND(request_transactions.amount_due)", :as => :amount_due, :type => :integer
         set_property :delta => :delayed
