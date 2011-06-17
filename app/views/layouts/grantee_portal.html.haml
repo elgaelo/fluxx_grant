@@ -20,7 +20,7 @@
         %span
           = 'Welcome, ' 
           = @current_user.full_name.gsub(/\b\w/){$&.upcase}
-        = link_to 'Logout', logout_path
+        = link_to 'Logout', portal_path
     .page
       = yield
       %p
