@@ -288,7 +288,7 @@ module FluxxRequest
       insta.updated_by_field = :updated_by_id
     end
     base.insta_utc do |insta|
-      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_proposed_end_at, :ierf_budget_end_at] 
+      insta.time_attributes = [:request_received_at, :grant_approved_at, :grant_agreement_at, :grant_amendment_at, :grant_begins_at, :grant_closed_at, :fip_projected_end_at, :ierf_proposed_end_at, :ierf_budget_end_at]
     end
     
     base.insta_workflow do |insta|
@@ -517,8 +517,10 @@ module FluxxRequest
         indexes program.name, :as => :program_name, :sortable => true
 
         # attributes
-        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :amount_requested, :amount_recommended, :granted
+        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
+        has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "if(granted = 0, (CONCAT(IFNULL(`program_organization_id`, '0'), ',', IFNULL(`fiscal_organization_id`, '0'))), null)", 
           :as => :related_request_organization_ids, :type => :multi
         has "if(granted = 1, (CONCAT(IFNULL(`program_organization_id`, '0'), ',', IFNULL(`fiscal_organization_id`, '0'))), null)", 
@@ -576,8 +578,10 @@ module FluxxRequest
         indexes program.name, :as => :program_name, :sortable => true
 
         # attributes
-        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :amount_requested, :amount_recommended, :granted
+        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
+        has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "null", :as => :related_request_organization_ids, :type => :multi
         has "null", :as => :related_grant_organization_ids, :type => :multi
         has "IF(requests.base_request_id IS NULL, 1, 0)", :as => :missing_request_id, :type => :boolean
@@ -641,8 +645,10 @@ module FluxxRequest
         indexes program.name, :as => :program_name, :sortable => true
 
         # attributes
-        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :amount_requested, :amount_recommended, :granted
+        has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
+        has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "null", :as => :related_request_organization_ids, :type => :multi
         has "null", :as => :related_grant_organization_ids, :type => :multi
         has "IF(requests.base_request_id IS NULL, 1, 0)", :as => :missing_request_id, :type => :boolean

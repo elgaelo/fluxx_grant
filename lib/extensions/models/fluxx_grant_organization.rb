@@ -170,25 +170,34 @@ module FluxxGrantOrganization
     
     def charity_check_api service, ein
       # Authenticate and retrieve the cookie
-      response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{Fluxx.config :username, :charity_check}&password=#{Fluxx.config :password, :charity_check}"
-      cookie = response.headers["Set-Cookie"]
+      begin
+        response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{Fluxx.config :username, :charity_check}&password=#{Fluxx.config :password, :charity_check}"
+        cookie = response.headers["Set-Cookie"]
 
-      # Call the GetCCPDF webservice
-      request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
-      request.body =  "ein=#{ein}"
-      request.headers["Cookie"] = cookie
-      HTTPI.post request rescue nil
+        # Call the GetCCPDF webservice
+        request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/#{service}"
+        request.body =  "ein=#{ein}"
+        request.headers["Cookie"] = cookie
+        HTTPI.post request
+      rescue Exception => e
+        nil
+      end
     end
+    
 
     def charity_check_enabled
       Fluxx.config(:enabled, :charity_check) == "1"
     end
 
     # Return an array of grants related to an organization
-    def foundation_center_api ein, pagenum=nil
-      ein = '' unless ein
-      response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.strip.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
-      Crack::JSON.parse(response.body)
+    def foundation_center_api ein=nil, pagenum=nil
+      if ein
+        begin
+          response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein.strip.sub('-', '')}#{pagenum.nil? ? '' : '&pagenum=' + pagenum.to_s}"
+          Crack::JSON.parse(response.body)
+        rescue Exception => e
+        end
+      end
     end
   end
 
