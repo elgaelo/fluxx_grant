@@ -57,6 +57,7 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
       where('1=? OR requests.type IN (?)', query_types.empty?, query_types).
       where('1=? OR requests.program_id IN (?)', programs.empty?, programs).
       where('requests.grant_agreement_at > ? AND requests.grant_agreement_at < ?', start_date, end_date).
+      where(:original => false).
       order('requests.id DESC, request_amendments.created_at ASC').
       all
     
@@ -82,13 +83,14 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
     worksheet.set_column(7, 7, 20)
     worksheet.set_column(9, 9, 15)
 
-    columns = ["Grant ID", "Grant Name", "Fistac Organization (If applicable)", "Start Date", "End Date (Original)", "Amount Recommended (Original)",
+    columns = ["Grant ID", "Grant Name", "Fiscal Organization (If applicable)", "Start Date", "End Date (Original)", "Amount Recommended (Original)",
      "Change Date (When record was altered)", "Adjusted End Date (If applicable)", "Amended Amount (If applicable)"]
 
-    columns.each_with_index { |label,index| worksheet.write(row, index, label, header_format) }
     row += 1
+    columns.each_with_index { |label,index| worksheet.write(row, index, label, header_format) }
 
     request_amendments.inject(HashWithIndifferentAccess.new) { |original,amendment|
+      row += 1
       request = amendment.request
       original = HashWithIndifferentAccess.new if original.nil? or original[:request_id] != amendment.request_id
 
@@ -111,7 +113,6 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
       worksheet.write(row, 7, amended_end_date ? amended_end_date.mdy : "")
       worksheet.write(row, 8, amendment.amount_recommended.to_s)
 
-      row += 1
       original.merge(amendment.attributes)
     }
 
