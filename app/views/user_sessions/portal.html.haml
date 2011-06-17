@@ -19,9 +19,9 @@
       %p= f.submit "Sign in"
     
   %div.c40r
-    %p
-      = render :partial => "loi_information"
-      - unless Fluxx.config(:hide_loi) == "1"
-        = form_for(@user_session, :url => new_loi_path, :html => { :method => :get}) do |f|
-          %p= f.submit "Submit LOI Now"
+    = render :partial => "loi_information"
+    - unless Fluxx.config(:hide_loi) == "1"
+      = form_for(@user_session, :url => new_loi_path, :html => { :method => :get}) do |f|
+        %p= f.submit "Create an account now"
+= render :partial => "extra_portal"
 
