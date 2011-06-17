@@ -87,11 +87,11 @@ module FluxxLoisController
       insta.icon_style = ICON_STYLE
       insta.pre_create_model = false
       insta.skip_permission_check = true
-      insta.layout = "portal"
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
           response.headers['fluxx_template'] = 'loi'
+          render :layout => "portal"
         end
       end
     end
