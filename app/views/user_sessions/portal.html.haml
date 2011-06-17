@@ -21,6 +21,7 @@
   %div.c40r
     %p
       = render :partial => "loi_information"
-      = form_for(@user_session, :url => new_loi_path, :html => { :method => :get}) do |f|
-        %p= f.submit "Submit LOI Now"
+      - unless Fluxx.config(:hide_loi) == "1"
+        = form_for(@user_session, :url => new_loi_path, :html => { :method => :get}) do |f|
+          %p= f.submit "Submit LOI Now"
 

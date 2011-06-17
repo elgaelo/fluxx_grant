@@ -58,11 +58,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new
     respond_to do |format|
       format.html do
-        if Fluxx.config(:hide_loi) == "1"
-          redirect_back_or_default dashboard_index_path
-        else
-          render :action => :portal, :layout => "portal_login"
-        end
+        render :action => :portal, :layout => "portal_login"
       end
     end
   end
