@@ -91,6 +91,7 @@ module FluxxLoisController
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
           response.headers['fluxx_template'] = 'loi'
+          render :layout => "portal"
         end
       end
     end
