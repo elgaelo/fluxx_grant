@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110531000004) do
+ActiveRecord::Schema.define(:version => 20110617030329) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "model_type"
+    t.datetime "send_at"
   end
 
   create_table "alert_recipients", :force => true do |t|
@@ -104,9 +105,9 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.integer  "request_id",         :null => false
-    t.integer  "amount_requested"
-    t.integer  "amount_recommended"
+    t.integer  "request_id",                                        :null => false
+    t.decimal  "amount_requested",   :precision => 10, :scale => 2
+    t.decimal  "amount_recommended", :precision => 10, :scale => 2
     t.string   "name"
     t.datetime "deleted_at"
     t.datetime "locked_until"
@@ -160,7 +161,7 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.integer  "amount"
+    t.decimal  "amount",                       :precision => 10, :scale => 2
     t.integer  "authority_id"
     t.integer  "funding_source_allocation_id"
   end
@@ -202,10 +203,10 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "name"
-    t.integer  "amount"
+    t.decimal  "amount",        :precision => 10, :scale => 2
     t.datetime "start_at"
     t.datetime "end_at"
-    t.boolean  "retired",       :default => false, :null => false
+    t.boolean  "retired",                                      :default => false, :null => false
   end
 
   create_table "geo_cities", :force => true do |t|
@@ -328,6 +329,7 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.integer  "user_id"
     t.integer  "request_id"
     t.integer  "organization_id"
+    t.boolean  "delta"
   end
 
   add_index "lois", ["created_by_id"], :name => "lois_created_by_id"
@@ -622,6 +624,18 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.text     "delta_attributes", :null => false
   end
 
+  create_table "request_amendments", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "duration"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.decimal  "amount_recommended", :precision => 10, :scale => 2
+    t.boolean  "original",                                          :default => false
+    t.integer  "request_id"
+    t.string   "request_type"
+  end
+
   create_table "request_evaluation_metrics", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -642,7 +656,7 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.string   "document_file_name"
-    t.integer  "funding_amount"
+    t.decimal  "funding_amount",               :precision => 10, :scale => 2
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.integer  "funding_source_allocation_id"
@@ -750,7 +764,7 @@ ActiveRecord::Schema.define(:version => 20110531000004) do
     t.integer  "updated_by_id"
     t.integer  "request_funding_source_id"
     t.integer  "request_transaction_id"
-    t.integer  "amount"
+    t.decimal  "amount",                    :precision => 10, :scale => 2
   end
 
   add_index "request_transaction_funding_sources", ["created_by_id"], :name => "request_transaction_funding_sources_created_by_id"
