@@ -91,6 +91,7 @@ module FluxxFundingSourceAllocation
       request_transaction_funding_sources.request_funding_source_id = request_funding_sources.id and
       request_transaction_funding_sources.request_transaction_id = request_transactions.id and
       funding_source_allocation_id = ? and
+      request_transactions.deleted_at is null and
       request_transactions.state = 'paid'", self.id]
       if a && a.is_a?(Array)
         (a.first.paid_amount ? a.first.paid_amount.to_i : 0)

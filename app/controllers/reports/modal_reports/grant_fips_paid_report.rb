@@ -63,6 +63,7 @@ class GrantAndFipDetailsReport < ActionController::ReportBase
       req.id = rt.request_id AND
       req.deleted_at IS NULL AND 
       rt.state in (?) AND
+      rt.deleted_at is null AND
       req.state not in (?) AND
       paid_at is not null and paid_at >= ? and paid_at <= ?
       and amount_paid is not null
