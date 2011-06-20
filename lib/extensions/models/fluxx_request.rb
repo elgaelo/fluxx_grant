@@ -75,6 +75,7 @@ module FluxxRequest
     base.after_create :generate_request_id
     base.after_save :process_before_save_blocks
     base.after_save :handle_cascading_deletes
+    base.before_save :build_amendment
     
     # base.after_commit :update_related_data
     base.send :attr_accessor, :before_save_blocks
@@ -1050,6 +1051,30 @@ module FluxxRequest
       end
     end
     
+    def build_amendment
+      original = state_changed? && state == 'granted'
+
+      if amend? or original
+        a = request_amendments.build()
+        a[:duration] = duration_in_months if duration_in_months_changed?
+        a[:start_date] = grant_begins_at if grant_begins_at_changed?
+        a[:end_date] = grant_closed_at if grant_closed_at_changed?
+        a[:amount_recommended] = amount_recommended if amount_recommended_changed?
+        a[:original] = original
+
+        append_amendment_note unless original
+      end
+
+      true # stop touching meee!
+    end
+
+    def append_amendment_note
+      note = []
+      note << "Amount amended from #{amount_recommended_was} to #{amount_recommended}." if amount_recommended_changed?
+      note << "Duration amended from #{duration_in_months_was} to #{duration_in_months}." if duration_in_months_changed?
+      note << amend_note unless amend_note.to_s.empty?
+      notes.build(:note => note.join(" "))
+    end
     
     # Deal with wonky behavior of secondary request programs
     def fire_event_override event_name, user
