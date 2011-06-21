@@ -30,28 +30,22 @@
       return $(document);
     },
     openCardModal: function(options) {
-      $.modal('<div id="modal-content"></div>', {
-        minWidth: 500,
-        minHeight: 500,
-        closeHTML: '<span>Close</span>',
-        close: true,
-        closeOverlay: true,
-        escClose:true,
-        opacity: 50,
-        onShow: function () {
-          $.ajax({
-            url: options.url,
-            type: 'GET',
-            success: function(data, status, xhr){
-             $('#modal-content').append(data);
-             $(document).data('modal-target', options.target);
+      $.ajax({
+        url: options.url,
+        type: 'GET',
+        success: function(data, status, xhr){
+          $('.page').fadeTo('slow','.2');
+          $('<div id="modal-content">' + data + '</div>').dialog({
+            modal: true,
+            minWidth: 500,
+            minHeight: 500,
+            close: function(event, ui) {
+              $('.page').fadeTo('slow','1');
             }
           });
-        },
-        onClose: function(){
-          $.modal.close();
         }
       });
+      $(document).data('modal-target', options.target);
     }
   });
 
@@ -192,7 +186,7 @@
                 success: function(data, status, xhr){
                   if (xhr.getResponseHeader('fluxx_result_success')) {
                     $.fn.loadTable($(document).data('modal-target').parents('[data-src]'), 0);
-                    $.modal.close();
+                    $('.ui-icon-closethick').click();
                   } else {
                     $('#modal-content').html(data);
                   }
