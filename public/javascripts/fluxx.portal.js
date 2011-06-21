@@ -43,9 +43,9 @@
               $('.page').fadeTo('slow','1');
             }
           });
-         $(document).data('modal-target', options.target);
         }
       });
+      $(document).data('modal-target', options.target);
     }
   });
 
@@ -186,7 +186,7 @@
                 success: function(data, status, xhr){
                   if (xhr.getResponseHeader('fluxx_result_success')) {
                     $.fn.loadTable($(document).data('modal-target').parents('[data-src]'), 0);
-                    $.modal.close();
+                    $('.ui-icon-closethick').click();
                   } else {
                     $('#modal-content').html(data);
                   }
