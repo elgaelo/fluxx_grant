@@ -111,7 +111,7 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
       worksheet.write(row, 2, request.fiscal_organization ? request.fiscal_organization.name : "")
       worksheet.write(row, 3, request.grant_begins_at ? request.grant_begins_at.mdy : "", date_format)
       if dont_use_duration_in_requests
-        worksheet.write(row, 4, original_end_date ? original_end_date.mdy : "", date_format)
+        worksheet.write(row, 4, original_end_date ? (Time.parse(original_end_date).mdy rescue nil) : nil, date_format)
       else
         worksheet.write(row, 4, (original_duration.to_i rescue nil), number_format)
       end
