@@ -113,14 +113,14 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
       if dont_use_duration_in_requests
         worksheet.write(row, 4, original_end_date ? original_end_date.mdy : "", date_format)
       else
-        worksheet.write(row, 4, (original_duration.to_i rescue nil), number_format)
+        worksheet.write(row, 4, original_duration ? (original_duration.to_i rescue nil) : nil, number_format)
       end
       worksheet.write(row, 5, (amendment.original_amount_recommended ? (amendment.original_amount_recommended.to_f rescue nil) : nil), amount_format)
       worksheet.write(row, 6, amendment.created_at ? amendment.created_at.mdy : "", date_format)
       if dont_use_duration_in_requests
         worksheet.write(row, 7, amended_end_date ? amended_end_date.mdy : "", date_format)
       else
-        worksheet.write(row, 7, (amended_duration.to_i rescue nil), number_format)
+        worksheet.write(row, 7, amended_duration ? (amended_duration.to_i rescue nil) : nil, number_format)
       end
       worksheet.write(row, 8, amendment.amount_recommended ? (amendment.amount_recommended.to_f rescue nil) : nil, amount_format)
     }

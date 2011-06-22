@@ -1052,17 +1052,24 @@ module FluxxRequest
     end
     
     def build_amendment
-      original = state_changed? && state == 'granted'
-
-      if amend? or original
+      if amend?
+        if request_amendments.empty?
+          # Create the original amendment
+          a = request_amendments.build()
+          a[:duration] = changed_attributes['duration_in_months'] || duration_in_months
+          a[:start_date] = changed_attributes['grant_begins_at'] || grant_begins_at
+          a[:end_date] = changed_attributes['grant_closed_at'] || grant_closed_at
+          a[:amount_recommended] = changed_attributes['amount_recommended'] || amount_recommended
+          a[:original] = true
+        end
         a = request_amendments.build()
         a[:duration] = duration_in_months if duration_in_months_changed?
         a[:start_date] = grant_begins_at if grant_begins_at_changed?
         a[:end_date] = grant_closed_at if grant_closed_at_changed?
         a[:amount_recommended] = amount_recommended if amount_recommended_changed?
-        a[:original] = original
+        a[:original] = false
 
-        append_amendment_note unless original
+        append_amendment_note
       end
 
       true # stop touching meee!
