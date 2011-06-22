@@ -56,6 +56,7 @@ module FluxxRequest
     base.belongs_to :fiscal_organization, :class_name => 'Organization', :foreign_key => :fiscal_organization_id
     base.send :attr_accessor, :fiscal_organization_lookup
     base.has_many :request_organizations
+    base.has_many :request_amendments, :as => :request
     base.has_many :request_users
     base.has_many :project_requests
     base.has_many :projects, :through => :project_requests
@@ -711,6 +712,10 @@ module FluxxRequest
   end
 
   module ModelInstanceMethods
+    attr_accessor :amend
+    attr_accessor :amend_note
+    alias_method :amend?, :amend
+
     def validate_funding_sources
       missing_funding_sources = ['(at least one Funding Source is required)'] if request_funding_sources.empty?
       errors[:Missing_funding_sources] << missing_funding_sources if missing_funding_sources
