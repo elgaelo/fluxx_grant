@@ -53,7 +53,10 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
     programs = programs.compact
     
     request_amendments = RequestAmendment.
-      joins('LEFT JOIN requests ON request_id=requests.id').
+      select('request_amendments.*, original_ras.duration original_duration, original_ras.end_date original_end_date, 
+        original_ras.amount_recommended original_amount_recommended, requests.grant_begins_at').
+      joins('INNER JOIN requests ON request_id=requests.id').
+      joins('LEFT OUTER JOIN request_amendments original_ras ON original_ras.request_id=requests.id and original_ras.original = 1').
       where('1=? OR requests.type IN (?)', query_types.empty?, query_types).
       where('1=? OR requests.program_id IN (?)', programs.empty?, programs).
       where('requests.grant_agreement_at > ? AND requests.grant_agreement_at < ?', start_date, end_date).
@@ -82,38 +85,44 @@ class AmendmentAndExtensionReport < ActionController::ReportBase
     worksheet.set_column(1, 1, 15)
     worksheet.set_column(7, 7, 20)
     worksheet.set_column(9, 9, 15)
+    
+    dont_use_duration_in_requests = Fluxx.config(:dont_use_duration_in_requests) == "1"
 
-    columns = ["Grant ID", "Grant Name", "Fiscal Organization (If applicable)", "Start Date", "End Date (Original)", "Amount Recommended (Original)",
-     "Change Date (When record was altered)", "Adjusted End Date (If applicable)", "Amended Amount (If applicable)"]
+    columns = ["Grant ID", "Grant Name", "Fiscal Organization (If applicable)", "Start Date", dont_use_duration_in_requests ? "End Date (Original)" : 'Duration (Original)', "Amount Recommended (Original)",
+     "Change Date (When record was altered)", dont_use_duration_in_requests ? "Adjusted End Date (If applicable)" : 'Duration (If applicable)', "Amended Amount (If applicable)"]
 
     row += 1
     columns.each_with_index { |label,index| worksheet.write(row, index, label, header_format) }
 
-    request_amendments.inject(HashWithIndifferentAccess.new) { |original,amendment|
+    request_amendments.each { |amendment|
       row += 1
       request = amendment.request
-      original = HashWithIndifferentAccess.new if original.nil? or original[:request_id] != amendment.request_id
 
-      if Fluxx.config(:dont_use_duration_in_requests) == "1"
-        original_end_date = original[:end_date] || request.grant_closed_at
+      if 
         amended_end_date = amendment.end_date
+        original_end_date = amendment.original_end_date
       else
-        original_end_date = (original[:start_date] || request.grant_begins_at) 
-        original_end_date = original_end_date ? original_end_date + (original[:duration] || request.duration_in_months).to_i : nil
-        amendded_end_date = amendment.end_date ? amendment.end_date + (amendment[:duration] || request.duration_in_months).to_i : nil
+        amended_duration = amendment.duration
+        original_duration = amendment.original_duration
       end
 
       worksheet.write(row, 0, request.grant_or_request_id)
       worksheet.write(row, 1, request.is_a?(FipRequest) ? request.fip_title : request.org_name_text)
       worksheet.write(row, 2, request.fiscal_organization ? request.fiscal_organization.name : "")
-      worksheet.write(row, 3, request.grant_begins_at ? request.grant_begins_at.mdy : "")
-      worksheet.write(row, 4, original_end_date ? original_end_date.mdy : "")
-      worksheet.write(row, 5, original[:amount_recommended].to_s)
-      worksheet.write(row, 6, amendment.created_at ? amendment.created_at.mdy : "")
-      worksheet.write(row, 7, amended_end_date ? amended_end_date.mdy : "")
-      worksheet.write(row, 8, amendment.amount_recommended.to_s)
-
-      original.merge(amendment.attributes)
+      worksheet.write(row, 3, request.grant_begins_at ? request.grant_begins_at.mdy : "", date_format)
+      if dont_use_duration_in_requests
+        worksheet.write(row, 4, original_end_date ? (Time.parse(original_end_date).mdy rescue nil) : nil, date_format)
+      else
+        worksheet.write(row, 4, (original_duration.to_i rescue nil), number_format)
+      end
+      worksheet.write(row, 5, (amendment.original_amount_recommended ? (amendment.original_amount_recommended.to_f rescue nil) : nil), amount_format)
+      worksheet.write(row, 6, amendment.created_at ? amendment.created_at.mdy : "", date_format)
+      if dont_use_duration_in_requests
+        worksheet.write(row, 7, amended_end_date ? amended_end_date.mdy : "", date_format)
+      else
+        worksheet.write(row, 7, (amended_duration.to_i rescue nil), number_format)
+      end
+      worksheet.write(row, 8, amendment.amount_recommended ? (amendment.amount_recommended.to_f rescue nil) : nil, amount_format)
     }
 
     workbook.close
