@@ -9,7 +9,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new
     respond_to do |format|
       format.html do
-        render :action => 'new.html.haml'
+        Fluxx.config(:hide_lois) == "1" ? render(:action => 'new.html.haml') : render(:action => :portal, :layout => "portal")
       end
       format.json do
         render :action => 'new.html.haml'
