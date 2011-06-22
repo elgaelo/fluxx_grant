@@ -76,29 +76,25 @@
             'click', function(e) {
               e.preventDefault();
               var $elem = $(this);
-              $.modal('<div class="upload-queue"></div>', {
+              $('.page').fadeTo('slow','.2');
+              $('<div class="upload-queue"></div>').dialog({
                 minWidth: 700,
                 minHeight: 400,
-                closeHTML: '<span>Close</span>',
-                close: true,
-                closeOverlay: true,
-                escClose:true,
-                opacity: 50,
-                onShow: function () {
+                open: function () {
                   $('.upload-queue').pluploadQueue({
                     url: $elem.attr('href'),
-                    runtimes: 'html5',
+                    runtimes: 'html5, flash',
+                    flash_swf_url: '/javascripts/fluxx_engine/lib/plupload.flash.swf',
                     multipart: false,
                     filters: [{title: "Allowed file types", extensions: $elem.attr('data-extensions')}]
                   });
                 },
-                onClose: function(){
-
+                close: function(){
+                  $('.page').fadeTo('slow','1');
                   var $area = $elem.parents('.reports');
                   if (!$area.attr('data-src'))
                     $area = $elem.parents('.partial');
                   $.fn.loadTable($area, 0);
-                  $.modal.close();
                 }
               });
             }
