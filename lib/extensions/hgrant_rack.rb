@@ -104,32 +104,40 @@ class RenderHgrantsRssResponse
 end
 
 class DisplayRssFeedGrantHTML
-  def self.generate_grant_html hash
-    if grantor = Organization.current_grantor
-      grantor = {
-        :name => grantor.name,
-        :street_address => grantor.street_address,
-        :street_address2 => grantor.street_address2,
-        :city => grantor.city,
-        :geo_state => { 
-          :name => grantor.geo_state.name, 
-          :abbr => grantor.geo_state.abbreviation },
-        :url => grantor.url,
-        :postal_code => grantor.postal_code
-      }
+  def self.grantor_hash
+    if defined? @@hash_for_grantor
+      @@hash_for_grantor
     else
-      grantor = {
-        :name => 'Energy Foundation',
-        :street_address => '301 Battery Street',
-        :street_address2 => '5th Floor',
-        :city => 'San Francisco',
-        :geo_state => {
-          :name => 'California',
-          :abbr => 'CA' },
-        :url => 'http://ef.org',
-        :postal_code => grantor.postal_code
-      }
+      if grantor = Organization.current_grantor
+        grantor = {
+          :name => grantor.name,
+          :street_address => grantor.street_address,
+          :street_address2 => grantor.street_address2,
+          :city => grantor.city,
+          :geo_state => { 
+            :name => grantor.geo_state.name, 
+            :abbr => grantor.geo_state.abbreviation },
+          :url => grantor.url,
+          :postal_code => grantor.postal_code
+        }
+      else
+        grantor = {
+          :name => 'Energy Foundation',
+          :street_address => '301 Battery Street',
+          :street_address2 => '5th Floor',
+          :city => 'San Francisco',
+          :geo_state => {
+            :name => 'California',
+            :abbr => 'CA' },
+          :url => 'http://ef.org',
+          :postal_code => '94111'
+        }
+      end
+      @@hash_for_grantor = grantor
     end
+    
+  end
+  def self.generate_grant_html hash
 
     output = StringIO.new
     output.write "    <div class='hgrant'>\n"
@@ -146,15 +154,15 @@ class DisplayRssFeedGrantHTML
     output.write "      <div class='grantor vcard'>\n"
     output.write "        <h3>Grantor</h3>\n"
     output.write "        <span class='fn org'>\n"
-    output.write "          <a class='url' href='#{grantor[:url]}'>#{grantor[:name]}</a></a>\n"
+    output.write "          <a class='url' href='#{grantor_hash[:url]}'>#{grantor_hash[:name]}</a></a>\n"
     output.write "        </span>\n"
     output.write "        <p class='adr'>\n"
-    output.write "          <span class='street-address'>#{grantor[:street_address]}</span>\n"
-    output.write "          <span class='extended-address'>#{grantor[:street_address2]}</span>\n"
-    output.write "          <span class='locality'>#{grantor[:city]}</span>\n"
+    output.write "          <span class='street-address'>#{grantor_hash[:street_address]}</span>\n"
+    output.write "          <span class='extended-address'>#{grantor_hash[:street_address2]}</span>\n"
+    output.write "          <span class='locality'>#{grantor_hash[:city]}</span>\n"
     output.write "          ,\n"
-    output.write "          <abbr class='region' title='#{grantor[:state][:name]}'>#{grantor[:state][:abbr]}</abbr>\n"
-    output.write "          <span class='postal-code'>#{grantor[:postal_code]}</span>\n"
+    output.write "          <abbr class='region' title='#{grantor_hash[:geo_state][:name]}'>#{grantor_hash[:geo_state][:abbr]}</abbr>\n"
+    output.write "          <span class='postal-code'>#{grantor_hash[:postal_code]}</span>\n"
 
 
 
