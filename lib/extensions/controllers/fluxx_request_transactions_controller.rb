@@ -15,7 +15,7 @@ module FluxxRequestTransactionsController
       insta.post do |triple|
         controller_dsl, model, outcome = triple
         # You should not be able to edit or delete transactions
-        # instance_variable_set '@edit_enabled', false
+        instance_variable_set '@edit_enabled', @edit_enabled || current_user.is_admin?
         instance_variable_set '@delete_enabled', current_user.is_admin?
       end
     end
