@@ -152,5 +152,8 @@ module FluxxGrantedRequestsController
   end
 
   module ModelInstanceMethods
+    def has_conversion_funnel
+      true
+    end
   end
 end
