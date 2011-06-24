@@ -76,6 +76,13 @@ module FluxxBudgetRequest
   end
   
   module ModelInstanceMethods
+    def amount_requested= new_amount
+      write_attribute(:amount_requested, filter_amount(new_amount))
+    end
+
+    def amount_recommended= new_amount
+      write_attribute(:amount_recommended, filter_amount(new_amount))
+    end
     def relates_to_user? user
       (user.id == self.created_by_id)
     end
