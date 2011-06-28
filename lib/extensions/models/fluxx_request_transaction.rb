@@ -383,7 +383,7 @@ module FluxxRequestTransaction
         paid_state = RequestTransaction.all_states_with_category('paid').first
       
         if payment_type == 'Credit Card' && state != paid_state
-          update_attributes(:state, paid_state, :paid_at => Time.now, :amount_paid => amount_due) 
+          update_attributes(:state => paid_state, :paid_at => Time.now, :amount_paid => amount_due) 
         end
       end
     end
