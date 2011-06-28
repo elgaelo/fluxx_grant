@@ -48,6 +48,7 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :using_transaction_form
     base.validate :validate_required_funding_source, :if => Proc.new{|model| !model.new_record?}
     base.after_save :update_rtfs
+    base.after_save :update_state_by_payment_type
     
     base.insta_favorite
     base.insta_export do |insta|
@@ -373,6 +374,14 @@ module FluxxRequestTransaction
             rtfs.destroy if rtfs
           end
         end
+      end
+    end
+    
+    def update_state_by_payment_type
+      unless changed_attributes['state']
+        paid_state = RequestTransaction.all_states_with_category('paid').first
+      
+        update_attribute(:state, paid_state) if payment_type == 'Credit Card' && state != paid_state
       end
     end
     
