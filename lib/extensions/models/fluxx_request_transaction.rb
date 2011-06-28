@@ -48,6 +48,7 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :using_transaction_form
     base.validate :validate_required_funding_source, :if => Proc.new{|model| !model.new_record?}
     base.after_save :update_rtfs
+    base.after_create :update_state_by_payment_type
     base.after_save :update_state_by_payment_type
     
     base.insta_favorite
