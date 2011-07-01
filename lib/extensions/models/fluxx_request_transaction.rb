@@ -150,6 +150,7 @@ module FluxxRequestTransaction
     base.insta_role do |insta|
       # Define who is allowed to perform which events
       insta.add_event_roles 'mark_paid', Program, Program.grant_roles + Program.finance_roles
+      insta.add_admin_edit_for_roles Program.finance_administrator_role_name
 
       insta.extract_related_object do |model|
         model.request.program if model.request
