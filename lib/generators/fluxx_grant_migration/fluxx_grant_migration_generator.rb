@@ -86,6 +86,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'correct_project_request_constraint.rb', 'db/migrate/fluxx_grant_correct_project_request_constraint.rb'
     handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
     handle_migration 'add_delta_column_to_loi.rb', 'db/migrate/fluxx_grant_add_delta_column_to_loi.rb'
+    handle_migration 'add_timeframe_to_request_evaluation_metric.rb', 'db/migrate/fluxx_grant_add_timeframe_to_request_evaluation_metric.rb'
   end
   
   private
