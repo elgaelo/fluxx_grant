@@ -2,7 +2,7 @@
 = javascript_include_tag '/javascripts/fluxx_grant/fluxx.simple-validation.js'
 = javascript_include_tag '/javascripts/fluxx_grant/fluxx.portal.js'
 .container.loi-form
-  = image_tag("/images/logo.png", :class => "logo")
+  = render :partial => "lois/client_logo"
   %h1.ac= "Welcome to the #{Fluxx.config(:grantor_name)}'s Grants Portal"
   .loi-information
     = render :partial => "lois/loi_information"

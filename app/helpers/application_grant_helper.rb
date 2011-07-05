@@ -105,7 +105,7 @@ module ApplicationGrantHelper
     #p "ESH: in build_request_quicklinks of application grant helper"
     request_links = []
     request_links << "  '#{link_to 'New Grant Request', new_grant_request_path, :class => 'new-detail'}'\n" unless Fluxx.config(:hide_requests) == "1"
-    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless Fluxx.config(:hide_requests) == "1"
+    request_links << "  '#{link_to 'New ' + I18n.t(:fip_name) + ' Request', new_fip_request_path, :class => 'new-detail'}'\n" unless Fluxx.config(:hide_requests) == "1" || Fluxx.config(:hide_fips) == "1"
     request_links
   end
 

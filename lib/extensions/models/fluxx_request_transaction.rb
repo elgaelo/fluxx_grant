@@ -48,6 +48,8 @@ module FluxxRequestTransaction
     base.send :attr_accessor, :using_transaction_form
     base.validate :validate_required_funding_source, :if => Proc.new{|model| !model.new_record?}
     base.after_save :update_rtfs
+    base.after_create :update_state_by_payment_type
+    base.after_save :update_state_by_payment_type
     
     base.insta_favorite
     base.insta_export do |insta|
@@ -149,7 +151,9 @@ module FluxxRequestTransaction
     
     base.insta_role do |insta|
       # Define who is allowed to perform which events
+      insta.add_event_roles 'mark_actually_due', Program, Program.grant_roles + Program.finance_roles
       insta.add_event_roles 'mark_paid', Program, Program.grant_roles + Program.finance_roles
+      insta.add_admin_edit_for_roles Program.finance_administrator_role_name
 
       insta.extract_related_object do |model|
         model.request.program if model.request
@@ -372,6 +376,16 @@ module FluxxRequestTransaction
             rtfs = rtfs.reload rescue nil # Note that for state transitions we essentially save twice; once to update the values and second time to do the state transition
             rtfs.destroy if rtfs
           end
+        end
+      end
+    end
+    
+    def update_state_by_payment_type
+      unless changed_attributes['state']
+        paid_state = RequestTransaction.all_states_with_category('paid').first
+      
+        if payment_type == 'Credit Card' && state != paid_state
+          update_attributes(:state => paid_state, :paid_at => Time.now, :amount_paid => amount_due) 
         end
       end
     end
