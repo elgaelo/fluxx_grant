@@ -16,7 +16,7 @@
             - models.each do |model|
               %tr
                 %td= model.type_to_english
-                %td= model.due_at.mdy if model.due_at.mdy
+                %td= model.due_at.mdy if model.due_at
                 %td= model.state_to_english
                 %td= model.updated_at.mdy if model.updated_at
             %tr
