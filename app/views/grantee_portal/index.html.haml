@@ -1,9 +1,8 @@
 .container
   %div.c60l
-    = image_tag("/images/logo-placeholder.png", :class => "logo")
+    = render :partial => "lois/client_logo"
     %p
-      Pellentesque vel dui sed orci faucibus iaculis. Suspendisse dictum magna id purus tincidunt rutrum. Nulla congue. Vivamus sit amet lorem posuere dui vulputate ornare. Phasellus mattis sollicitudin ligula.
-    
+      = render :partial => "grantee_portal/information"
   %div.c40r
     = render :partial => "document_list", :locals => {:@data => @transactions}
 .container{"data-src".to_sym => url_for({:table => "requests", :page => @requests.current_page})}
