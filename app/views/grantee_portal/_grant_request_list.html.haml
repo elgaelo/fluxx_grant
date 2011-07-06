@@ -1,8 +1,9 @@
 .titlebar
   %h4
     = @title
+    - draft_state = Request.all_states_with_category("draft").first
     - if @title == 'Requests'
-      %input{:type => 'button', :name => 'new-request', :class => 'open-link float_right', :value => 'Create a Request', 'data-href'.to_sym => new_portal_grant_request_path}
+      %input{:type => 'button', :name => 'new-request', :class => 'open-link float_right', :value => 'Create a Request', 'data-href'.to_sym => new_portal_grant_request_path(:grant_request => {:state => draft_state})}
 .content
   - if @data.count == 0
     %p.caption
