@@ -74,6 +74,7 @@ module FluxxGrantOrganization
         # fields
         indexes "lower(organizations.name)", :as => :name, :sortable => true
         indexes "lower(organizations.acronym)", :as => :acronym, :sortable => true
+        indexes :vendor_number
 
         # attributes
         has created_at, updated_at, deleted_at, state, parent_org_id
