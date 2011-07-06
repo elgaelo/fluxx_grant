@@ -1051,9 +1051,9 @@ module FluxxRequest
     def handle_cascading_deletes
       if self.deleted_at
         user = User.find(updated_by_id) if updated_by_id
-        request_reports.each {|rep| rep.safe_delete(user)}
-        request_transactions.each {|trans| trans.safe_delete(user)}
-        request_funding_sources.each {|rfs| rfs.safe_delete(user)}
+        request_reports.each {|rep| rep.safe_delete(user) rescue nil}
+        request_transactions.each {|trans| trans.safe_delete(user) rescue nil}
+        request_funding_sources.each {|rfs| rfs.safe_delete(user) rescue nil}
       end
     end
     
