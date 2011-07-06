@@ -1,52 +1,20 @@
-- request ||= nil
-- unless request
+- grant_request ||= nil
+- unless grant_request
   - if params[:request_id]
-    - request = Request.find params[:request_id] rescue nil
+    - grant_request = Request.find params[:request_id] rescue nil
 
 %table.tabular{:cellspacing => 0}
   %thead
     %tr
       %th
         = "Budget Line Items"
-        %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_budget_request_path(:budget_request => {:request_id => request.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.budget-request-list-span', :title => "Add Budget Request Item"
+        %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_budget_request_path(:budget_request => {:request_id => grant_request.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.budget-request-list-span', :title => "Add Budget Request Item"
   %tbody
     - if !defined?(models) || models.empty?
       %tr
         %td
           %p.caption= "Click the green '+' sign in order to create your itemized grant budget request."
     - else
-      %tr
-        %td
-          %table.clean-table
-            %thead
-              %tr
-                %th
-                %th= "Budget Item"
-                %th= "Grant Amt Requested"
-                %th= "Grant Amt Recommended"
-                %th= "% of Total Recommended"
-            %tbody
-              -requested_total = 0
-              -recommended_total = 0
-              - models.sort_by{|br| br.created_at ? (-1 * br.created_at.to_i) : Time.at(0).to_i }.each do |model|
-                %tr
-                  %td
-                    - if current_user.has_delete_for_model? model
-                      %span.actions
-                        %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_budget_request_url(:id => model.id, :as_modal => '1'), :class => 'to-modal', :title => "Edit Budget Request Item", 'data-on-success' => 'refreshNamed,close', 'target' => '.budget-request-list-span'
-                        %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), budget_request_path(model), {:class => 'as-delete', :title => "Delete Budget Request Item", 'data-on-success' => 'refreshCaller', 'target' => '.budget-request-list-span'}
-                  %td= model.name
-                  %td= number_to_currency(model.amount_requested, :precision => 0) if model.amount_requested
-                  %td= number_to_currency(model.amount_recommended, :precision => 0) if model.amount_recommended
-                  -requested_total += model.amount_requested.to_f if model.amount_requested
-                  -recommended_total += model.amount_recommended.to_f if model.amount_recommended
-                  %td= "#{((request.amount_recommended || 0) > 0 ? ((model.amount_recommended || 0) * 100) / request.amount_recommended : 0).to_int}%"
-              %tr
-                %td{:colspan => 2}
-                  Total Grant:
-                %td= number_to_currency(requested_total, :precision => 0)
-                %td= number_to_currency(recommended_total, :precision => 0)
-                %td= "#{((request.amount_recommended || 0) > 0 ? ((recommended_total || 0) * 100) / request.amount_recommended : 0).to_int}%"
-              = render :partial => "budget_requests/extra_budget_request_list", :locals => {:models => models, :request => request}
+      = render :partial => "budget_requests/budget_request_list_details", :locals => {:models => models, :grant_request => grant_request}
     %tr
       %td
