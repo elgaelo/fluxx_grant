@@ -14,7 +14,7 @@
         - models.sort_by{|br| br.created_at ? (-1 * br.created_at.to_i) : Time.at(0).to_i }.each do |model|
           %tr
             %td
-              = render :partial => "budget_requests/budget_request_list_edit_actions", :locals => {:models => models, :request => grant_request}
+              = render :partial => "budget_requests/budget_request_list_edit_actions", :locals => {:model => model, :request => grant_request}
             %td= model.name
             %td= number_to_currency(model.amount_requested, :precision => 2) if model.amount_requested
             %td= number_to_currency(model.amount_recommended, :precision => 2) if model.amount_recommended
