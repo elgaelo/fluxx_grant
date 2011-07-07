@@ -2,7 +2,6 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxGrantMigrationGenerator < Rails::Generators::Base
-
   include Rails::Generators::Migration
 
   def self.source_root
@@ -87,6 +86,7 @@ class FluxxGrantMigrationGenerator < Rails::Generators::Base
     handle_migration 'convert_amounts_to_money.rb', 'db/migrate/fluxx_grant_convert_amounts_to_money.rb'
     handle_migration 'add_delta_column_to_loi.rb', 'db/migrate/fluxx_grant_add_delta_column_to_loi.rb'
     handle_migration 'add_timeframe_to_request_evaluation_metric.rb', 'db/migrate/fluxx_grant_add_timeframe_to_request_evaluation_metric.rb'
+    handle_migration 'add_request_fields_to_loi.rb', 'db/migrate/fluxx_grant_add_request_fields_to_loi.rb'
   end
   
   private

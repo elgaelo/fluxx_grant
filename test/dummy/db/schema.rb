@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110617030329) do
+ActiveRecord::Schema.define(:version => 20110707013521) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -37,11 +37,13 @@ ActiveRecord::Schema.define(:version => 20110617030329) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "last_realtime_update_id"
-    t.string   "type"
+    t.string   "model_controller_type"
     t.text     "filter"
     t.string   "name"
     t.string   "subject"
     t.text     "body"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   create_table "audits", :force => true do |t|
@@ -330,6 +332,9 @@ ActiveRecord::Schema.define(:version => 20110617030329) do
     t.integer  "request_id"
     t.integer  "organization_id"
     t.boolean  "delta"
+    t.string   "tax_id"
+    t.decimal  "amount_requested",  :precision => 10, :scale => 2
+    t.datetime "grant_begins_at"
   end
 
   add_index "lois", ["created_by_id"], :name => "lois_created_by_id"
@@ -482,6 +487,7 @@ ActiveRecord::Schema.define(:version => 20110617030329) do
     t.boolean  "c3_status_approved",                     :default => false, :null => false
     t.text     "c3_serialized_response"
     t.string   "vendor_number"
+    t.boolean  "is_grantor",                             :default => false
   end
 
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"
@@ -645,6 +651,7 @@ ActiveRecord::Schema.define(:version => 20110617030329) do
     t.text     "description"
     t.text     "comment"
     t.boolean  "achieved"
+    t.string   "timeframe"
   end
 
   add_index "request_evaluation_metrics", ["request_id"], :name => "request_evaluation_metrics_request_id"
