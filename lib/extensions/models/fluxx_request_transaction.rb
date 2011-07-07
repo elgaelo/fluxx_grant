@@ -162,7 +162,7 @@ module FluxxRequestTransaction
 
     base.insta_workflow do |insta|
       insta.add_state_to_english :new, 'New', 'new'
-      insta.add_state_to_english :tentatively_due, 'Tentatively Due', 'due'
+      insta.add_state_to_english :tentatively_due, 'Tentatively Due', 'tentatively_due'
       insta.add_state_to_english :due, 'Actually Due', 'due'
       insta.add_state_to_english :paid, 'Paid', ['mark_paid', 'paid']
       

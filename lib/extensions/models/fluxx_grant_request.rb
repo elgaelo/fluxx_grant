@@ -68,48 +68,56 @@ module FluxxGrantRequest
   module ModelInstanceMethods
     
     def generate_grant_transactions
-      validate_for_grant
-      interim_request_document = request_reports.select{|rep| rep.is_interim_type?}.last
-      final_request_document = request_reports.select{|rep| rep.is_final_type?}.last
-      if self.is_er?
-        if program_organization.grants.size > 0 # Is there another grant that already exists
-          # Transactions for ER trusted orgs
-          if duration_in_months > 12
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
-              :amount_due => amount_recommended * 0.5, :due_at => grant_agreement_at, :state => 'tentatively_due')
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
-              :amount_due => amount_recommended * 0.4, :due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
-              :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
-          else
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,  
-              :amount_due => amount_recommended * 0.9, :due_at => grant_agreement_at, :state => 'tentatively_due')
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
-              :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
-          end
-        else
-          # Transactions for ER non-trusted orgs
-          if duration_in_months > 12
-            raise I18n.t(:er_grants_may_not_be_greater_than_one_year, :duration_in_months => duration_in_months)
-          else
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
-              :amount_due => amount_recommended * 0.6, :due_at => grant_agreement_at, :state => 'tentatively_due')
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
-              :amount_due => amount_recommended * 0.3,:due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
-            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
-              :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
-          end
-        end
+      transaction_style = Fluxx.config(:transaction_generation_style)
+      due_state = RequestTransaction.all_states_with_category 'due'
+      tentatively_due_state = RequestTransaction.all_states_with_category 'tentatively_due'
+      if transaction_style == 'simple'
+        request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,  
+          :amount_due => amount_recommended, :due_at => grant_agreement_at, :state => 'due')
       else
-        # Transactions for public charities
-        if duration_in_months > 12
-          request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended * 0.5, 
-            :due_at => grant_agreement_at, :state => 'tentatively_due')
-          request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended * 0.5, 
-            :due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
+        validate_for_grant
+        interim_request_document = request_reports.select{|rep| rep.is_interim_type?}.last
+        final_request_document = request_reports.select{|rep| rep.is_final_type?}.last
+        if self.is_er?
+          if program_organization.grants.size > 0 # Is there another grant that already exists
+            # Transactions for ER trusted orgs
+            if duration_in_months > 12
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
+                :amount_due => amount_recommended * 0.5, :due_at => grant_agreement_at, :state => 'tentatively_due')
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
+                :amount_due => amount_recommended * 0.4, :due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
+                :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
+            else
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,  
+                :amount_due => amount_recommended * 0.9, :due_at => grant_agreement_at, :state => 'tentatively_due')
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
+                :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
+            end
+          else
+            # Transactions for ER non-trusted orgs
+            if duration_in_months > 12
+              raise I18n.t(:er_grants_may_not_be_greater_than_one_year, :duration_in_months => duration_in_months)
+            else
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
+                :amount_due => amount_recommended * 0.6, :due_at => grant_agreement_at, :state => 'tentatively_due')
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, 
+                :amount_due => amount_recommended * 0.3,:due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
+              request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id,
+                :amount_due => amount_recommended * 0.1,:due_at => final_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'final_request')
+            end
+          end
         else
-          request_transactions << RequestTransaction.new(:request_id => self.id, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended, 
-            :due_at => grant_agreement_at, :state => 'tentatively_due')
+          # Transactions for public charities
+          if duration_in_months > 12
+            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended * 0.5, 
+              :due_at => grant_agreement_at, :state => 'tentatively_due')
+            request_transactions << RequestTransaction.new(:request => self, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended * 0.5, 
+              :due_at => interim_request_document.due_at, :state => 'tentatively_due', :request_document_linked_to => 'interim_request')
+          else
+            request_transactions << RequestTransaction.new(:request_id => self.id, :created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :amount_due => amount_recommended, 
+              :due_at => grant_agreement_at, :state => 'tentatively_due')
+          end
         end
       end
     end
@@ -122,31 +130,39 @@ module FluxxGrantRequest
     end
     
     def generate_grant_reports
-      validate_for_grant
-      new_grantee = program_organization.grants.select {|grant| grant.id != self.id}.empty?
-      # Interim Reports
-      if duration_in_months > 12
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + 10.months).next_business_day, :report_type => RequestReport.interim_budget_type_name)
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + 10.months).next_business_day, :report_type => RequestReport.interim_narrative_type_name)
-      elsif new_grantee
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + (grant_ends_at - grant_begins_at) / 2).next_business_day, :report_type => RequestReport.interim_budget_type_name)
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + (grant_ends_at - grant_begins_at) / 2).next_business_day, :report_type => RequestReport.interim_narrative_type_name)
-      end
-      interim_request_document = request_reports.last
-
-      # Final Reports
-      if self.is_er?
+      report_style = Fluxx.config(:report_generation_style)
+      if report_style == 'simple'
+        request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + 3.month).next_business_day, :report_type => RequestReport.final_monitor_type_name)
         request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 1.month).next_business_day, :report_type => RequestReport.final_budget_type_name)
         request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 1.month).next_business_day, :report_type => RequestReport.final_narrative_type_name)
+        request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 2.month).next_business_day, :report_type => RequestReport.final_eval_type_name)
       else
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 2.month).next_business_day, :report_type => RequestReport.final_budget_type_name)
-        request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 2.month).next_business_day, :report_type => RequestReport.final_narrative_type_name)
-      end
-      final_request_document = request_reports.last
+        validate_for_grant
+        new_grantee = program_organization.grants.select {|grant| grant.id != self.id}.empty?
+        # Interim Reports
+        if duration_in_months > 12
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + 10.months).next_business_day, :report_type => RequestReport.interim_budget_type_name)
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + 10.months).next_business_day, :report_type => RequestReport.interim_narrative_type_name)
+        elsif new_grantee
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + (grant_ends_at - grant_begins_at) / 2).next_business_day, :report_type => RequestReport.interim_budget_type_name)
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_begins_at + (grant_ends_at - grant_begins_at) / 2).next_business_day, :report_type => RequestReport.interim_narrative_type_name)
+        end
+        interim_request_document = request_reports.last
 
-      # Eval Reports
-      eval_request_document = RequestReport.new(:request => self, :due_at => (final_request_document.due_at + 1.month).next_business_day, :report_type => RequestReport.final_eval_type_name)
-      request_reports << eval_request_document
+        # Final Reports
+        if self.is_er?
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 1.month).next_business_day, :report_type => RequestReport.final_budget_type_name)
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 1.month).next_business_day, :report_type => RequestReport.final_narrative_type_name)
+        else
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 2.month).next_business_day, :report_type => RequestReport.final_budget_type_name)
+          request_reports << RequestReport.new(:request => self, :due_at => (grant_ends_at + 2.month).next_business_day, :report_type => RequestReport.final_narrative_type_name)
+        end
+        final_request_document = request_reports.last
+
+        # Eval Reports
+        eval_request_document = RequestReport.new(:request => self, :due_at => (final_request_document.due_at + 1.month).next_business_day, :report_type => RequestReport.final_eval_type_name)
+        request_reports << eval_request_document
+      end
     end
 
     # This will generate (but not persist to DB) all the transactions, etc. necessary to make the grant go through

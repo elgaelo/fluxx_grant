@@ -487,15 +487,15 @@ module FluxxRequestReport
       self.approved_at = Time.now
       if self.report_type == 'InterimBudget' || self.report_type == 'InterimNarrative'
         request.request_transactions.each do |rt|
-          if rt.tentatively_due? && rt.request_document_linked_to == 'interim_request'
-            rt.mark_actually_due 
+          if rt.in_state_with_category?('tentatively_due') && rt.request_document_linked_to == 'interim_request'
+            rt.insta_fire_event :mark_actually_due, self.updated_by
             rt.save
           end
         end
       elsif self.report_type == 'FinalBudget' || self.report_type == 'FinalNarrative'
         request.request_transactions.each do |rt|
-          if rt.tentatively_due? && rt.request_document_linked_to == 'final_request'
-            rt.mark_actually_due 
+          if rt.in_state_with_category?('tentatively_due') && rt.request_document_linked_to == 'final_request'
+            rt.insta_fire_event :mark_actually_due, self.updated_by
             rt.save
           end
         end
