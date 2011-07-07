@@ -6,7 +6,6 @@ class FluxxGrantAddRequestFieldsToLoi < ActiveRecord::Migration
     add_column :lois, :sub_program_id, :intefer rescue nil
     add_column :lois, duration_in_months, :integer rescue nil
     add_column :lois, :grant_begins_at, :datetime, :null => true rescue nil
-    add_column :lois, :request_id, :null => true
   end
 
   def self.down
