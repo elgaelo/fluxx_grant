@@ -241,19 +241,19 @@ module FluxxRequest
           end),
           :greater_amount_recommended => (lambda do |search_with_attributes, request_params, name, val|
             val = val.first if val && val.is_a?(Array)
-            if search_with_attributes[:amount_recommended]
-              search_with_attributes[:amount_recommended] = (val.to_i..(search_with_attributes[:amount_recommended].end))
+            if search_with_attributes[:amount_recommended_or_requested]
+              search_with_attributes[:amount_recommended_or_requested] = (val.to_i..(search_with_attributes[:amount_recommended_or_requested].end))
             else
-              search_with_attributes[:amount_recommended] = (val.to_i..999999999999)
+              search_with_attributes[:amount_recommended_or_requested] = (val.to_i..999999999999)
             end
             search_with_attributes
           end),
           :lesser_amount_recommended => (lambda do |search_with_attributes, request_params, name, val|
             val = val.first if val && val.is_a?(Array)
-            if search_with_attributes[:amount_recommended]
-              search_with_attributes[:amount_recommended] = ((search_with_attributes[:amount_recommended].begin)..val.to_i)
+            if search_with_attributes[:amount_recommended_or_requested]
+              search_with_attributes[:amount_recommended_or_requested] = ((search_with_attributes[:amount_recommended_or_requested].begin)..val.to_i)
             else
-              search_with_attributes[:amount_recommended] = (0..val.to_i)
+              search_with_attributes[:amount_recommended_or_requested] = (0..val.to_i)
             end
             search_with_attributes
           end),
@@ -522,6 +522,7 @@ module FluxxRequest
         # attributes
         has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "if(requests.amount_recommended is null, ROUND(requests.amount_requested), ROUND(requests.amount_recommended))", :as => :amount_recommended_or_requested, :type => :integer
         has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
         has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "if(granted = 0, (CONCAT(IFNULL(`program_organization_id`, '0'), ',', IFNULL(`fiscal_organization_id`, '0'))), null)", 
@@ -583,6 +584,7 @@ module FluxxRequest
         # attributes
         has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "if(requests.amount_recommended is null, ROUND(requests.amount_requested), ROUND(requests.amount_recommended))", :as => :amount_recommended_or_requested, :type => :integer
         has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
         has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "null", :as => :related_request_organization_ids, :type => :multi
@@ -650,6 +652,7 @@ module FluxxRequest
         # attributes
         has :created_at, :updated_at, :deleted_at, :created_by_id, :program_id, :sub_program_id, :request_received_at, :grant_agreement_at, :grant_begins_at, :granted
         has :program_organization_id, :fiscal_organization_id
+        has "if(requests.amount_recommended is null, ROUND(requests.amount_requested), ROUND(requests.amount_recommended))", :as => :amount_recommended_or_requested, :type => :integer
         has "ROUND(requests.amount_recommended)", :as => :amount_recommended, :type => :integer
         has "ROUND(requests.amount_requested)", :as => :amount_requested, :type => :integer
         has "null", :as => :related_request_organization_ids, :type => :multi
