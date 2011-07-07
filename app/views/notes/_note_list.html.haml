@@ -18,7 +18,7 @@
         %tr
           %td
             - if model.respond_to? :note
-              -if model.created_by_id == current_user.id || current_user.is_admin?
+              -if model.updated_by_id == current_user.id || current_user.is_admin?
                 = link_to model.note, edit_note_path(:id => model.id, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
               - else
                 = model.note
@@ -37,9 +37,9 @@
                 = model.comment
             <br/>
             %span
-              - if model.created_by
+              - if model.updated_by
                 By
-                = model.created_by.full_name 
+                = model.updated_by.full_name 
               - if model.created_at
                 Added at
                 = model.created_at.ampm_time
