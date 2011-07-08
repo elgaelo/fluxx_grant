@@ -48,7 +48,8 @@
         -if model.request
           %br
           connected to
-          = link_to model.request, model.request, :class => "new-detail", "data-insert" => "after"
+          = link_to render_grant_or_request_id(model.request), model.request, :class => "new-detail", "data-insert" => "after"
 
 %h3 Project Summary
 %p= model.project_summary
+= render :partial => 'lois/loi_show_extra',  :locals => {:model => model}

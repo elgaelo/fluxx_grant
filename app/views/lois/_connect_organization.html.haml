@@ -1,4 +1,4 @@
-- new_org = @organization || Organization.new(:name => model.organization_name, :street_address => model.address)
+- new_org = @organization || Organization.new(:name => model.organization_name, :street_address => model.address, :tax_id => model.tax_id)
 %fieldset.inputs
   %ol
     = form.input :organization_name, :input_html => {:class => "refresh-partial", "data-target" => ".matches"}

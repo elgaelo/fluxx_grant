@@ -75,6 +75,7 @@ module FluxxLoisController
             model.all_dynamic_attributes.each do |k,v|
               attributes_to_set[k] = model.dyn_value_for(k) if request_attributes[k]
             end
+            attributes_to_set[:project_title] = model.project_title if request_attributes[:project_title]
             request.update_attributes attributes_to_set
             model.update_attribute :request_id, request.id
           end
