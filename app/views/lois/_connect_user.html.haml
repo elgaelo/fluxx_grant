@@ -1,4 +1,4 @@
-- new_user = @user || User.new(:first_name => model.first_name, :last_name => model.last_name, :user_profile_id => UserProfile.where(:name => 'Grantee').first.id, :email => model.email)
+- new_user = @user || User.new(:first_name => model.first_name, :last_name => model.last_name, :user_profile_id => UserProfile.where(:name => 'Grantee').first.id, :email => model.email, :work_phone => model.phone)
 %fieldset.inputs
   %ol
     = form.input :first_name, :input_html => {:class => "refresh-partial", "data-target" => ".matches"}
