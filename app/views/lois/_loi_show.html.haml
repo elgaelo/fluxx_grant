@@ -35,5 +35,20 @@
         = link_to "Disconnect", loi_path(model, :disconnect_organization => 1, :as_modal => 1), :class => 'as-put', 'data-on-success' => 'refreshCaller', "data-confirm" => "Are you sure you with to disconnect the organization?"
       -else
         = link_to "Connect", edit_loi_path(model, :connect_organization => 1, :as_modal => 1), :class => 'to-modal hide-footer', 'data-on-success' => 'close,refreshCaller'
+    %tr
+      %td
+    %tr
+      %td Request:
+      %td
+        = "Amount Requested: #{as_currency model.amount_requested}"
+        %br
+        = "Grant Start Date: #{model.grant_begins_at.mdy}"
+        %br
+        = "Duration: #{model.duration_in_months}"
+        -if model.request
+          %br
+          connected to
+          = link_to model.request, model.request, :class => "new-detail", "data-insert" => "after"
+
 %h3 Project Summary
 %p= model.project_summary

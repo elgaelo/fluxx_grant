@@ -16,6 +16,7 @@ module FluxxLoisController
       insta.icon_style = ICON_STYLE
       insta.add_workflow
       insta.template_map = {:matching_users => "matching_users_list", :matching_organizations => "matching_organizations_list"}
+      insta.footer_template =  'loi_footer'
     end
     base.insta_edit Loi do |insta|
       insta.icon_style = ICON_STYLE
@@ -53,13 +54,30 @@ module FluxxLoisController
         if (params[:link_organization].to_i > 0)
           @organization = Organization.find(params[:link_organization].to_i)
         end
+
         model.link_user @user if @user
         model.link_organization @organization if @organization
+
         if params[:disconnect_user]
           model.update_attribute "user_id", nil
         end
         if params[:disconnect_organization]
           model.update_attribute "organization_id", nil
+        end
+        if params[:promote_to_request] && model.user && model.organization && !model.request
+          request = GrantRequest.new(:program_organization_id => model.organization_id, :program_id => model.program_id,
+                                :amount_requested => model.amount_requested, :duration_in_months => model.duration_in_months,
+                                :grant_begins_at => model.grant_begins_at, :project_summary => model.project_summary, :grantee_org_owner_id => model.user_id)
+
+          if request.save
+            attributes_to_set = {}
+            request_attributes = request.all_dynamic_attributes
+            model.all_dynamic_attributes.each do |k,v|
+              attributes_to_set[k] = model.dyn_value_for(k) if request_attributes[k]
+            end
+            request.update_attributes attributes_to_set
+            model.update_attribute :request_id, request.id
+          end
         end
       end
       insta.format do |format|

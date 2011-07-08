@@ -47,7 +47,11 @@ module FluxxLoi
       # insta.add_state_to_english :new, 'New Request'
       # insta.add_event_to_english :recommend_funding, 'Recommend Funding'
 #    end
-    
+    base.insta_utc do |insta|
+      insta.time_attributes = [:grant_begins_at]
+    end
+
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
