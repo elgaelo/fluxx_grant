@@ -25,7 +25,7 @@
       = form.input(:amount_recommended, :label => "Recommended amount to fund.", :label_class=>'')
       = form.input :duration_in_months, {:label => 'Duration (months):', :as => :select, :collection => (1..36).to_a, :input_html => {:class => 'select_short'}}
       - unless model.granted
-        = form.input :grant_begins_at, :label => "Start Date:"
+        = form.input :grant_begins_at, :label => "Grant Start Date:"
       = form.input :ierf_proposed_end_at, :label => "Final Proposal Date:"
       = form.input :ierf_budget_end_at, :label => "Final Budget Date:"
       = render :partial => "request_funding_sources/list_request_funding_sources", :locals => { :model => model }
