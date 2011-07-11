@@ -42,7 +42,7 @@
       %td
         = "Amount Requested: #{as_currency model.amount_requested}"
         %br
-        = "Grant Start Date: #{model.grant_begins_at.mdy}"
+        = "Grant Start Date: #{model.grant_begins_at ? model.grant_begins_at.mdy : nil}"
         %br
         = "Duration: #{model.duration_in_months}"
         -if model.request
