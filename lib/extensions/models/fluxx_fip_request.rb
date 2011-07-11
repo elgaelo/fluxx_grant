@@ -17,8 +17,6 @@ module FluxxFipRequest
     base.has_many :wiki_documents, :foreign_key => :model_id, :conditions => {:model_type => base.name}
     base.has_many :request_amendments, :as => :request
     
-    base.before_save :build_amendment
-
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
@@ -89,23 +87,6 @@ module FluxxFipRequest
 
     def generate_grant_details
       generate_grant_dates
-    end
-
-    def build_amendment
-      original = state_changed? && state == 'granted'
-
-      if amend? or original
-        a = request_amendments.build()
-        a[:duration] = duration_in_months if duration_in_months_changed?
-        a[:start_date] = grant_begins_at if grant_begins_at_changed?
-        a[:end_date] = grant_closed_at if grant_closed_at_changed?
-        a[:amount_recommended] = amount_recommended if amount_recommended_changed?
-        a[:original] = original
-
-        append_amendment_note unless original
-      end
-
-      true # stop touching meee!
     end
 
     def append_amendment_note
