@@ -129,7 +129,7 @@ module FluxxCommonRequestsController
 
         # If there is no promote or sendback event available in the workflow, do not let the user edit
         edit_enabled = promotion_event
-        delete_events = edit_enabled
+        delete_enabled = edit_enabled
 
         if current_user.has_permission?('admin') || current_user.has_permission?('data_cleanup')
           edit_enabled = true
