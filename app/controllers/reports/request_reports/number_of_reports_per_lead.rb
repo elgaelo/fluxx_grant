@@ -5,10 +5,6 @@ class NumberOfReportsPerLead < ActionController::ReportBase
     "Reports Pending Lead Approval"
   end
   def compute_index_plot_data controller, index_object, params, models
-    load 'vendor/gems/fluxx_grant/app/controllers/reports/request_reports/number_of_reports_per_lead.rb'
-
-    # TODO: Make sure we put a limit clause on the query!!!!
-
     hash = {:library => "jqplot"}
     hash[:title] = report_label
     hash[:data] = []
@@ -49,9 +45,21 @@ class NumberOfReportsPerLead < ActionController::ReportBase
   end
 
   def report_legend controller, index_object, params, models
-    legend = [{:table => ['Report Type']}]
-    ["Eval", "FinalBudget", "FinalNarrative"].each do |type|
-       legend << { :table => [type] }
+    legend = [{:table => ['Report Type', 'Number of Reports Due']}]
+    query = "select count(rr.id) as count, report_type from request_reports rr where (report_type = 'Eval' or report_type = 'FinalBudget' or report_type = 'FinalNarrative') and id in (?) group by report_type order by report_type"
+    filter = []
+    params["request_report"].each do |key, value|
+      next if key == "report_type"
+      if value.is_a? Array
+        value.each {|val| filter << "request_report[#{key}][]=#{val}"}
+      else
+        filter << "request_report[#{key}]=#{value}"
+      end
+    end if params["request_report"]
+    RequestReport.connection.execute(Request.send(:sanitize_sql, [query, models.map(&:id)])).each_hash do |result|
+      legend << { :table => [result["report_type"], result["count"]],
+                  :filter =>  filter.join("&") + "&request_report[report_type][]=#{result['report_type']}",
+        "listing_url".to_sym => controller.request_reports_path, "card_title".to_sym => "#{result['report_type']} Reports"}
     end
     legend
   end
