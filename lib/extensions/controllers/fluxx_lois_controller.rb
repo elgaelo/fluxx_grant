@@ -78,6 +78,8 @@ module FluxxLoisController
             attributes_to_set[:project_title] = model.project_title if request_attributes[:project_title]
             request.update_attributes attributes_to_set
             model.update_attribute :request_id, request.id
+          else
+            flash[:error] = I18n.t(:unable_to_promote) + request.errors.full_messages.to_sentence + '.'
           end
         end
       end
