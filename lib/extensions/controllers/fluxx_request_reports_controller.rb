@@ -13,6 +13,9 @@ module FluxxRequestReportsController
         end
       end)
     end
+    base.insta_report do |insta|
+      insta.report_name_path = 'request_reports'
+    end
     base.insta_show RequestReport do |insta|
       insta.template = 'request_report_show'
       insta.icon_style = ICON_STYLE
