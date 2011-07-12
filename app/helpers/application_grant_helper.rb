@@ -86,10 +86,10 @@ module ApplicationGrantHelper
     links << "  '#{link_to 'Jira', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
     links << "  '#{link_to 'Zendesk', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_zendesk) == "1" || !current_user.is_admin?
 
-    links << "  '<h3>Project/Product Management</h3>'"
-    links << "  '#{link_to 'Twitter', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
-    links << "  '#{link_to 'Facebook', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
-    links << "  '#{link_to 'LinkeIn', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
+    links << "  '<h3>Social</h3>'" if current_user.is_admin?
+    links << "  '#{link_to 'Twitter', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_twitter) == "1" || !current_user.is_admin?
+    links << "  '#{link_to 'Facebook', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_facebook) == "1" || !current_user.is_admin?
+    links << "  '#{link_to 'LinkedIn', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_linkedin) == "1" || !current_user.is_admin?
 
     links.join ",\n"
   end
