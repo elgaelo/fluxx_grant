@@ -68,16 +68,29 @@ module ApplicationGrantHelper
     else
       "Grants / #{I18n.t(:fip_name).pluralize}"
     end
+    links << "  '<h3>Grants Management</h3>'";
+    links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_lois) == "1" || !current_user.has_listview_for_model?(Loi)
+    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_requests) == "1" || !current_user.has_listview_for_model?(Request) || current_user.is_board_member?
     links << "  '#{link_to grant_fip_name, granted_requests_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_grants) == "1" || !current_user.has_listview_for_model?(Request)
     links << "  '#{link_to 'Grantee Reports', request_reports_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_grantee_reports) == "1" || !current_user.has_listview_for_model?(RequestReport)
-    links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_organizations) == "1" || !current_user.has_listview_for_model?(Organization)
-    links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_people) == "1" || !current_user.has_listview_for_model?(User)
-    links << "  '#{link_to 'Projects', projects_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_projects) == "1" || !current_user.has_listview_for_model?(Project)
-    links << "  '#{link_to 'Requests', grant_requests_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_requests) == "1" || !current_user.has_listview_for_model?(Request) || current_user.is_board_member?
-    links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_tasks) == "1" || !current_user.has_listview_for_model?(WorkTask)
     links << "  '#{link_to 'Transactions', request_transactions_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_transactions) == "1" || !current_user.has_listview_for_model?(RequestTransaction)
-    links << "  '#{link_to 'LOIs', lois_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_lois) == "1" || !current_user.has_listview_for_model?(Loi)
     links << "  '#{link_to 'Budgeting', admin_card_path(:id => 1), :class => 'new-detail'}'" unless Fluxx.config(:hide_admin_cards) == "1" || !current_user.has_listview_for_model?(Program)
+
+    links << "  '<h3>CRM</h3>'";
+    links << "  '#{link_to 'People', users_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_people) == "1" || !current_user.has_listview_for_model?(User)
+    links << "  '#{link_to I18n.t(:Organization).pluralize, organizations_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_organizations) == "1" || !current_user.has_listview_for_model?(Organization)
+
+    links << "  '<h3>Project/Product Management</h3>'"
+    links << "  '#{link_to 'Projects', projects_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_projects) == "1" || !current_user.has_listview_for_model?(Project)
+    links << "  '#{link_to 'Tasks', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_tasks) == "1" || !current_user.has_listview_for_model?(WorkTask)
+    links << "  '#{link_to 'Jira', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
+    links << "  '#{link_to 'Zendesk', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_zendesk) == "1" || !current_user.is_admin?
+
+    links << "  '<h3>Project/Product Management</h3>'"
+    links << "  '#{link_to 'Twitter', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
+    links << "  '#{link_to 'Facebook', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
+    links << "  '#{link_to 'LinkeIn', work_tasks_path, :class => 'new-listing'}'" unless Fluxx.config(:hide_jira) == "1" || !current_user.is_admin?
+
     links.join ",\n"
   end
 
