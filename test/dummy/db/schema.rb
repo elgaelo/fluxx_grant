@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110707013521) do
+ActiveRecord::Schema.define(:version => 20110712063423) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -108,8 +108,8 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "request_id",                                        :null => false
-    t.decimal  "amount_requested",   :precision => 10, :scale => 2
-    t.decimal  "amount_recommended", :precision => 10, :scale => 2
+    t.decimal  "amount_requested",   :precision => 15, :scale => 2
+    t.decimal  "amount_recommended", :precision => 15, :scale => 2
     t.string   "name"
     t.datetime "deleted_at"
     t.datetime "locked_until"
@@ -163,7 +163,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.decimal  "amount",                       :precision => 10, :scale => 2
+    t.decimal  "amount",                       :precision => 15, :scale => 2
     t.integer  "authority_id"
     t.integer  "funding_source_allocation_id"
   end
@@ -183,7 +183,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "sub_program_id"
     t.integer  "initiative_id"
     t.integer  "sub_initiative_id"
-    t.decimal  "amount",            :precision => 10, :scale => 2
+    t.decimal  "amount",            :precision => 15, :scale => 2
     t.boolean  "retired"
     t.integer  "locked_by_id"
     t.datetime "locked_until"
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "name"
-    t.decimal  "amount",        :precision => 10, :scale => 2
+    t.decimal  "amount",        :precision => 15, :scale => 2
     t.datetime "start_at"
     t.datetime "end_at"
     t.boolean  "retired",                                      :default => false, :null => false
@@ -333,7 +333,9 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "organization_id"
     t.boolean  "delta"
     t.string   "tax_id"
-    t.decimal  "amount_requested",  :precision => 10, :scale => 2
+    t.decimal  "amount_requested",   :precision => 10, :scale => 2
+    t.integer  "sub_program_id"
+    t.integer  "duration_in_months"
     t.datetime "grant_begins_at"
   end
 
@@ -636,7 +638,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "duration"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.decimal  "amount_recommended", :precision => 10, :scale => 2
+    t.decimal  "amount_recommended", :precision => 15, :scale => 2
     t.boolean  "original",                                          :default => false
     t.integer  "request_id"
     t.string   "request_type"
@@ -663,7 +665,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "updated_by_id"
     t.integer  "request_id"
     t.string   "document_file_name"
-    t.decimal  "funding_amount",               :precision => 10, :scale => 2
+    t.decimal  "funding_amount",               :precision => 15, :scale => 2
     t.integer  "locked_by_id"
     t.datetime "locked_until"
     t.integer  "funding_source_allocation_id"
@@ -771,7 +773,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "updated_by_id"
     t.integer  "request_funding_source_id"
     t.integer  "request_transaction_id"
-    t.decimal  "amount",                    :precision => 10, :scale => 2
+    t.decimal  "amount",                    :precision => 15, :scale => 2
   end
 
   add_index "request_transaction_funding_sources", ["created_by_id"], :name => "request_transaction_funding_sources_created_by_id"
@@ -785,8 +787,8 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "request_id"
-    t.decimal  "amount_paid",                 :precision => 10, :scale => 2
-    t.decimal  "amount_due",                  :precision => 10, :scale => 2
+    t.decimal  "amount_paid",                 :precision => 15, :scale => 2
+    t.decimal  "amount_due",                  :precision => 15, :scale => 2
     t.datetime "due_at"
     t.datetime "paid_at"
     t.string   "comment"
@@ -841,8 +843,8 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.datetime "grant_agreement_at"
     t.datetime "grant_begins_at"
     t.datetime "grant_closed_at"
-    t.decimal  "amount_requested",                  :precision => 10, :scale => 2
-    t.decimal  "amount_recommended",                :precision => 10, :scale => 2
+    t.decimal  "amount_requested",                  :precision => 15, :scale => 2
+    t.decimal  "amount_recommended",                :precision => 15, :scale => 2
     t.integer  "duration_in_months"
     t.text     "project_summary"
     t.string   "base_request_id"
@@ -858,7 +860,7 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
     t.text     "ierf_due_diligence_risks"
     t.text     "ierf_due_diligence_noc4_work"
     t.text     "ierf_due_diligence_board_review"
-    t.decimal  "funds_expended_amount",             :precision => 10, :scale => 2
+    t.decimal  "funds_expended_amount",             :precision => 15, :scale => 2
     t.datetime "funds_expended_at"
     t.string   "type"
     t.string   "state"
@@ -1150,6 +1152,6 @@ ActiveRecord::Schema.define(:version => 20110707013521) do
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
   add_index "workflow_events", ["updated_by_id"], :name => "workflow_events_updated_by_id"
-  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_flowid_type"
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_id_type"
 
 end
