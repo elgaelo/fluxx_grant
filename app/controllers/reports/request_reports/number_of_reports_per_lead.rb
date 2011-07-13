@@ -11,24 +11,35 @@ class NumberOfReportsPerLead < ActionController::ReportBase
     query = "select count(rr.id) as count, u.first_name, u.last_name, rr.report_type as report_type, u.id as user_id from request_reports rr
       left join requests r on r.id = rr.request_id
       right join users u on u.id = r.program_lead_id
-      where rr.state != 'approved' and (report_type = 'Eval' or report_type = 'FinalBudget' or report_type = 'FinalNarrative')
+      where report_type != '' and rr.state != 'approved' AND rr.id in (?)
       group by u.id, rr.report_type
       order by rr.report_type,  u.last_name"
     data = RequestReport.connection.execute(RequestReport.send(:sanitize_sql, [query, models.map(&:id)]))
-    last_type = nil
     xaxis = []
+    user_ids = []
+    report_types = []
+    report_count = {}
+    max = 0
     data.each_hash do |row|
-      if (row["report_type"] != last_type)
-        last_type = row["report_type"]
-        hash[:data] << []
-
+      if !user_ids.include?(row["user_id"])
+        user_ids << row["user_id"]
+        xaxis << "#{row['first_name']} #{row['last_name']}"
       end
-      xaxis << "#{row['first_name']} #{row['last_name']}"
-      hash[:data].last << row["count"]
+      report_types << row["report_type"] unless report_types.include?(row["report_type"])
+      report_count[row["report_type"]] = {} unless report_count[row["report_type"]]
+      report_count[row["report_type"]][row["user_id"]] = row["count"]
+      max = row["count"].to_i if max < row["count"].to_i
     end
 
-    hash[:axes] = { :xaxis => {:ticks => xaxis.inject({}) {|h,v| h[v]=h[v].to_i+1; h}.reject{|k,v| v==1}.keys, :tickOptions => { :angle => -30 }}, :yaxis => { :min => 0 }}
-    hash[:series] = [ {:label => "Eval"}, {:label => "FinalBudget"}, {:label => "FinalNarrative"} ]
+    report_count.sort.each do |report_type, counts_by_user|
+      hash[:data] << []
+      user_ids.each do |user_id|
+        hash[:data].last << (counts_by_user[user_id].nil? ? 0 : counts_by_user[user_id])
+      end
+    end
+
+    hash[:axes] = { :xaxis => {:ticks => xaxis, :tickOptions => { :angle => -30 }}, :yaxis => { :min => 0, :max => max + 10 }}
+    hash[:series] = report_types.map{|report_type| {:label => report_type}}
     hash[:stackSeries] = false;
     hash[:type] = "bar"
 
@@ -46,7 +57,7 @@ class NumberOfReportsPerLead < ActionController::ReportBase
 
   def report_legend controller, index_object, params, models
     legend = [{:table => ['Report Type', 'Number of Reports Due']}]
-    query = "select count(rr.id) as count, report_type from request_reports rr where (report_type = 'Eval' or report_type = 'FinalBudget' or report_type = 'FinalNarrative') and id in (?) group by report_type order by report_type"
+    query = "select count(rr.id) as count, report_type from request_reports rr where report_type != '' and rr.state != 'approved' and id in (?) group by report_type order by report_type"
     filter = []
     params["request_report"].each do |key, value|
       next if key == "report_type"
