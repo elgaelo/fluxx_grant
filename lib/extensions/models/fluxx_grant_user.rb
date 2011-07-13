@@ -174,10 +174,6 @@ module FluxxGrantUser
       related_requests true, limit_amount
     end
     
-    def related_organizations limit_amount=20
-      organizations.order('name asc').limit(limit_amount)
-    end
-    
     def program_ids
       role_programs.map &:id
     end
