@@ -64,6 +64,12 @@ module FluxxLoi
   
 
   module ModelClassMethods
+    # ESH: hack to rename Loi to LOI
+    def model_name
+      u = ActiveModel::Name.new Loi
+      u.instance_variable_set '@human', 'LOI'
+      u
+    end
     def add_aasm
       aasm_column :state
       aasm_initial_state :new
