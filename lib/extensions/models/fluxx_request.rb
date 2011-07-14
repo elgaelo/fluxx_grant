@@ -823,7 +823,7 @@ module FluxxRequest
     end
 
     def title
-      "#{tax_class_org ? tax_class_org.name : ''} #{self.granted ? grant_id : request_id} #{(amount_recommended || amount_requested || 0).to_currency(:precision => 0)}"
+      "#{tax_class_org ? tax_class_org.name : ''} #{self.granted ? grant_id : request_id} #{(amount_recommended || amount_requested || 0).to_currency(:precision => 2)}"
     end
 
     ## Letter specific helpers
