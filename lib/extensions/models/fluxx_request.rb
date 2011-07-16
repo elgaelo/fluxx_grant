@@ -204,7 +204,7 @@ module FluxxRequest
     
     base.insta_template do |insta|
       insta.entity_name = 'request'
-      insta.add_methods [:program_organization, :signatory_contact, :address_org, :title, :grant_id, :request_id, :grant_ends_at]
+      insta.add_methods [:program_organization, :signatory_contact, :address_org, :title, :grant_id, :request_id, :grant_ends_at, :amount_funded, :funds_expended, :created_by_with_create_date]
       insta.add_list_method :request_transactions, RequestTransaction
       insta.add_list_method :request_reports, RequestReport
       insta.remove_methods [:id]
@@ -1204,6 +1204,19 @@ module FluxxRequest
       if changed_attributes.include?('display_warnings') && !self.display_warnings
         note = Note.create(:created_by_id => self.updated_by_id, :updated_by_id => self.updated_by_id, :note => "Turned off the following warnings: '#{self.funding_warnings}'", :notable_id => self.id, :notable_type => self.class.name) 
       end
+    end
+
+    def funds_expended
+      expended = ""
+      if funds_expended_amount
+        expended = as_currency(funds_expended_amount)
+        expended += "on #{model.funds_expended_at.mdy}" if funds_expended_at
+      end
+      expended
+    end
+
+    def created_by_with_create_date
+      "#{created_by.full_name if created_by} (#{created_at.mdy if created_at})"
     end
   end
 end
